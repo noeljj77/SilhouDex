@@ -21,30 +21,27 @@ html {
   color-scheme: dark;
 }
 
-/* Soft light sweeping across the hidden grid, so unrevealed areas feel alive. */
-@keyframes shimmer {
-  from {
-    background-position:
-      0 0,
-      0 0;
+/* Faint sparkles drifting in the stage backdrop. */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.08;
+    transform: translateY(0) scale(0.7);
   }
   50% {
-    opacity: 0.55;
-  }
-  to {
-    background-position:
-      0 0,
-      0 0;
+    opacity: 0.85;
+    transform: translateY(-14px) scale(1.15);
   }
 }
 
-.shimmer {
-  animation: shimmer 4s ease-in-out infinite;
+.sparkle {
+  animation: twinkle var(--dur, 6s) ease-in-out var(--delay, 0s) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .shimmer {
+  .sparkle {
     animation: none;
+    opacity: 0.3;
   }
 }
 

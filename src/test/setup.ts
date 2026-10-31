@@ -14,3 +14,6 @@ class ResizeObserverStub {
   disconnect() {}
 }
 globalThis.ResizeObserver ??= ResizeObserverStub;
+
+// jsdom cannot draw. Canvas calls return nothing (and stay quiet) so components can render.
+HTMLCanvasElement.prototype.getContext = () => null;

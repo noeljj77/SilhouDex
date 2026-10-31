@@ -6,7 +6,7 @@ import type { GuessOutcome } from '../../domain/game/engine.ts';
 import { CLUES_PER_GAME } from '../../domain/game/config.ts';
 import type { GameResult, GameView, Guess } from '../../domain/game/types.ts';
 import type { SpeciesId } from '../../domain/pokemon/types.ts';
-import { planReveal } from '../../domain/reveal/tiles.ts';
+import { computeRevealOrder } from '../../domain/reveal/mask.ts';
 import { ClueList } from './ClueList.tsx';
 import { GuessHistory } from './GuessHistory.tsx';
 import { GuessInput } from './GuessInput.tsx';
@@ -18,7 +18,7 @@ import { usePokemonDetails } from './usePokemonDetails.ts';
 
 export interface GameScreenProps {
   pokemonId: SpeciesId;
-  /** Fixes which clues and which tile order this game uses. */
+  /** Fixes which clues and which reveal pattern this game uses. */
   seed: string;
   difficulty?: DifficultyLevel;
   view: GameView;
@@ -52,8 +52,14 @@ export function GameScreen({
   const silhouette = useSilhouette(entry.artworkUrl);
   const details = usePokemonDetails(pokemonId);
   const artwork = silhouette.status === 'ready' ? silhouette.artwork : undefined;
-  const plan = useMemo(
-    () => (artwork ? planReveal(artwork.grid, `${seed}|${pokemonId}`) : undefined),
+  const order = useMemo(
+    () =>
+      artwork
+        ? computeRevealOrder(
+            { alpha: artwork.alpha, width: artwork.alphaWidth, height: artwork.alphaHeight },
+            `${seed}|${pokemonId}`,
+          )
+        : undefined,
     [artwork, seed, pokemonId],
   );
   const clues = useMemo(() => {
@@ -86,7 +92,7 @@ export function GameScreen({
           <SilhouetteStage
             status={status}
             artwork={artwork}
-            plan={plan}
+            order={order}
             stage={view.revealStage}
             solved={view.isOver}
             onRetry={retry}

@@ -1,5 +1,3 @@
-import { gridDimensions, type GridDimensions } from './tiles.ts';
-
 /** Pixel data in the same layout as canvas ImageData: RGBA bytes, row by row. */
 export interface PixelData {
   data: ArrayLike<number>;
@@ -36,37 +34,4 @@ export function findBounds(px: PixelData, threshold = ALPHA_THRESHOLD): Bounds |
   }
   if (maxX < 0) return null;
   return { x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1 };
-}
-
-/** Share of each tile (row-major) covered by visible pixels. Tiles are measured from `bounds`. */
-export function tileCoverage(
-  px: PixelData,
-  bounds: Bounds,
-  grid: GridDimensions,
-  threshold = ALPHA_THRESHOLD,
-): number[] {
-  const area = grid.tileSize * grid.tileSize;
-  const counts = new Array<number>(grid.cols * grid.rows).fill(0);
-  for (let y = 0; y < bounds.height; y++) {
-    const row = Math.floor(y / grid.tileSize);
-    for (let x = 0; x < bounds.width; x++) {
-      if (alphaAt(px, bounds.x + x, bounds.y + y) < threshold) continue;
-      counts[row * grid.cols + Math.floor(x / grid.tileSize)]! += 1;
-    }
-  }
-  return counts.map((n) => n / area);
-}
-
-export interface SilhouetteAnalysis {
-  bounds: Bounds;
-  grid: GridDimensions;
-  coverage: number[];
-}
-
-/** Crops to the visible shape and measures how much of each tile it fills. */
-export function analyzePixels(px: PixelData): SilhouetteAnalysis | null {
-  const bounds = findBounds(px);
-  if (!bounds) return null;
-  const grid = gridDimensions(bounds.width, bounds.height);
-  return { bounds, grid, coverage: tileCoverage(px, bounds, grid) };
 }

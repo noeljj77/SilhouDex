@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { analyzePixels, findBounds, tileCoverage, type PixelData } from './analysis.ts';
-import { gridDimensions, planReveal } from './tiles.ts';
+import { findBounds, type PixelData } from './analysis.ts';
 
 /** Builds RGBA pixels where `filled(x, y)` decides if a pixel is opaque. */
 function image(
@@ -41,77 +40,23 @@ describe('findBounds', () => {
       height: 1,
     });
   });
-});
 
-describe('analyzePixels', () => {
-  it('crops a wide shape and builds a wide grid', () => {
-    const a = analyzePixels(image(500, 500, (x, y) => x >= 50 && x < 450 && y >= 200 && y < 300))!;
-    expect(a.bounds).toEqual({ x: 50, y: 200, width: 400, height: 100 });
-    expect(a.grid).toEqual({ tileSize: 40, cols: 10, rows: 3 });
-    expect(a.coverage).toHaveLength(30);
-  });
-
-  it('crops a tall shape and builds a tall grid', () => {
-    const a = analyzePixels(image(500, 500, (x, y) => x >= 200 && x < 300 && y >= 50 && y < 450))!;
-    expect(a.grid).toEqual({ tileSize: 40, cols: 3, rows: 10 });
-  });
-
-  it('measures coverage: full tiles read 1, empty tiles 0, partial in between', () => {
-    // 100×100 image, a 40×40 square at the top-left of the crop plus a 10×40 sliver.
-    const px = image(100, 100, (x, y) => (x < 40 && y < 40) || (x >= 90 && y < 40));
-    const a = analyzePixels(px)!;
-    expect(a.grid).toEqual({ tileSize: 10, cols: 10, rows: 4 });
-    expect(a.coverage[0]).toBe(1);
-    expect(a.coverage[9]).toBe(1);
-    expect(a.coverage[5]).toBe(0);
-    // Columns 4–8 are empty in every row; columns 0–3 and 9 are full in every row.
-    for (let row = 0; row < 4; row++) {
-      const cells = a.coverage.slice(row * 10, row * 10 + 10);
-      expect(cells.slice(4, 9)).toEqual([0, 0, 0, 0, 0]);
-      expect([...cells.slice(0, 4), cells[9]]).toEqual([1, 1, 1, 1, 1]);
-    }
-  });
-
-  it('measures a half-covered tile as 0.5', () => {
-    const px = image(20, 10, (x) => x < 15);
-    const bounds = findBounds(px)!;
-    const grid = gridDimensions(bounds.width, bounds.height, 3);
-    const cov = tileCoverage(px, bounds, grid);
-    expect(cov.every((c) => c >= 0 && c <= 1)).toBe(true);
-    expect(cov.some((c) => c > 0 && c < 1)).toBe(false); // clean edges here
-  });
-
-  it('keeps holes empty (a ring has an empty middle)', () => {
-    const px = image(200, 200, (x, y) => {
-      const d = Math.hypot(x - 100, y - 100);
-      return d < 95 && d > 55;
+  it('handles tall and wide shapes', () => {
+    expect(
+      findBounds(image(500, 500, (x, y) => x >= 50 && x < 450 && y >= 200 && y < 300)),
+    ).toEqual({
+      x: 50,
+      y: 200,
+      width: 400,
+      height: 100,
     });
-    const a = analyzePixels(px)!;
-    const centre =
-      a.coverage[Math.floor(a.grid.rows / 2) * a.grid.cols + Math.floor(a.grid.cols / 2)];
-    expect(centre).toBe(0);
-    // Empty tiles are never part of the reveal plan.
-    const plan = planReveal({ cols: a.grid.cols, rows: a.grid.rows, coverage: a.coverage }, 's');
-    expect(plan.order.length).toBeLessThan(a.grid.cols * a.grid.rows);
-  });
-
-  it('works for a circle: plan reveals the whole shape at the last stage', () => {
-    const px = image(300, 300, (x, y) => Math.hypot(x - 150, y - 150) < 120);
-    const a = analyzePixels(px)!;
-    const plan = planReveal(
-      { cols: a.grid.cols, rows: a.grid.rows, coverage: a.coverage },
-      'circle',
-    );
-    expect(plan.stageVisible[0]).toBeGreaterThanOrEqual(0.12 - 0.001);
-    expect(plan.stageVisible.at(-1)).toBeCloseTo(1);
-    // Every opaque pixel lives in a tile that is in the order.
-    const inPlan = new Set(plan.order);
-    a.coverage.forEach((c, i) => {
-      if (c > 0) expect(inPlan.has(i)).toBe(true);
+    expect(
+      findBounds(image(500, 500, (x, y) => x >= 200 && x < 300 && y >= 50 && y < 450)),
+    ).toEqual({
+      x: 200,
+      y: 50,
+      width: 100,
+      height: 400,
     });
-  });
-
-  it('returns null when there is nothing to show', () => {
-    expect(analyzePixels(image(8, 8, () => false))).toBeNull();
   });
 });

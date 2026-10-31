@@ -1,12 +1,13 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { useState } from 'react';
-import { visibleTiles, type RevealPlan } from '../../../domain/reveal/tiles.ts';
+import { fractionForStage, type RevealOrder } from '../../../domain/reveal/mask.ts';
 import type { ProcessedArtwork } from './processArtwork.ts';
+import { RevealCanvas } from './RevealCanvas.tsx';
+import { Sparkles } from './Sparkles.tsx';
 
 export interface SilhouetteStageProps {
   status: 'loading' | 'error' | 'ready';
   artwork?: ProcessedArtwork;
-  plan?: RevealPlan;
+  order?: RevealOrder;
   /** 0 = opening view … 5 = everything. */
   stage: number;
   /** When true the black silhouette melts into the full-colour artwork. */
@@ -15,24 +16,21 @@ export interface SilhouetteStageProps {
   className?: string;
 }
 
-/** Seconds between neighbouring tiles appearing, so a reveal ripples in. */
-const TILE_STAGGER = 0.045;
-
 export function SilhouetteStage({
   status,
   artwork,
-  plan,
+  order,
   stage,
   solved = false,
   onRetry,
   className = '',
 }: SilhouetteStageProps) {
-  const ready = status === 'ready' && artwork && plan;
-  const percent = ready ? Math.round(plan.stageVisible[clampStage(plan, stage)]! * 100) : 0;
+  const ready = status === 'ready' && artwork && order;
+  const fraction = fractionForStage(stage);
   const label = solved
     ? 'Revealed Pokémon artwork'
     : ready
-      ? `Mystery Pokémon silhouette, ${percent}% revealed`
+      ? `Mystery Pokémon silhouette, ${Math.round(fraction * 100)}% revealed`
       : 'Mystery Pokémon silhouette';
 
   return (
@@ -42,8 +40,9 @@ export function SilhouetteStage({
       className={`relative aspect-square w-full overflow-hidden rounded-3xl border border-white/15 bg-[radial-gradient(circle_at_50%_38%,#b9a4ff_0%,#7c4ddb_42%,#2a1b6e_100%)] shadow-[0_0_60px_-10px_rgba(139,92,246,0.7)] ${className}`}
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_110%,rgba(34,211,238,0.35),transparent_55%)]" />
+      <Sparkles />
       {ready ? (
-        <RevealLayers artwork={artwork} plan={plan} stage={stage} solved={solved} />
+        <Picture artwork={artwork} order={order} fraction={fraction} solved={solved} />
       ) : status === 'error' ? (
         <ErrorPanel onRetry={onRetry} />
       ) : (
@@ -53,31 +52,18 @@ export function SilhouetteStage({
   );
 }
 
-function clampStage(plan: RevealPlan, stage: number) {
-  return Math.min(Math.max(Math.trunc(stage), 0), plan.stageCounts.length - 1);
-}
-
-function RevealLayers({
+function Picture({
   artwork,
-  plan,
-  stage,
+  order,
+  fraction,
   solved,
 }: {
   artwork: ProcessedArtwork;
-  plan: RevealPlan;
-  stage: number;
+  order: RevealOrder;
+  fraction: number;
   solved: boolean;
 }) {
-  const reduceMotion = useReducedMotion();
-  const tiles = visibleTiles(plan, stage);
-  const count = tiles.length;
-
-  // Remember how many tiles were showing before this render: only tiles beyond that animate in.
-  const [shown, setShown] = useState({ count, previous: count });
-  if (shown.count !== count) setShown({ count, previous: shown.count });
-  const previous = shown.previous;
-
-  const { cols, rows } = plan;
+  const reduceMotion = useReducedMotion() ?? false;
   const ratio = artwork.width / artwork.height;
 
   return (
@@ -86,52 +72,12 @@ function RevealLayers({
         className="relative max-h-full max-w-full"
         style={{ aspectRatio: ratio, ...(ratio >= 1 ? { width: '100%' } : { height: '100%' }) }}
       >
-        {/* Faint grid over the whole picture: shows where tiles are without hinting at the shape. */}
-        {!solved && count < plan.order.length && (
-          <div
-            aria-hidden
-            className="shimmer absolute inset-0 rounded-md"
-            style={{
-              backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.16) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.16) 1px, transparent 1px)`,
-              backgroundSize: `${100 / cols}% ${100 / rows}%`,
-            }}
-          />
-        )}
-
-        {tiles.map((tile, position) => {
-          const col = tile % cols;
-          const row = Math.floor(tile / cols);
-          const isNew = position >= previous && !reduceMotion;
-          const delay = (position - previous) * TILE_STAGGER;
-          return (
-            <motion.div
-              key={tile}
-              data-tile={tile}
-              aria-hidden
-              className="absolute inset-0"
-              style={{
-                clipPath: `inset(${(row / rows) * 100}% ${(1 - (col + 1) / cols) * 100}% ${(1 - (row + 1) / rows) * 100}% ${(col / cols) * 100}%)`,
-                transformOrigin: `${((col + 0.5) / cols) * 100}% ${((row + 0.5) / rows) * 100}%`,
-              }}
-              initial={isNew ? { opacity: 0, scale: 0.8 } : false}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div
-                className="absolute inset-0 bg-[length:100%_100%]"
-                style={{ backgroundImage: `url(${artwork.silhouetteUrl})` }}
-              />
-              {isNew && (
-                <motion.div
-                  className="absolute inset-0 bg-cyan-300"
-                  initial={{ opacity: 0.8 }}
-                  animate={{ opacity: 0 }}
-                  transition={{ duration: 0.9, delay, ease: 'easeOut' }}
-                />
-              )}
-            </motion.div>
-          );
-        })}
+        <RevealCanvas
+          artwork={artwork}
+          order={order}
+          fraction={fraction}
+          reduceMotion={reduceMotion}
+        />
 
         {solved && (
           <>

@@ -20,9 +20,11 @@ vi.mock('../data/defaultRepository.ts', () => ({
 }));
 vi.mock('../features/game/silhouette/processArtwork.ts', () => ({
   processArtwork: async () => ({
-    silhouetteUrl: 'blob:silhouette',
+    silhouette: {},
     colorUrl: 'blob:color',
-    grid: { cols: 10, rows: 10, coverage: Array.from({ length: 100 }, () => 1) },
+    alpha: new Uint8ClampedArray(100).fill(255),
+    alphaWidth: 10,
+    alphaHeight: 10,
     width: 400,
     height: 400,
   }),

@@ -1,16 +1,21 @@
-import { analyzePixels } from '../../../domain/reveal/analysis.ts';
-import type { TileGrid } from '../../../domain/reveal/tiles.ts';
+import { findBounds } from '../../../domain/reveal/analysis.ts';
+
+/** Longest side, in pixels, of the small copy used to plan the reveal. */
+const PLAN_SIZE = 192;
 
 /** Everything the stage needs to draw one Pokémon. Built once per artwork, then cached. */
 export interface ProcessedArtwork {
-  /** Black copy of the artwork with its transparent areas kept, cropped and padded to the grid. */
-  silhouetteUrl: string;
+  /** Solid black copy of the artwork, keeping its transparency, cropped to the shape. */
+  silhouette: HTMLCanvasElement;
   /** Full-colour copy with identical size and alignment, shown when the game is solved. */
   colorUrl: string;
-  grid: TileGrid;
-  /** Pixel size of both images (a whole number of tiles). */
+  /** Pixel size of both copies. */
   width: number;
   height: number;
+  /** Small copy of the shape's alpha (0–255), used to work out the reveal order. */
+  alpha: Uint8ClampedArray;
+  alphaWidth: number;
+  alphaHeight: number;
 }
 
 const cache = new Map<string, Promise<ProcessedArtwork>>();
@@ -31,7 +36,7 @@ function canvasToBlobUrl(canvas: HTMLCanvasElement): Promise<string> {
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
       if (blob) resolve(URL.createObjectURL(blob));
-      else reject(new Error('Could not encode the silhouette'));
+      else reject(new Error('Could not encode the artwork'));
     }, 'image/png');
   });
 }
@@ -49,46 +54,40 @@ async function build(url: string): Promise<ProcessedArtwork> {
   const img = await loadImage(url);
   const [source, sourceCtx] = newCanvas(img.naturalWidth, img.naturalHeight);
   sourceCtx.drawImage(img, 0, 0);
-  const pixels = sourceCtx.getImageData(0, 0, source.width, source.height);
+  const bounds = findBounds(sourceCtx.getImageData(0, 0, source.width, source.height));
+  if (!bounds) throw new Error('The artwork has no visible pixels');
+  const { width, height } = bounds;
 
-  const analysis = analyzePixels(pixels);
-  if (!analysis) throw new Error('The artwork has no visible pixels');
-  const { bounds, grid } = analysis;
-  const width = grid.cols * grid.tileSize;
-  const height = grid.rows * grid.tileSize;
-
-  // Colour copy: the cropped artwork on a canvas sized to a whole number of tiles.
+  // Colour copy: the artwork cropped to the shape.
   const [color, colorCtx] = newCanvas(width, height);
-  colorCtx.drawImage(
-    source,
-    bounds.x,
-    bounds.y,
-    bounds.width,
-    bounds.height,
-    0,
-    0,
-    bounds.width,
-    bounds.height,
-  );
+  colorCtx.drawImage(source, bounds.x, bounds.y, width, height, 0, 0, width, height);
 
-  // Silhouette copy: same picture, painted solid black where it was visible. "source-in" keeps
-  // the original transparency, so holes and soft edges survive.
-  const [shadow, shadowCtx] = newCanvas(width, height);
+  // Silhouette copy: same picture, painted solid black where it was visible. "source-in" keeps the
+  // original transparency, so holes and soft edges survive.
+  const [silhouette, shadowCtx] = newCanvas(width, height);
   shadowCtx.drawImage(color, 0, 0);
   shadowCtx.globalCompositeOperation = 'source-in';
   shadowCtx.fillStyle = '#000';
   shadowCtx.fillRect(0, 0, width, height);
 
-  const [silhouetteUrl, colorUrl] = await Promise.all([
-    canvasToBlobUrl(shadow),
-    canvasToBlobUrl(color),
-  ]);
+  // A small copy of the shape, so planning the reveal stays fast on any device.
+  const scale = Math.min(1, PLAN_SIZE / Math.max(width, height));
+  const alphaWidth = Math.max(1, Math.round(width * scale));
+  const alphaHeight = Math.max(1, Math.round(height * scale));
+  const [, smallCtx] = newCanvas(alphaWidth, alphaHeight);
+  smallCtx.drawImage(color, 0, 0, alphaWidth, alphaHeight);
+  const small = smallCtx.getImageData(0, 0, alphaWidth, alphaHeight).data;
+  const alpha = new Uint8ClampedArray(alphaWidth * alphaHeight);
+  for (let i = 0; i < alpha.length; i++) alpha[i] = small[i * 4 + 3] ?? 0;
+
   return {
-    silhouetteUrl,
-    colorUrl,
-    grid: { cols: grid.cols, rows: grid.rows, coverage: analysis.coverage },
+    silhouette,
+    colorUrl: await canvasToBlobUrl(color),
     width,
     height,
+    alpha,
+    alphaWidth,
+    alphaHeight,
   };
 }
 

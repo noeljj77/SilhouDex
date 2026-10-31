@@ -1,7 +1,8 @@
 import { Eye, RotateCcw, Shuffle, Sparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { pokedexIndex } from '../data/pokedexIndex.ts';
-import { planReveal } from '../domain/reveal/tiles.ts';
+import { REVEAL_FRACTIONS } from '../domain/game/config.ts';
+import { computeRevealOrder } from '../domain/reveal/mask.ts';
 import { SilhouetteStage } from '../features/game/silhouette/SilhouetteStage.tsx';
 import { useSilhouette } from '../features/game/silhouette/useSilhouette.ts';
 
@@ -35,8 +36,14 @@ export function SilhouetteLabPage() {
   const entry = pokedexIndex.getById(pokemonId);
   const state = useSilhouette(entry?.artworkUrl ?? null);
   const artwork = state.status === 'ready' ? state.artwork : undefined;
-  const plan = useMemo(
-    () => (artwork ? planReveal(artwork.grid, `${seed}|${pokemonId}`) : undefined),
+  const order = useMemo(
+    () =>
+      artwork
+        ? computeRevealOrder(
+            { alpha: artwork.alpha, width: artwork.alphaWidth, height: artwork.alphaHeight },
+            `${seed}|${pokemonId}`,
+          )
+        : undefined,
     [artwork, seed, pokemonId],
   );
 
@@ -65,7 +72,7 @@ export function SilhouetteLabPage() {
           <SilhouetteStage
             status={state.status}
             artwork={artwork}
-            plan={plan}
+            order={order}
             stage={stage}
             solved={solved}
             onRetry={state.retry}
@@ -122,11 +129,11 @@ export function SilhouetteLabPage() {
                 icon={<Shuffle size={16} aria-hidden />}
                 onClick={() => setSeed(randomSeed())}
               >
-                New tile order
+                New reveal order
               </LabButton>
             </div>
             <p className="text-xs text-violet-200/60">
-              Seed: <code>{seed}</code> — the same seed always reveals tiles in the same order.
+              Seed: <code>{seed}</code> — the same seed always reveals in the same way.
             </p>
           </div>
 
@@ -176,31 +183,27 @@ export function SilhouetteLabPage() {
             </div>
           </div>
 
-          {plan && (
-            <div className="flex flex-col gap-2">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-violet-200/70">
-                Reveal plan — {plan.order.length} tiles on a {plan.cols}×{plan.rows} grid
-              </h2>
-              <table className="w-full max-w-sm text-sm">
-                <thead>
-                  <tr className="text-left text-violet-200/60">
-                    <th className="py-1 font-medium">Stage</th>
-                    <th className="py-1 font-medium">Tiles</th>
-                    <th className="py-1 font-medium">Shape visible</th>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-violet-200/70">
+              Reveal: clockwise fog
+            </h2>
+            <table className="w-full max-w-sm text-sm">
+              <thead>
+                <tr className="text-left text-violet-200/60">
+                  <th className="py-1 font-medium">Stage</th>
+                  <th className="py-1 font-medium">Shape visible</th>
+                </tr>
+              </thead>
+              <tbody>
+                {REVEAL_FRACTIONS.map((fraction, s) => (
+                  <tr key={s} className={s === stage ? 'text-cyan-glow' : 'text-white/80'}>
+                    <td className="py-0.5">{s}</td>
+                    <td className="py-0.5">{Math.round(fraction * 100)}%</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {plan.stageCounts.map((count, s) => (
-                    <tr key={s} className={s === stage ? 'text-cyan-glow' : 'text-white/80'}>
-                      <td className="py-0.5">{s}</td>
-                      <td className="py-0.5">{count}</td>
-                      <td className="py-0.5">{Math.round(plan.stageVisible[s]! * 100)}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       </div>
     </main>
