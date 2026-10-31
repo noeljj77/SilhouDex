@@ -1,7 +1,8 @@
 import { CalendarClock } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { hrefFor } from '../app/router.ts';
-import { useProgress, useProgressStore } from '../app/progressStore.ts';
+import { useProgressStore } from '../app/progressStore.ts';
+import { DEFAULT_DIFFICULTY } from '../domain/clues/difficulty.ts';
 import type { DailyChallenge } from '../domain/daily/schedule.ts';
 import { createSession, viewFromResult } from '../domain/game/engine.ts';
 import type { GameResult, GameSession } from '../domain/game/types.ts';
@@ -109,7 +110,6 @@ function LockedDaily({ challenge, result }: { challenge: DailyChallenge; result:
 
 function PlayableDaily({ challenge }: { challenge: DailyChallenge }) {
   const store = useProgressStore();
-  const difficulty = useProgress().settings.difficulty;
 
   // An unfinished game from earlier today resumes; one from another day is ignored.
   const [resume] = useState<GameSession | undefined>(() => {
@@ -139,7 +139,8 @@ function PlayableDaily({ challenge }: { challenge: DailyChallenge }) {
     <GameScreen
       pokemonId={challenge.pokemonId}
       seed={challenge.seed}
-      difficulty={difficulty}
+      // Everyone gets the same clues on the same day, so the player's Practice setting is not used.
+      difficulty={DEFAULT_DIFFICULTY}
       view={game.view}
       guesses={game.session.guesses}
       finished={game.finish}

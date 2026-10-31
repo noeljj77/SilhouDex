@@ -1,6 +1,7 @@
-import { Award, BookOpen, Shuffle, User } from 'lucide-react';
+import { Award, BookOpen, User } from 'lucide-react';
 import { ComingSoonPage } from '../pages/ComingSoonPage.tsx';
 import { DailyPage } from '../pages/DailyPage.tsx';
+import { PracticePage } from '../pages/PracticePage.tsx';
 import { SilhouetteLabPage } from '../pages/SilhouetteLabPage.tsx';
 import { AppShell } from './AppShell.tsx';
 import { ProgressProvider } from './ProgressProvider.tsx';
@@ -11,13 +12,7 @@ function Page({ route }: { route: RouteId }) {
     case 'daily':
       return <DailyPage />;
     case 'practice':
-      return (
-        <ComingSoonPage
-          icon={Shuffle}
-          title="Practice"
-          blurb="Unlimited random silhouettes. They never affect your daily streak."
-        />
-      );
+      return <PracticePage />;
     case 'pokedex':
       return (
         <ComingSoonPage

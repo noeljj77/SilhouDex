@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProgressProvider } from '../app/ProgressProvider.tsx';
 import { createProgressStore } from '../app/progressStore.ts';
 import { mapDetails } from '../data/pokeapi/mappers.ts';
+import { generateClues } from '../domain/clues/engine.ts';
 import { getDailyPool, LAUNCH_DATE } from '../domain/daily/schedule.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
 import { createLocalRepository, STORAGE_KEY } from '../persistence/localRepository.ts';
@@ -269,6 +270,32 @@ describe('DailyPage: refreshing the page', () => {
     await ready();
     expect(points()).toBe(100);
     expect(screen.queryByRole('list', { name: 'Wrong guesses' })).not.toBeInTheDocument();
+  });
+});
+
+describe('DailyPage: fairness', () => {
+  it('uses the same clues for everyone, whatever difficulty the player picked in Practice', async () => {
+    const { species, pokemon, chain } = fixtures.bulbasaur;
+    const details = mapDetails(species, pokemon, chain);
+    const seed = `daily:#${getDailyPool().indexOf(1) + 1}`;
+    const displayName = (r: { id: number; slug: string }) => r.slug;
+    const normal = generateClues(details, { seed, difficulty: 'normal', displayName })[0]!;
+    const easy = generateClues(details, { seed, difficulty: 'easy', displayName })[0]!;
+    expect(normal.body).not.toBe(easy.body); // so this test can tell the two apart
+
+    // The player chose Easy in Practice earlier.
+    const store = createProgressStore(createLocalRepository());
+    store.setDifficulty('easy');
+    const user = userEvent.setup();
+    render(
+      <ProgressProvider store={store}>
+        <DailyPage />
+      </ProgressProvider>,
+    );
+    await ready();
+    await guess(user, 'Charmander');
+    expect(screen.getByText(normal.body)).toBeInTheDocument();
+    expect(screen.queryByText(easy.body)).not.toBeInTheDocument();
   });
 });
 

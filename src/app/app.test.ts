@@ -89,6 +89,17 @@ describe('createProgressStore', () => {
     expect(store.getSnapshot().discoveries[25]?.timesDiscovered).toBe(1);
   });
 
+  it('saves the practice difficulty, and skips saving an unchanged one', () => {
+    const repo = makeRepo();
+    const store = createProgressStore(repo);
+    expect(store.getSnapshot().settings.difficulty).toBe('normal');
+    store.setDifficulty('hard');
+    expect(store.getSnapshot().settings.difficulty).toBe('hard');
+    expect(repo.saves).toBe(1);
+    store.setDifficulty('hard');
+    expect(repo.saves).toBe(1);
+  });
+
   it('does not notify or save when nothing changed', () => {
     const repo = makeRepo();
     const store = createProgressStore(repo);
