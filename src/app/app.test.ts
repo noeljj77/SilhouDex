@@ -100,6 +100,81 @@ describe('createProgressStore', () => {
     expect(repo.saves).toBe(1);
   });
 
+  describe('achievements', () => {
+    const won = (over: Partial<GameSession> = {}): GameSession =>
+      session({
+        status: 'won',
+        endedAt: NOW,
+        guesses: [{ pokemonId: 25, correct: true, at: NOW }],
+        ...over,
+      });
+
+    it('unlocks achievements when a game ends, and reports them', () => {
+      const store = createProgressStore(makeRepo());
+      const outcome = store.finishGame(won());
+      expect(outcome.newAchievements).toEqual(['first-discovery', 'perfect-instinct']);
+      expect(store.getSnapshot().achievements['first-discovery']).toEqual({
+        unlockedAt: NOW,
+        seen: false,
+      });
+    });
+
+    it('reports nothing new on a later game that earns nothing', () => {
+      const store = createProgressStore(makeRepo());
+      store.finishGame(won());
+      const second = store.finishGame(
+        won({ id: 'p2', mode: 'practice', dateKey: undefined, challengeNumber: undefined }),
+      );
+      expect(second.newAchievements).toEqual([]);
+    });
+
+    it('does not unlock anything for a result that was ignored as a duplicate', () => {
+      const store = createProgressStore(makeRepo());
+      store.finishGame(won());
+      const before = store.getSnapshot().achievements;
+      const again = store.finishGame(won());
+      expect(again.recorded).toBe(false);
+      expect(again.newAchievements).toEqual([]);
+      expect(store.getSnapshot().achievements).toBe(before);
+    });
+
+    it('does not unlock anything for giving up', () => {
+      const store = createProgressStore(makeRepo());
+      const outcome = store.finishGame(session({ status: 'gave_up', endedAt: NOW }));
+      expect(outcome.newAchievements).toEqual([]);
+      expect(store.getSnapshot().achievements).toEqual({});
+    });
+
+    it('marks achievements as seen', () => {
+      const store = createProgressStore(makeRepo());
+      store.finishGame(won());
+      store.markAchievementsSeen(['first-discovery']);
+      expect(store.getSnapshot().achievements['first-discovery']?.seen).toBe(true);
+      expect(store.getSnapshot().achievements['perfect-instinct']?.seen).toBe(false);
+    });
+
+    it('catches up on progress made before achievements existed, already seen', () => {
+      const old = createEmptyProgress(NOW, 'p');
+      old.discoveries = {
+        25: {
+          pokemonId: 25,
+          firstDiscoveredAt: NOW,
+          lastDiscoveredAt: NOW,
+          timesDiscovered: 1,
+          modes: ['daily'],
+        },
+      };
+      const repo = makeRepo();
+      repo.load = () => old;
+      const store = createProgressStore(repo, { now: () => '2026-11-20T00:00:00.000Z' });
+      expect(store.getSnapshot().achievements['first-discovery']).toEqual({
+        unlockedAt: '2026-11-20T00:00:00.000Z',
+        seen: true,
+      });
+      expect(repo.saves).toBe(1);
+    });
+  });
+
   it('does not notify or save when nothing changed', () => {
     const repo = makeRepo();
     const store = createProgressStore(repo);

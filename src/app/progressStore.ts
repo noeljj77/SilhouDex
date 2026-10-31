@@ -1,8 +1,11 @@
 import { createContext, useContext, useSyncExternalStore } from 'react';
+import { pokedexIndex } from '../data/pokedexIndex.ts';
+import { markSeen, unlockAchievements } from '../domain/achievements/evaluator.ts';
 import type { DifficultyLevel } from '../domain/clues/difficulty.ts';
 import { toGameResult } from '../domain/game/engine.ts';
 import type { GameMode, GameResult, GameSession } from '../domain/game/types.ts';
 import { recordGameEnd, setActiveSession } from '../domain/progression/record.ts';
+import type { PokemonIndexEntry } from '../domain/pokemon/types.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
 import type { ProgressRepository, StorageMode } from '../persistence/localRepository.ts';
 
@@ -11,6 +14,8 @@ export interface FinishOutcome {
   /** False when the result was ignored because that daily date already had one. */
   recorded: boolean;
   isNewDiscovery: boolean;
+  /** Achievements this game unlocked (ids). */
+  newAchievements: string[];
 }
 
 export interface ProgressStore {
@@ -25,11 +30,31 @@ export interface ProgressStore {
   finishGame(session: GameSession): FinishOutcome;
   /** Clue difficulty for Practice. (Daily always uses the same difficulty for everyone.) */
   setDifficulty(difficulty: DifficultyLevel): void;
+  /** Records that the player has been shown these unlocked achievements. */
+  markAchievementsSeen(ids: readonly string[]): void;
+}
+
+export interface ProgressStoreOptions {
+  /** The Pokémon achievements are measured against. Defaults to the bundled Pokédex. */
+  catalogue?: readonly PokemonIndexEntry[];
+  now?: () => string;
 }
 
 /** Holds the player's progress in memory, writing every change through the repository. */
-export function createProgressStore(repo: ProgressRepository): ProgressStore {
+export function createProgressStore(
+  repo: ProgressRepository,
+  options: ProgressStoreOptions = {},
+): ProgressStore {
+  const catalogue = options.catalogue ?? pokedexIndex.entries;
+  const now = options.now ?? (() => new Date().toISOString());
   let state = repo.load();
+
+  // Catch up on progress made before achievements existed. These unlocks start as already seen.
+  const caughtUp = unlockAchievements(state, catalogue, now(), true);
+  if (caughtUp.newlyUnlocked.length > 0) {
+    state = caughtUp.data;
+    repo.save(state);
+  }
   const listeners = new Set<() => void>();
 
   const commit = (next: ProgressData) => {
@@ -53,9 +78,22 @@ export function createProgressStore(repo: ProgressRepository): ProgressStore {
     finishGame(session) {
       const result = toGameResult(session);
       const outcome = recordGameEnd(state, result);
-      commit(outcome.data);
-      return { result, recorded: outcome.recorded, isNewDiscovery: outcome.isNewDiscovery };
+      let next = outcome.data;
+      let newAchievements: string[] = [];
+      if (outcome.recorded) {
+        const unlocked = unlockAchievements(next, catalogue, result.completedAt);
+        next = unlocked.data;
+        newAchievements = unlocked.newlyUnlocked;
+      }
+      commit(next);
+      return {
+        result,
+        recorded: outcome.recorded,
+        isNewDiscovery: outcome.isNewDiscovery,
+        newAchievements,
+      };
     },
+    markAchievementsSeen: (ids) => commit(markSeen(state, ids)),
     setDifficulty: (difficulty) => {
       if (state.settings.difficulty === difficulty) return;
       commit({ ...state, settings: { ...state.settings, difficulty } });

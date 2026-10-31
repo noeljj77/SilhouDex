@@ -174,6 +174,27 @@ describe('DailyPage: finishing', () => {
     expect(saved.daily.active).toBeUndefined();
   });
 
+  it('winning with no wrong guess unlocks First Discovery and Perfect Instinct, unseen', async () => {
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    await guess(user, 'Bulbasaur');
+    await screen.findByRole('region', { name: 'Result' });
+    const { achievements } = stored();
+    expect(Object.keys(achievements).sort()).toEqual(['first-discovery', 'perfect-instinct']);
+    expect(achievements['perfect-instinct']?.seen).toBe(false);
+  });
+
+  it('giving up unlocks nothing', async () => {
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    await user.click(screen.getByRole('button', { name: 'Give up' }));
+    await user.click(screen.getByRole('button', { name: 'Yes, reveal it' }));
+    await screen.findByRole('region', { name: 'Result' });
+    expect(stored().achievements).toEqual({});
+  });
+
   it('a perfect first guess scores 100', async () => {
     const user = userEvent.setup();
     renderDaily();

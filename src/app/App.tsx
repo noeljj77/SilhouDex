@@ -1,6 +1,6 @@
-import { Award } from 'lucide-react';
 import { lazy, Suspense } from 'react';
-import { ComingSoonPage } from '../pages/ComingSoonPage.tsx';
+import { AchievementToaster } from '../features/achievements/AchievementToaster.tsx';
+import { AchievementsPage } from '../pages/AchievementsPage.tsx';
 import { DailyPage } from '../pages/DailyPage.tsx';
 import { PokedexPage } from '../pages/PokedexPage.tsx';
 import { PracticePage } from '../pages/PracticePage.tsx';
@@ -23,13 +23,7 @@ function Page({ route }: { route: RouteId }) {
     case 'pokedex':
       return <PokedexPage />;
     case 'achievements':
-      return (
-        <ComingSoonPage
-          icon={Award}
-          title="Achievements"
-          blurb="Fifteen goals to chase, from First Discovery to Master Detective."
-        />
-      );
+      return <AchievementsPage />;
     case 'profile':
       return (
         <Suspense fallback={<p className="py-16 text-center text-violet-200/70">Loading…</p>}>
@@ -45,6 +39,7 @@ export function App() {
   const route = useRoute();
   return (
     <ProgressProvider>
+      <AchievementToaster />
       <AppShell route={route}>
         <Page route={route} />
       </AppShell>
