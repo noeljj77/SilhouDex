@@ -1,0 +1,31 @@
+@import 'tailwindcss';
+
+/*
+ * SilhouDex design tokens. Placeholder values for M0 — the full visual
+ * direction (typography, motion, surfaces) is settled in the design pass.
+ */
+@theme {
+  --color-night-950: #07061a;
+  --color-night-900: #0b0a1f;
+  --color-night-800: #14123a;
+  --color-night-700: #1f1b52;
+
+  --color-violet-glow: #8b5cf6;
+  --color-cyan-glow: #22d3ee;
+  --color-volt: #facc15;
+
+  --font-sans: ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-night-900);
+  color: #ece9ff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
