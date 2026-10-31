@@ -50,6 +50,16 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'Pokédex' })).toBeInTheDocument();
   });
 
+  it('opens the Profile page (loaded on demand)', { timeout: 20_000 }, async () => {
+    window.location.hash = '#/profile';
+    render(<App />);
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Profile' }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Profile' })).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('heading', { name: 'Daily streak' })).toBeInTheDocument();
+  });
+
   it('falls back to the Daily game for an unknown address', () => {
     window.location.hash = '#/nonsense';
     render(<App />);

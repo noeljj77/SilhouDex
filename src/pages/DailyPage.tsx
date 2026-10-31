@@ -1,7 +1,9 @@
 import { CalendarClock } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { hrefFor } from '../app/router.ts';
-import { useProgressStore } from '../app/progressStore.ts';
+import { useProgress, useProgressStore } from '../app/progressStore.ts';
+import { computeStreaks } from '../domain/progression/streaks.ts';
+import { StreakBadge } from '../features/daily/StreakBadge.tsx';
 import { DEFAULT_DIFFICULTY } from '../domain/clues/difficulty.ts';
 import type { DailyChallenge } from '../domain/daily/schedule.ts';
 import { createSession, viewFromResult } from '../domain/game/engine.ts';
@@ -46,18 +48,23 @@ function DailyChallengeView({ challenge }: { challenge: DailyChallenge }) {
     () => store.getSnapshot().daily.results[challenge.dateKey],
   );
 
+  const streak = computeStreaks(useProgress().daily.results, challenge.dateKey);
+
   return (
     <main className="flex flex-col gap-5">
-      <header>
-        <p className="text-sm font-semibold uppercase tracking-wider text-cyan-glow">
-          Daily Silhouette
-        </p>
-        <h1 className="text-3xl font-black text-white">
-          Challenge #{challenge.challengeNumber}
-          <span className="block text-base font-medium text-violet-200/70 sm:ml-3 sm:inline">
-            {formatDate(challenge.dateKey)}
-          </span>
-        </h1>
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-wider text-cyan-glow">
+            Daily Silhouette
+          </p>
+          <h1 className="text-3xl font-black text-white">
+            Challenge #{challenge.challengeNumber}
+            <span className="block text-base font-medium text-violet-200/70 sm:ml-3 sm:inline">
+              {formatDate(challenge.dateKey)}
+            </span>
+          </h1>
+        </div>
+        <StreakBadge streak={streak} />
       </header>
       {saved ? (
         <LockedDaily challenge={challenge} result={saved} />

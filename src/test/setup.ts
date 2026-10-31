@@ -6,3 +6,11 @@ afterEach(() => {
   cleanup();
   localStorage.clear();
 });
+
+// jsdom has no ResizeObserver; charts need one to exist.
+class ResizeObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+globalThis.ResizeObserver ??= ResizeObserverStub;

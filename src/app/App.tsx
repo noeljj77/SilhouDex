@@ -1,4 +1,5 @@
-import { Award, BookOpen, User } from 'lucide-react';
+import { Award, BookOpen } from 'lucide-react';
+import { lazy, Suspense } from 'react';
 import { ComingSoonPage } from '../pages/ComingSoonPage.tsx';
 import { DailyPage } from '../pages/DailyPage.tsx';
 import { PracticePage } from '../pages/PracticePage.tsx';
@@ -6,6 +7,11 @@ import { SilhouetteLabPage } from '../pages/SilhouetteLabPage.tsx';
 import { AppShell } from './AppShell.tsx';
 import { ProgressProvider } from './ProgressProvider.tsx';
 import { useRoute, type RouteId } from './router.ts';
+
+// Loaded on demand: it carries the charting library, which the game screens do not need.
+const ProfilePage = lazy(() =>
+  import('../pages/ProfilePage.tsx').then((m) => ({ default: m.ProfilePage })),
+);
 
 function Page({ route }: { route: RouteId }) {
   switch (route) {
@@ -31,11 +37,9 @@ function Page({ route }: { route: RouteId }) {
       );
     case 'profile':
       return (
-        <ComingSoonPage
-          icon={User}
-          title="Profile"
-          blurb="Your streaks, calendar and statistics."
-        />
+        <Suspense fallback={<p className="py-16 text-center text-violet-200/70">Loading…</p>}>
+          <ProfilePage />
+        </Suspense>
       );
     case 'lab':
       return <SilhouetteLabPage />;

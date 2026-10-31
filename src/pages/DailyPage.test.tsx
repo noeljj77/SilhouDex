@@ -6,6 +6,7 @@ import { createProgressStore } from '../app/progressStore.ts';
 import { mapDetails } from '../data/pokeapi/mappers.ts';
 import { generateClues } from '../domain/clues/engine.ts';
 import { getDailyPool, LAUNCH_DATE } from '../domain/daily/schedule.ts';
+import { createEmptyProgress } from '../domain/progression/record.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
 import { createLocalRepository, STORAGE_KEY } from '../persistence/localRepository.ts';
 import { addDays, type DateKey } from '../lib/utcDate.ts';
@@ -270,6 +271,70 @@ describe('DailyPage: refreshing the page', () => {
     await ready();
     expect(points()).toBe(100);
     expect(screen.queryByRole('list', { name: 'Wrong guesses' })).not.toBeInTheDocument();
+  });
+});
+
+describe('DailyPage: streak badge', () => {
+  const seedStreak = (days: number) => {
+    const data = createEmptyProgress(`${addDays(BULBASAUR_DAY, -days)}T00:00:00.000Z`, 'p');
+    for (let i = 1; i <= days; i++) {
+      const key = addDays(BULBASAUR_DAY, -i) as DateKey;
+      data.daily.results[key] = {
+        sessionId: `daily-${key}`,
+        mode: 'daily',
+        pokemonId: 25,
+        status: 'won',
+        score: 100,
+        wrongGuesses: 0,
+        revealsUsed: 0,
+        completedAt: `${key}T09:00:00.000Z`,
+        dateKey: key,
+        challengeNumber: 1,
+      };
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  };
+
+  it('invites a new player to start a streak', async () => {
+    renderDaily();
+    await ready();
+    expect(screen.getByText('Start your streak')).toBeInTheDocument();
+  });
+
+  it('shows the running streak and nudges to play today, then grows it after finishing', async () => {
+    seedStreak(2);
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    expect(screen.getByText('2-day streak')).toBeInTheDocument();
+    expect(screen.getByText(/play today to keep it/)).toBeInTheDocument();
+
+    await guess(user, 'Bulbasaur');
+    await screen.findByRole('region', { name: 'Result' });
+    expect(screen.getByText('3-day streak')).toBeInTheDocument();
+    expect(screen.queryByText(/play today to keep it/)).not.toBeInTheDocument();
+  });
+
+  it('a loss or give-up also keeps the streak going', async () => {
+    seedStreak(1);
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    await user.click(screen.getByRole('button', { name: 'Give up' }));
+    await user.click(screen.getByRole('button', { name: 'Yes, reveal it' }));
+    await screen.findByRole('region', { name: 'Result' });
+    expect(screen.getByText('2-day streak')).toBeInTheDocument();
+  });
+
+  it('a missed day resets it to a fresh start', async () => {
+    seedStreak(3);
+    // Skip the most recent day: remove yesterday's result.
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    delete data.daily.results[addDays(BULBASAUR_DAY, -1)];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    renderDaily();
+    await ready();
+    expect(screen.getByText('Start your streak')).toBeInTheDocument();
   });
 });
 
