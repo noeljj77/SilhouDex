@@ -1,7 +1,8 @@
-import { Award, BookOpen } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { ComingSoonPage } from '../pages/ComingSoonPage.tsx';
 import { DailyPage } from '../pages/DailyPage.tsx';
+import { PokedexPage } from '../pages/PokedexPage.tsx';
 import { PracticePage } from '../pages/PracticePage.tsx';
 import { SilhouetteLabPage } from '../pages/SilhouetteLabPage.tsx';
 import { AppShell } from './AppShell.tsx';
@@ -20,13 +21,7 @@ function Page({ route }: { route: RouteId }) {
     case 'practice':
       return <PracticePage />;
     case 'pokedex':
-      return (
-        <ComingSoonPage
-          icon={BookOpen}
-          title="Pokédex"
-          blurb="Every Pokémon you identify is collected here. The rest stay in the shadows."
-        />
-      );
+      return <PokedexPage />;
     case 'achievements':
       return (
         <ComingSoonPage
