@@ -7,7 +7,7 @@ import type { SpeciesId } from '../pokemon/types.ts';
  * TODO: set to the real launch date. Do not change it after launch: it would renumber every
  * challenge and move every player's streak calendar.
  */
-export const LAUNCH_DATE: DateKey = '2026-11-01';
+export const LAUNCH_DATE: DateKey = '2026-10-31';
 
 /**
  * Daily pool v1: species 1..1025, shuffled once with a fixed seed.

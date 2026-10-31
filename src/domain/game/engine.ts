@@ -46,6 +46,19 @@ export function getGameView(session: GameSession): GameView {
   };
 }
 
+/** The view of a finished game when only its saved result is known (for example after a refresh). */
+export function viewFromResult(result: GameResult): GameView {
+  return {
+    wrongGuesses: result.wrongGuesses,
+    score: result.score,
+    revealStage: SCORING.maxReveals,
+    cluesUnlocked: SCORING.maxReveals,
+    guessesLeft: 0,
+    isFinalGuess: false,
+    isOver: true,
+  };
+}
+
 export type GuessOutcome =
   /** The right Pokémon: the game is won. */
   | 'correct'

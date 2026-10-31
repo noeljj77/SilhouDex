@@ -7,6 +7,7 @@ import {
   scoreForWrongGuesses,
   submitGuess,
   toGameResult,
+  viewFromResult,
 } from './engine.ts';
 import type { GameSession } from './types.ts';
 
@@ -134,6 +135,21 @@ describe('giveUp', () => {
   it('does nothing once the game is over', () => {
     const won = submitGuess(fresh(), ANSWER, T).session;
     expect(giveUp(won, T)).toBe(won);
+  });
+});
+
+describe('viewFromResult', () => {
+  it('shows a finished game fully revealed, with the saved score', () => {
+    const result = toGameResult(giveUp(wrongGuesses(fresh(), 2), T));
+    expect(viewFromResult(result)).toEqual({
+      wrongGuesses: 2,
+      score: 0,
+      revealStage: 5,
+      cluesUnlocked: 5,
+      guessesLeft: 0,
+      isFinalGuess: false,
+      isOver: true,
+    });
   });
 });
 
