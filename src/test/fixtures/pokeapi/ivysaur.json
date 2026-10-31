@@ -1,0 +1,416 @@
+{
+  "species": {
+    "id": 2,
+    "name": "ivysaur",
+    "is_legendary": false,
+    "is_mythical": false,
+    "generation": {
+      "name": "generation-i",
+      "url": "https://pokeapi.co/api/v2/generation/1/"
+    },
+    "names": [
+      {
+        "name": "Ivysaur",
+        "language": {
+          "name": "en",
+          "url": "https://pokeapi.co/api/v2/language/9/"
+        }
+      }
+    ],
+    "varieties": [
+      {
+        "is_default": true,
+        "pokemon": {
+          "name": "ivysaur",
+          "url": "https://pokeapi.co/api/v2/pokemon/2/"
+        }
+      }
+    ],
+    "habitat": {
+      "name": "grassland"
+    },
+    "egg_groups": [
+      {
+        "name": "monster"
+      },
+      {
+        "name": "plant"
+      }
+    ],
+    "color": {
+      "name": "green"
+    },
+    "shape": {
+      "name": "quadruped"
+    },
+    "evolution_chain": {
+      "url": "https://pokeapi.co/api/v2/evolution-chain/1/"
+    },
+    "flavor_text_entries": [
+      {
+        "flavor_text": "When the bulb on\nits back grows\nlarge, it appears\fto lose the\nability to stand\non its hind legs.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bulb on\nits back grows\nlarge, it appears\fto lose the\nability to stand\non its hind legs.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "The bulb on its\nback grows by\ndrawing energy.\fIt gives off an\naroma when it is\nready to bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Exposure to sun­\nlight adds to its\nstrength. Sunlight\falso makes the bud\non its back grow\nlarger.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "If the bud on its\nback starts to\nsmell sweet, it\fis evidence that\nthe large flower\nwill soon bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "The bulb on its\nback grows as it\nabsorbs nutrients.\fThe bulb gives off\na pleasant aroma\nwhen it blooms.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "There is a bud on this POKéMON’s back.\nTo support its weight, IVYSAUR’s legs\nand trunk grow thick and strong.\fIf it starts spending more time lying\nin the sunlight, it’s a sign that the\nbud will bloom into a large flower soon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "There is a bud on this POKéMON’s back.\nTo support its weight, IVYSAUR’s legs\nand trunk grow thick and strong.\fIf it starts spending more time lying\nin the sunlight, it’s a sign that the\nbud will bloom into a large flower soon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "To support its bulb, IVYSAUR’s legs\ngrow sturdy. If it spends more time lying in\nthe sunlight, the bud will soon bloom into\na large flower.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "There is a plant bulb on its back.\nWhen it absorbs nutrients, the bulb is said\nto blossom into a large flower.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bulb on its back grows large, it\nappears to lose the ability to stand on\nits hind legs.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts\nswelling, a sweet aroma wafts to\nindicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts\nswelling, a sweet aroma wafts to\nindicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts\nswelling, a sweet aroma wafts to\nindicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Exposure to sunlight adds to its\nstrength. Sunlight also makes the\nbud on its back grow larger.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "If the bud on its back starts to\nsmell sweet, it is evidence that\nthe large flower will soon bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts\nswelling, a sweet aroma wafts to\nindicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts\nswelling, a sweet aroma wafts to\nindicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts\nswelling, a sweet aroma wafts to\nindicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts\nswelling, a sweet aroma wafts to\nindicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "There is a plant bulb on its back.\nWhen it absorbs nutrients, the bulb is said to\nblossom into a large flower.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bud on its back starts swelling, a sweet\naroma wafts to indicate the flower’s coming bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "There is a bud on this Pokémon’s back. To support its weight,\nIvysaur’s legs and trunk grow thick and strong.\nIf it starts spending more time lying in the sunlight,\nit’s a sign that the bud will bloom into a large flower soon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "There is a bud on this Pokémon’s back. To support its weight,\nIvysaur’s legs and trunk grow thick and strong.\nIf it starts spending more time lying in the sunlight,\nit’s a sign that the bud will bloom into a large flower soon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "The bud on its back grows by drawing energy. It\ngives off an aroma when it is ready to bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "The bud on its back grows by drawing energy. It\ngives off an aroma when it is ready to bloom.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When the bulb on its back grows large, it\nappears to lose the ability to stand on its\nhind legs.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Exposure to sunlight adds to its strength.\nSunlight also makes the bud on its back\ngrow larger.",
+        "language": {
+          "name": "en"
+        }
+      }
+    ]
+  },
+  "pokemon": {
+    "id": 2,
+    "name": "ivysaur",
+    "height": 10,
+    "weight": 130,
+    "types": [
+      {
+        "slot": 1,
+        "type": {
+          "name": "grass",
+          "url": "https://pokeapi.co/api/v2/type/12/"
+        }
+      },
+      {
+        "slot": 2,
+        "type": {
+          "name": "poison",
+          "url": "https://pokeapi.co/api/v2/type/4/"
+        }
+      }
+    ],
+    "stats": [
+      {
+        "base_stat": 60,
+        "stat": {
+          "name": "hp"
+        }
+      },
+      {
+        "base_stat": 62,
+        "stat": {
+          "name": "attack"
+        }
+      },
+      {
+        "base_stat": 63,
+        "stat": {
+          "name": "defense"
+        }
+      },
+      {
+        "base_stat": 80,
+        "stat": {
+          "name": "special-attack"
+        }
+      },
+      {
+        "base_stat": 80,
+        "stat": {
+          "name": "special-defense"
+        }
+      },
+      {
+        "base_stat": 60,
+        "stat": {
+          "name": "speed"
+        }
+      }
+    ],
+    "abilities": [
+      {
+        "is_hidden": false,
+        "slot": 1,
+        "ability": {
+          "name": "overgrow"
+        }
+      },
+      {
+        "is_hidden": true,
+        "slot": 3,
+        "ability": {
+          "name": "chlorophyll"
+        }
+      }
+    ],
+    "sprites": {
+      "other": {
+        "official-artwork": {
+          "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png"
+        }
+      }
+    }
+  },
+  "chain": {
+    "id": 1,
+    "baby_trigger_item": null,
+    "chain": {
+      "is_baby": false,
+      "species": {
+        "name": "bulbasaur",
+        "url": "https://pokeapi.co/api/v2/pokemon-species/1/"
+      },
+      "evolution_details": [],
+      "evolves_to": [
+        {
+          "is_baby": false,
+          "species": {
+            "name": "ivysaur",
+            "url": "https://pokeapi.co/api/v2/pokemon-species/2/"
+          },
+          "evolution_details": [
+            {
+              "version_group": {
+                "name": "red-blue",
+                "url": "https://pokeapi.co/api/v2/version-group/1/"
+              },
+              "is_default": true,
+              "item": null,
+              "trigger": {
+                "name": "level-up",
+                "url": "https://pokeapi.co/api/v2/evolution-trigger/1/"
+              },
+              "gender": null,
+              "held_item": null,
+              "known_move": null,
+              "known_move_type": null,
+              "location": null,
+              "min_level": 16,
+              "min_happiness": null,
+              "min_beauty": null,
+              "min_affection": null,
+              "near_special_rock": false,
+              "needs_multiplayer": false,
+              "needs_overworld_rain": false,
+              "party_species": null,
+              "party_type": null,
+              "relative_physical_stats": null,
+              "time_of_day": "",
+              "trade_species": null,
+              "turn_upside_down": false,
+              "region": null,
+              "required_pokemon_form": null,
+              "evolved_pokemon_form": null,
+              "used_move": null,
+              "min_move_count": null,
+              "min_steps": null,
+              "min_damage_taken": null,
+              "allowed_natures": null,
+              "condition_expression": null
+            }
+          ],
+          "evolves_to": [
+            {
+              "is_baby": false,
+              "species": {
+                "name": "venusaur",
+                "url": "https://pokeapi.co/api/v2/pokemon-species/3/"
+              },
+              "evolution_details": [
+                {
+                  "version_group": {
+                    "name": "red-blue",
+                    "url": "https://pokeapi.co/api/v2/version-group/1/"
+                  },
+                  "is_default": true,
+                  "item": null,
+                  "trigger": {
+                    "name": "level-up",
+                    "url": "https://pokeapi.co/api/v2/evolution-trigger/1/"
+                  },
+                  "gender": null,
+                  "held_item": null,
+                  "known_move": null,
+                  "known_move_type": null,
+                  "location": null,
+                  "min_level": 32,
+                  "min_happiness": null,
+                  "min_beauty": null,
+                  "min_affection": null,
+                  "near_special_rock": false,
+                  "needs_multiplayer": false,
+                  "needs_overworld_rain": false,
+                  "party_species": null,
+                  "party_type": null,
+                  "relative_physical_stats": null,
+                  "time_of_day": "",
+                  "trade_species": null,
+                  "turn_upside_down": false,
+                  "region": null,
+                  "required_pokemon_form": null,
+                  "evolved_pokemon_form": null,
+                  "used_move": null,
+                  "min_move_count": null,
+                  "min_steps": null,
+                  "min_damage_taken": null,
+                  "allowed_natures": null,
+                  "condition_expression": null
+                }
+              ],
+              "evolves_to": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "species": {
+    "id": 151,
+    "name": "mew",
+    "is_legendary": false,
+    "is_mythical": true,
+    "generation": {
+      "name": "generation-i",
+      "url": "https://pokeapi.co/api/v2/generation/1/"
+    },
+    "names": [
+      {
+        "name": "Mew",
+        "language": {
+          "name": "en",
+          "url": "https://pokeapi.co/api/v2/language/9/"
+        }
+      }
+    ],
+    "varieties": [
+      {
+        "is_default": true,
+        "pokemon": {
+          "name": "mew",
+          "url": "https://pokeapi.co/api/v2/pokemon/151/"
+        }
+      }
+    ],
+    "habitat": {
+      "name": "rare"
+    },
+    "egg_groups": [
+      {
+        "name": "no-eggs"
+      }
+    ],
+    "color": {
+      "name": "pink"
+    },
+    "shape": {
+      "name": "upright"
+    },
+    "evolution_chain": {
+      "url": "https://pokeapi.co/api/v2/evolution-chain/78/"
+    },
+    "flavor_text_entries": [
+      {
+        "flavor_text": "So rare that it\nis still said to\nbe a mirage by\fmany experts. Only\na few people have\nseen it worldwide.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "So rare that it\nis still said to\nbe a mirage by\fmany experts. Only\na few people have\nseen it worldwide.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When viewed\nthrough a micro­\nscope, this\fPOKéMON's short,\nfine, delicate\nhair can be seen.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Apparently, it\nappears only to\nthose people who\fare pure of heart\nand have a strong\ndesire to see it.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Its DNA is said to\ncontain the genet­\nic codes of all\fPOKéMON, so it can\nuse all kinds of\ntechniques.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can\nlearn any move,\nsome people began\fresearch to see if\nit is the ancestor\nof all POKéMON.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "MEW is said to possess the genetic\ncomposition of all POKéMON.\nIt is capable of making itself invisible\fat will, so it entirely avoids notice even\nif it approaches people.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "MEW is said to possess the genetic\ncomposition of all POKéMON.\nIt is capable of making itself invisible\fat will, so it entirely avoids notice even\nif it approaches people.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "A MEW is said to possess the genes of all\nPOKéMON. It is capable of making itself\ninvisible at will, so it entirely avoids\nnotice even if it approaches people.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "A POKéMON of South America that was\nthought to have been extinct. It is very\nintelligent and learns any move.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "So rare that it is still said to be a\nmirage by many experts. Only a few people\nhave seen it worldwide.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of\nmoves, many scientists believe MEW\nto be the ancestor of Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of\nmoves, many scientists believe MEW\nto be the ancestor of Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of\nmoves, many scientists believe MEW\nto be the ancestor of Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Apparently, it appears only to\nthose people who are pure of heart\nand have a strong desire to see it.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Its DNA is said to contain the genetic\ncodes of all Pokémon, so it can\nuse all kinds of techniques.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of\nmoves, many scientists believe Mew\nto be the ancestor of Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of\nmoves, many scientists believe Mew\nto be the ancestor of Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of\nmoves, many scientists believe Mew\nto be the ancestor of Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of\nmoves, many scientists believe Mew\nto be the ancestor of Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Because it can use all kinds of moves, many\nscientists believe Mew to be the ancestor\nof Pokémon.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Its DNA is said to contain the genetic codes of all\nPokémon, so it can use all kinds of techniques.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Mew is said to possess the genetic composition of all\nPokémon. It is capable of making itself invisible at will,\nso it entirely avoids notice even if it approaches people.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "Mew is said to possess the genetic composition of all\nPokémon. It is capable of making itself invisible at will,\nso it entirely avoids notice even if it approaches people.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When viewed through a microscope, this\nPokémon’s short, fine, delicate hair can be seen.",
+        "language": {
+          "name": "en"
+        }
+      },
+      {
+        "flavor_text": "When viewed through a microscope, this\nPokémon’s short, fine, delicate hair can be seen.",
+        "language": {
+          "name": "en"
+        }
+      }
+    ]
+  },
+  "pokemon": {
+    "id": 151,
+    "name": "mew",
+    "height": 4,
+    "weight": 40,
+    "types": [
+      {
+        "slot": 1,
+        "type": {
+          "name": "psychic",
+          "url": "https://pokeapi.co/api/v2/type/14/"
+        }
+      }
+    ],
+    "stats": [
+      {
+        "base_stat": 100,
+        "stat": {
+          "name": "hp"
+        }
+      },
+      {
+        "base_stat": 100,
+        "stat": {
+          "name": "attack"
+        }
+      },
+      {
+        "base_stat": 100,
+        "stat": {
+          "name": "defense"
+        }
+      },
+      {
+        "base_stat": 100,
+        "stat": {
+          "name": "special-attack"
+        }
+      },
+      {
+        "base_stat": 100,
+        "stat": {
+          "name": "special-defense"
+        }
+      },
+      {
+        "base_stat": 100,
+        "stat": {
+          "name": "speed"
+        }
+      }
+    ],
+    "abilities": [
+      {
+        "is_hidden": false,
+        "slot": 1,
+        "ability": {
+          "name": "synchronize"
+        }
+      }
+    ],
+    "sprites": {
+      "other": {
+        "official-artwork": {
+          "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png"
+        }
+      }
+    }
+  },
+  "chain": {
+    "id": 78,
+    "baby_trigger_item": null,
+    "chain": {
+      "is_baby": false,
+      "species": {
+        "name": "mew",
+        "url": "https://pokeapi.co/api/v2/pokemon-species/151/"
+      },
+      "evolution_details": [],
+      "evolves_to": []
+    }
+  }
+}

@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "build:index": "tsx scripts/build-pokedex-index.ts"
   },
   "dependencies": {
     "lucide-react": "^1.66.0",
