@@ -9,6 +9,12 @@ import { createEmptyProgress } from '../../domain/progression/record.ts';
 import { AccountButton } from './AccountButton.tsx';
 import { AccountSection } from './AccountSection.tsx';
 
+// These tests describe a site with no Firebase project, whatever the real settings are.
+vi.mock('../../cloud/firebaseConfig.ts', () => ({
+  firebaseConfig: {},
+  isCloudConfigured: false,
+}));
+
 const NOW = '2026-11-02T10:00:00.000Z';
 
 function setup(state: Partial<CloudState> | null) {

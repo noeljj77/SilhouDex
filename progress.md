@@ -4,7 +4,7 @@ _Last updated: 1 November 2026 (site is live)._ Daily Pokémon silhouette guessi
 
 ## Where we are in one line
 
-All ten milestones are built and the game is feature-complete. The Sora font, MIT licence and layout check are done and committed. **The site is live at https://noeljj77.github.io/SilhouDex/** and Challenge #1 (1 November 2026) is running. The Pokédex-device redesign, the new guessing screen and the README GIF are done. Google sign-in is built but switched off until you create the Firebase project and give me its settings.
+All ten milestones are built and the game is feature-complete. The Sora font, MIT licence and layout check are done and committed. **The site is live at https://noeljj77.github.io/SilhouDex/** and Challenge #1 (1 November 2026) is running. The Pokédex-device redesign, the new guessing screen and the README GIF are done. Google sign-in is switched on with the `silhoudex` Firebase project; a real sign-in on the live site is the one thing left to confirm.
 
 ## What we have accomplished
 
@@ -42,13 +42,11 @@ Decisions you made along the way: any finished daily (win, loss or give-up) keep
 
 **For you (I can't do these):**
 
-1. **Set up Firebase for Google sign-in** (about 10 minutes, free): follow `docs/firebase-setup.md`, then send me the four `firebaseConfig` values (they are public, not secrets) and I will fill in `src/cloud/firebaseConfig.ts`, push, and check it.
-2. **Try it on a real phone**: the share sheet, card download and Google sign-in can only be fully tested on a device.
+1. **Try Google sign-in on the live site** (desktop and phone): click Sign in, finish the Google window, play, then check the Profile page says progress is saved. Tell me if anything looks wrong.
 
 **For me:**
 
-1. Once you send the Firebase settings: fill in the config, deploy, and test sign-in and cloud saving end to end on the live site.
-2. Optional: a final code-review, simplify and security-review pass.
+1. Optional: a final code-review, simplify and security-review pass.
 
 ## After launch (V2, not started)
 
@@ -58,7 +56,7 @@ Backend and accounts, global leaderboard, progress that follows you between devi
 
 - **Frontend only:** a determined player can find the answer by inspecting the app's data. A backend (V2) is the only real fix.
 - **Progress is per browser** until the player signs in with Google (needs the Firebase setup above).
-- **Not tested on a real phone yet:** the share sheet, downloading the card, and Google sign-in (which cannot be tested at all until Firebase is set up).
+- **Not tested on a real phone yet:** the share sheet, downloading the card, and Google sign-in (the sign-in window can only be opened by a real click).
 - **Regional and alternate forms** count as their base Pokémon.
 
 ## Handy reference

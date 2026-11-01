@@ -5,10 +5,10 @@
  * they are empty the site works as before and shows no sign-in button. See docs/firebase-setup.md.
  */
 export const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: '',
-  appId: '',
+  apiKey: 'AIzaSyBdRmhXhXa2ImSFcV1pJFpr2WZiZzXYDjA',
+  authDomain: 'silhoudex.firebaseapp.com',
+  projectId: 'silhoudex',
+  appId: '1:922961171500:web:154956ecefe50e09396d89',
 };
 
 export const isCloudConfigured = Object.values(firebaseConfig).every((value) => value !== '');
