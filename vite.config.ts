@@ -2,6 +2,7 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import { firebaseConfig } from './src/cloud/firebaseConfig.ts';
 
 /**
  * What the published site is allowed to load. It lists every place the app talks to, so anything
@@ -19,8 +20,9 @@ export const CONTENT_SECURITY_POLICY = [
   // Google profile pictures come from googleusercontent.com.
   "img-src 'self' data: blob: https://raw.githubusercontent.com https://*.googleusercontent.com",
   // Firebase talks to Google's APIs for sign-in and for saving progress.
-  "connect-src 'self' https://pokeapi.co https://*.googleapis.com",
-  'frame-src https://accounts.google.com https://*.firebaseapp.com',
+  "connect-src 'self' https://pokeapi.co https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com",
+  // The sign-in window lives on this project's own Firebase address, not on any other project's.
+  `frame-src https://accounts.google.com https://${firebaseConfig.authDomain}`,
   "font-src 'self'",
   "manifest-src 'self'",
   "object-src 'none'",

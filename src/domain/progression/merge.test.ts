@@ -143,9 +143,9 @@ describe('mergeProgress', () => {
     expect(merged.b).toEqual({ unlockedAt: T1, seen: false });
   });
 
-  it('keeps the earliest player and this device settings', () => {
-    const local = { ...empty(T2, 'new'), settings: { difficulty: 'hard' as const } };
-    const remote = { ...empty(T1, 'old'), settings: { difficulty: 'easy' as const } };
+  it('keeps the earliest player, and takes settings from the cloud copy', () => {
+    const local = { ...empty(T2, 'new'), settings: { difficulty: 'normal' as const } };
+    const remote = { ...empty(T1, 'old'), settings: { difficulty: 'hard' as const } };
     const merged = mergeProgress(local, remote);
     expect(merged.player).toEqual({ id: 'old', createdAt: T1 });
     expect(merged.settings.difficulty).toBe('hard');

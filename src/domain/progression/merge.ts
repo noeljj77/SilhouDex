@@ -29,7 +29,8 @@ function mergeAchievement(a: AchievementState, b: AchievementState): Achievement
  *  - A daily date keeps the result that was finished first (days stay locked).
  *  - Practice games are joined by game id, newest {@link PRACTICE_RESULTS_CAP} kept.
  *  - Discoveries and achievements keep the earliest dates and the highest counts.
- *  - Settings and the unfinished games come from `local`, the device being used.
+ *  - Settings come from the cloud copy, so a new device picks up the player's saved choices
+ *    instead of overwriting them with its defaults. Unfinished games come from `local`.
  * Merging the same data twice gives the same result.
  */
 export function mergeProgress(local: ProgressData, remote: ProgressData): ProgressData {
@@ -65,7 +66,7 @@ export function mergeProgress(local: ProgressData, remote: ProgressData): Progre
   const merged: ProgressData = {
     schemaVersion: local.schemaVersion,
     player,
-    settings: local.settings,
+    settings: remote.settings,
     daily: { results: dailyResults },
     practice: { results: practiceResults },
     discoveries,

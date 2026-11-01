@@ -25,7 +25,10 @@ Until the settings below are filled in, the site works exactly as before (progre
 1. **Project settings (gear icon) → Your apps → Web (`</>`).** Name it `SilhouDex` and register it. Skip "Firebase Hosting".
 2. Copy the `firebaseConfig` values (`apiKey`, `authDomain`, `projectId`, `appId`) into [`src/cloud/firebaseConfig.ts`](../src/cloud/firebaseConfig.ts).
 
-These are public identifiers, not secrets. What protects the data is the sign-in plus the rules in step 3, so committing them is safe. Optionally, in the Google Cloud console, restrict the API key to your website address (`https://noeljj77.github.io/*`).
+These are public identifiers, not secrets. What protects the data is the sign-in plus the rules in step 3, so committing them is safe. Restrict the API key to your website, so it can't be used from anywhere else. In the Google Cloud console, open **APIs & Services → Credentials**, click **Browser key (auto created by Firebase)**, and:
+
+- Under **Application restrictions**, choose **Websites** and add `https://noeljj77.github.io/*`, `https://silhoudex.firebaseapp.com/*`, `https://silhoudex.web.app/*` and, for testing on your computer, `http://localhost:5173/*`. The `firebaseapp.com` address is required: Google's sign-in window runs there.
+- Under **API restrictions**, choose **Restrict key** and tick only **Identity Toolkit API**, **Token Service API** and **Cloud Firestore API**.
 
 ## 5. Publish
 
@@ -36,7 +39,9 @@ Commit and push. GitHub Pages redeploys, and a **Sign in** button appears in the
 - Signed out, nothing leaves the device.
 - On sign-in, the saved copy is merged with this device's progress, so nothing is lost on either side. A finished daily game stays locked; the earliest result for a day wins.
 - After that, every change is saved a couple of seconds later. Coming back to the tab after a while pulls any progress made on another device.
-- Signing out keeps the progress on that device.
+- Signing out keeps the progress on that device. If a different account signs in on the same device, the earlier account's progress is not carried into it: the device starts fresh and loads the new account's saved progress.
+- If the saved copy cannot be reached when someone signs in, nothing is saved over it. The app keeps trying on later changes, and merges before it saves.
+- Settings such as clue difficulty come from the account, so a new device picks up the player's choices.
 - If the saved copy is unreadable or comes from a newer version of the app, it is never overwritten, and the player is told.
 
 ## What the Firebase pieces cost

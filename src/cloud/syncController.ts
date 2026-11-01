@@ -23,7 +23,34 @@ export interface CloudController {
   dispose(): void;
 }
 
+/** Remembers which account this device's progress belongs to. */
+export interface OwnerMemory {
+  get(): string | null;
+  set(uid: string): void;
+}
+
+const OWNER_KEY = 'silhoudex:v1:cloud-owner';
+
+/** The default memory: LocalStorage, which can be blocked, so every access is guarded. */
+export const localOwnerMemory: OwnerMemory = {
+  get() {
+    try {
+      return localStorage.getItem(OWNER_KEY);
+    } catch {
+      return null;
+    }
+  },
+  set(uid) {
+    try {
+      localStorage.setItem(OWNER_KEY, uid);
+    } catch {
+      // Without it the device simply cannot tell accounts apart.
+    }
+  },
+};
+
 export interface SyncOptions {
+  owner?: OwnerMemory;
   /** How long to wait after the last change before saving, so a burst becomes one write. */
   debounceMs?: number;
   now?: () => string;
@@ -43,6 +70,7 @@ export function createSyncController(
 ): CloudController {
   const debounceMs = options.debounceMs ?? 2000;
   const now = options.now ?? (() => new Date().toISOString());
+  const owner = options.owner ?? localOwnerMemory;
 
   let state: CloudState = { status: 'signed-out', user: null, message: '', lastSyncedAt: null };
   const listeners = new Set<() => void>();
@@ -54,6 +82,13 @@ export function createSyncController(
   let uid: string | null = null;
   /** True when the cloud copy must not be overwritten (it is unreadable or from a newer version). */
   let blocked = false;
+  /**
+   * True once this sign-in's cloud copy has been merged in. Until then this device's progress must
+   * not be saved over the cloud one, which it may know nothing about.
+   */
+  let ready = false;
+  /** The account this device's progress has been claimed for during this session. */
+  let claimedFor: string | null = null;
   /** True while a cloud copy is being merged in, so that merge is not itself saved as a change. */
   let applyingRemote = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -68,27 +103,31 @@ export function createSyncController(
     set({ status: 'error', message });
   };
 
-  /** Merges the cloud copy into this device. Returns false if it must not be overwritten. */
-  async function pull(id: string): Promise<boolean> {
+  /**
+   * Merges the cloud copy into this device. 'blocked' means it must not be overwritten, and
+   * 'stale' means the player signed out or switched while it was loading, so nothing was applied.
+   */
+  async function pull(id: string): Promise<'ok' | 'blocked' | 'stale'> {
     const json = await backend.load(id);
-    if (json === null) return true;
+    if (uid !== id) return 'stale';
+    if (json === null) return 'ok';
     let parsed: unknown;
     try {
       parsed = JSON.parse(json);
     } catch {
       block('Your saved cloud progress could not be read, so it was left as it is.');
-      return false;
+      return 'blocked';
     }
     const result = migrateToCurrent(parsed, { now: now(), playerId: newId() });
     if (result.status === 'future') {
       block(
         'Your cloud progress comes from a newer version of SilhouDex. Reload the page to update.',
       );
-      return false;
+      return 'blocked';
     }
     if (result.status === 'invalid') {
       block('Your saved cloud progress could not be read, so it was left as it is.');
-      return false;
+      return 'blocked';
     }
     applyingRemote = true;
     try {
@@ -96,15 +135,33 @@ export function createSyncController(
     } finally {
       applyingRemote = false;
     }
-    return true;
+    return 'ok';
   }
 
   const push = (id: string) => backend.save(id, JSON.stringify(store.getSnapshot()));
 
+  /** Progress on a device that belonged to another account is not carried into this one. */
+  function claimDevice(id: string) {
+    if (claimedFor === id) return;
+    const previous = owner.get();
+    if (previous && previous !== id) {
+      applyingRemote = true;
+      try {
+        store.reset();
+      } finally {
+        applyingRemote = false;
+      }
+    }
+    owner.set(id);
+    claimedFor = id;
+  }
+
   async function sync(id: string) {
     set({ status: 'syncing', message: '' });
     try {
-      if (!(await pull(id))) return;
+      claimDevice(id);
+      if ((await pull(id)) !== 'ok') return;
+      ready = true;
       await push(id);
       if (uid === id) set({ status: 'synced', lastSyncedAt: now(), message: '' });
     } catch {
@@ -116,7 +173,7 @@ export function createSyncController(
     clearTimeout(timer);
     timer = undefined;
     const id = uid;
-    if (!id || blocked) return;
+    if (!id || blocked || !ready) return;
     try {
       await push(id);
       if (uid === id) set({ status: 'synced', lastSyncedAt: now(), message: '' });
@@ -128,15 +185,22 @@ export function createSyncController(
   const stopWatchingStore = store.subscribe(() => {
     if (!uid || blocked || applyingRemote) return;
     clearTimeout(timer);
-    timer = setTimeout(() => void run(flush), debounceMs);
+    timer = setTimeout(() => {
+      const id = uid;
+      if (!id) return;
+      // Before the cloud copy has been merged in, try that again instead of saving over it.
+      void run(ready ? flush : () => sync(id));
+    }, debounceMs);
   });
 
   const stopWatchingAuth = backend.onAuthChange((user) => {
     clearTimeout(timer);
     timer = undefined;
     blocked = false;
+    ready = false;
     if (!user) {
       uid = null;
+      claimedFor = null;
       set({ status: 'signed-out', user: null, message: '', lastSyncedAt: null });
       return;
     }

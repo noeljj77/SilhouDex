@@ -4,7 +4,7 @@ import { SCHEMA_VERSION, createEmptyProgress } from '../domain/progression/recor
 import type { GameSession } from '../domain/game/types.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
 import type { ProgressRepository } from '../persistence/localRepository.ts';
-import { createSyncController, type CloudController } from './syncController.ts';
+import { createSyncController, type CloudController, type OwnerMemory } from './syncController.ts';
 import type { CloudBackend, CloudUser } from './types.ts';
 
 const NOW = '2026-11-02T10:00:00.000Z';
@@ -192,5 +192,81 @@ describe('createSyncController', () => {
     expect((JSON.parse(backend.docs['u1']!) as ProgressData).settings.difficulty).toBe('hard');
     expect(controller.getState()).toMatchObject({ status: 'signed-out', user: null });
     expect(store.getSnapshot().settings.difficulty).toBe('hard');
+  });
+
+  it('never saves over the cloud copy after a failed first load, and retries instead', async () => {
+    const cloud = createProgressStore(memoryRepo(createEmptyProgress(NOW, 'p2')), {
+      catalogue: [],
+      now: () => NOW,
+    });
+    finishedDaily(cloud, '2026-11-03', 4);
+    const backend = fakeBackend({ u1: JSON.stringify(cloud.getSnapshot()) });
+    backend.failLoad = true;
+    controller = createSyncController(store, backend, { debounceMs: 2000, now: () => NOW });
+
+    await controller.signIn();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(controller.getState().status).toBe('error');
+
+    // Playing on while the cloud is unreachable must not overwrite what is saved there.
+    store.setDifficulty('hard');
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(backend.save).not.toHaveBeenCalled();
+
+    // Once it is reachable again, the next change merges first and saves second.
+    backend.failLoad = false;
+    store.setDifficulty('easy');
+    await vi.advanceTimersByTimeAsync(2000);
+    const saved = JSON.parse(backend.docs['u1']!) as ProgressData;
+    expect(Object.keys(saved.daily.results)).toEqual(['2026-11-03']);
+    expect(controller.getState().status).toBe('synced');
+  });
+
+  it("does not carry another account's progress into the account that signs in", async () => {
+    const owner: OwnerMemory = { get: () => 'someone-else', set: vi.fn() };
+    const backend = fakeBackend();
+    controller = createSyncController(store, backend, { owner, now: () => NOW });
+    finishedDaily(store, '2026-11-02');
+
+    await controller.signIn();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(store.getSnapshot().daily.results).toEqual({});
+    expect((JSON.parse(backend.docs['u1']!) as ProgressData).daily.results).toEqual({});
+    expect(owner.set).toHaveBeenCalledWith('u1');
+  });
+
+  it('merges this device into the account it already belongs to', async () => {
+    const owner: OwnerMemory = { get: () => 'u1', set: vi.fn() };
+    const backend = fakeBackend();
+    controller = createSyncController(store, backend, { owner, now: () => NOW });
+    finishedDaily(store, '2026-11-02');
+
+    await controller.signIn();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(Object.keys((JSON.parse(backend.docs['u1']!) as ProgressData).daily.results)).toEqual([
+      '2026-11-02',
+    ]);
+  });
+
+  it('ignores a cloud copy that arrives after the player has signed out', async () => {
+    const cloud = createProgressStore(memoryRepo(createEmptyProgress(NOW, 'p2')), {
+      catalogue: [],
+      now: () => NOW,
+    });
+    finishedDaily(cloud, '2026-11-03', 4);
+    const backend = fakeBackend();
+    let arrive: (json: string) => void = () => {};
+    backend.load.mockImplementationOnce(() => new Promise<string>((resolve) => (arrive = resolve)));
+    controller = createSyncController(store, backend, { now: () => NOW });
+
+    await controller.signIn();
+    await controller.signOut();
+    arrive(JSON.stringify(cloud.getSnapshot()));
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(store.getSnapshot().daily.results).toEqual({});
+    expect(controller.getState().status).toBe('signed-out');
   });
 });

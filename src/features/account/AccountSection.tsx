@@ -78,7 +78,8 @@ export function AccountSection() {
         </button>
       </div>
       <p className="text-xs text-ink-soft">
-        Signing out keeps your progress on this device. Sign back in on any device to carry on.
+        Signing out keeps your progress on this device until a different account signs in here. Sign
+        back in on any device to carry on.
       </p>
     </section>
   );

@@ -5,9 +5,14 @@ import type { DifficultyLevel } from '../domain/clues/difficulty.ts';
 import { toGameResult } from '../domain/game/engine.ts';
 import type { GameMode, GameResult, GameSession } from '../domain/game/types.ts';
 import { mergeProgress } from '../domain/progression/merge.ts';
-import { recordGameEnd, setActiveSession } from '../domain/progression/record.ts';
+import {
+  createEmptyProgress,
+  recordGameEnd,
+  setActiveSession,
+} from '../domain/progression/record.ts';
 import type { PokemonIndexEntry } from '../domain/pokemon/types.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
+import { newId } from '../lib/id.ts';
 import type { ProgressRepository, StorageMode } from '../persistence/localRepository.ts';
 
 export interface FinishOutcome {
@@ -35,6 +40,8 @@ export interface ProgressStore {
   markAchievementsSeen(ids: readonly string[]): void;
   /** Folds in progress saved elsewhere (the cloud) without losing anything from this device. */
   mergeRemote(remote: ProgressData): void;
+  /** Empties this device's progress, for when a different person signs in. */
+  reset(): void;
 }
 
 export interface ProgressStoreOptions {
@@ -97,6 +104,7 @@ export function createProgressStore(
       };
     },
     markAchievementsSeen: (ids) => commit(markSeen(state, ids)),
+    reset: () => commit(createEmptyProgress(now(), newId())),
     mergeRemote(remote) {
       const merged = mergeProgress(state, remote);
       // Combining two histories can complete achievements neither one had alone; those start seen.
