@@ -4,24 +4,26 @@ _Last updated: 1 November 2026 (site is live)._ Daily Pokémon silhouette guessi
 
 ## Where we are in one line
 
-All ten milestones are built and the game is feature-complete. The Sora font, MIT licence and layout check are done and committed. **The site is live at https://noeljj77.github.io/SilhouDex/** and Challenge #1 (1 November 2026) is running. What remains is a real-phone test and the optional final review pass.
+All ten milestones are built and the game is feature-complete. The Sora font, MIT licence and layout check are done and committed. **The site is live at https://noeljj77.github.io/SilhouDex/** and Challenge #1 (1 November 2026) is running. The Pokédex-device redesign, the new guessing screen and the README GIF are done. Google sign-in is built but switched off until you create the Firebase project and give me its settings.
 
 ## What we have accomplished
 
-| Milestone            | What it added                                                                                                                                                                    | Commit    |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| M0 Scaffold          | Vite, React 19, TypeScript, Tailwind, Vitest, lint and formatting                                                                                                                | `1fb29f5` |
-| M1 Data layer        | Bundled index of all 1,025 Pokémon, PokéAPI client with retries and cache, name matching                                                                                         | `d57903e` |
-| M2 Game engines      | Scoring rules, UTC daily schedule with a pinned Pokémon order, clue engine (22 clue types, name-leak safe)                                                                       | `792dd15` |
-| M3 Silhouette reveal | Artwork turned into a black silhouette on a canvas (first version used tiles)                                                                                                    | `f2fe61f` |
-| M4 Daily game        | Playable Daily screen, saved progress that survives refresh, locked finished days, navigation                                                                                    | `ac6a887` |
-| M5 Practice          | Unlimited random games, difficulty picker, never touches daily stats, never picks today's answer                                                                                 | `aa18f99` |
-| M6 Profile           | Streaks, monthly calendar, win-rate and guess-distribution statistics                                                                                                            | `bbf5c3f` |
-| M7 Pokédex           | All 1,025 Pokémon, silhouettes for the undiscovered, filters, search, sorting, details                                                                                           | `b572188` |
-| M8 Achievements      | 15 data-driven achievements, progress bars, unlock pop-ups                                                                                                                       | `e341e4d` |
-| Reveal redo          | Replaced tiles and the grid with a smooth clockwise fog dissolve and sparkles (you chose A + D)                                                                                  | `53e3227` |
-| M9 Sharing           | Copy result, PNG result card, phone share sheet, spoiler-free by default; next-day countdown in the Daily header                                                                 | `1654c95` |
-| M10 launch work      | Accessibility fixes, error screen, offline notice, footer disclaimer, lazy-loaded pages, security policy, icons and social image, GitHub Pages workflow, README with screenshots | `e50afdb` |
+| Milestone            | What it added                                                                                                                                                                                | Commit    |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| M0 Scaffold          | Vite, React 19, TypeScript, Tailwind, Vitest, lint and formatting                                                                                                                            | `1fb29f5` |
+| M1 Data layer        | Bundled index of all 1,025 Pokémon, PokéAPI client with retries and cache, name matching                                                                                                     | `d57903e` |
+| M2 Game engines      | Scoring rules, UTC daily schedule with a pinned Pokémon order, clue engine (22 clue types, name-leak safe)                                                                                   | `792dd15` |
+| M3 Silhouette reveal | Artwork turned into a black silhouette on a canvas (first version used tiles)                                                                                                                | `f2fe61f` |
+| M4 Daily game        | Playable Daily screen, saved progress that survives refresh, locked finished days, navigation                                                                                                | `ac6a887` |
+| M5 Practice          | Unlimited random games, difficulty picker, never touches daily stats, never picks today's answer                                                                                             | `aa18f99` |
+| M6 Profile           | Streaks, monthly calendar, win-rate and guess-distribution statistics                                                                                                                        | `bbf5c3f` |
+| M7 Pokédex           | All 1,025 Pokémon, silhouettes for the undiscovered, filters, search, sorting, details                                                                                                       | `b572188` |
+| M8 Achievements      | 15 data-driven achievements, progress bars, unlock pop-ups                                                                                                                                   | `e341e4d` |
+| Reveal redo          | Replaced tiles and the grid with a smooth clockwise fog dissolve and sparkles (you chose A + D)                                                                                              | `53e3227` |
+| M9 Sharing           | Copy result, PNG result card, phone share sheet, spoiler-free by default; next-day countdown in the Daily header                                                                             | `1654c95` |
+| M10 launch work      | Accessibility fixes, error screen, offline notice, footer disclaimer, lazy-loaded pages, security policy, icons and social image, GitHub Pages workflow, README with screenshots             | `e50afdb` |
+| Redesign             | Pokédex-device look: red shell with lens and lights, "Who's that Pokémon?" sunburst screen, HP-style score bar, LCD clue cards, type-coloured badges, new icons, social image and share card | `748d50f` |
+| Google sign-in       | Optional sign-in with Firebase (Auth + Firestore, free plan, site stays on GitHub Pages); merges cloud and device progress; hidden until configured                                          | `9fbfe23` |
 
 Decisions you made along the way: any finished daily (win, loss or give-up) keeps the streak; "No Looking Back" means 5 games in a row without giving up; hosting on GitHub Pages; reveal style A + D with sparkles; Sora font; MIT licence.
 
@@ -40,11 +42,13 @@ Decisions you made along the way: any finished daily (win, loss or give-up) keep
 
 **For you (I can't do these):**
 
-1. **Try it on a real phone**: the share sheet and card download can only be fully tested on a device.
+1. **Set up Firebase for Google sign-in** (about 10 minutes, free): follow `docs/firebase-setup.md`, then send me the four `firebaseConfig` values (they are public, not secrets) and I will fill in `src/cloud/firebaseConfig.ts`, push, and check it.
+2. **Try it on a real phone**: the share sheet, card download and Google sign-in can only be fully tested on a device.
 
 **For me:**
 
-1. Optional: a final code-review, simplify and security-review pass.
+1. Once you send the Firebase settings: fill in the config, deploy, and test sign-in and cloud saving end to end on the live site.
+2. Optional: a final code-review, simplify and security-review pass.
 
 ## After launch (V2, not started)
 
@@ -53,8 +57,8 @@ Backend and accounts, global leaderboard, progress that follows you between devi
 ## Known limits
 
 - **Frontend only:** a determined player can find the answer by inspecting the app's data. A backend (V2) is the only real fix.
-- **Progress is per browser** (LocalStorage), so it does not follow you between devices.
-- **Not tested on a real phone yet:** the share sheet and downloading the card.
+- **Progress is per browser** until the player signs in with Google (needs the Firebase setup above).
+- **Not tested on a real phone yet:** the share sheet, downloading the card, and Google sign-in (which cannot be tested at all until Firebase is set up).
 - **Regional and alternate forms** count as their base Pokémon.
 
 ## Handy reference

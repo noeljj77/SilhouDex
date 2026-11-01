@@ -8,7 +8,7 @@ SilhouDex is a daily Pokémon mystery guessing game. A partly hidden silhouette 
 
 **Play it:** https://noeljj77.github.io/SilhouDex/
 
-![The Daily game after two wrong guesses](docs/screenshots/daily.png)
+<p align="center"><img src="docs/demo.gif" alt="Playing the Daily game: two wrong guesses unlock clues and lift the fog, then the right answer reveals the Pokémon in colour" width="880" /></p>
 
 ## Features
 
