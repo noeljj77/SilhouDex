@@ -1,3 +1,4 @@
+import { AccountSection } from '../features/account/AccountSection.tsx';
 import { BookOpen, CalendarCheck, Flame, Medal, Percent, Target, Trophy } from 'lucide-react';
 import { useMemo } from 'react';
 import { useProgress, useProgressStore } from '../app/progressStore.ts';
@@ -54,6 +55,8 @@ export function ProfilePage() {
         <h1 className="font-display text-4xl text-ink">Profile</h1>
         {sinceText && <p className="text-sm text-ink-soft">Playing since {sinceText}</p>}
       </header>
+
+      <AccountSection />
 
       {store.storageMode !== 'persistent' && (
         <p

@@ -10,13 +10,17 @@ import tailwindcss from '@tailwindcss/vite';
  */
 export const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
-  "script-src 'self'",
+  // Google's sign-in script (Firebase Auth opens its sign-in window with it).
+  "script-src 'self' https://apis.google.com",
   // React and Motion set styles through the DOM, and some pieces carry inline style attributes.
   "style-src 'self' 'unsafe-inline'",
   // Pokémon artwork and sprites come from PokéAPI's image repository; blob: and data: are the
   // silhouettes and result cards the app draws itself.
-  "img-src 'self' data: blob: https://raw.githubusercontent.com",
-  "connect-src 'self' https://pokeapi.co",
+  // Google profile pictures come from googleusercontent.com.
+  "img-src 'self' data: blob: https://raw.githubusercontent.com https://*.googleusercontent.com",
+  // Firebase talks to Google's APIs for sign-in and for saving progress.
+  "connect-src 'self' https://pokeapi.co https://*.googleapis.com",
+  'frame-src https://accounts.google.com https://*.firebaseapp.com',
   "font-src 'self'",
   "manifest-src 'self'",
   "object-src 'none'",

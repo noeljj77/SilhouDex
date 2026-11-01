@@ -97,9 +97,13 @@ One-time setup: in the repository, go to **Settings → Pages** and set **Source
 
 ## Known limits (V1)
 
-- **Frontend only.** There is no server, so a determined player could find the answer by inspecting the app's data. Global leaderboards, accounts and sign-in are planned for V2.
-- **Progress is per browser.** It lives in that browser's storage, so it doesn't follow you between devices.
+- **No game server.** The answers are in the app's data, so a determined player could find them by inspecting it. Global leaderboards are planned for V2.
+- **Progress is per browser until you sign in.** It lives in that browser's storage. Signing in with Google (once the Firebase project in [docs/firebase-setup.md](docs/firebase-setup.md) is set up) saves it to your account so it follows you between devices.
 - **Forms.** Regional and alternate forms count as their base Pokémon.
+
+## Google sign-in
+
+Optional sign-in with Google saves progress to the player's account, using Firebase Auth and Firestore on the free plan. The site stays on GitHub Pages. Until the Firebase settings in `src/cloud/firebaseConfig.ts` are filled in, the site runs on-device only and shows no sign-in button. Setup steps and the security rules are in [docs/firebase-setup.md](docs/firebase-setup.md).
 
 ## Licence
 

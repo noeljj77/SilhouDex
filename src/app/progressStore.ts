@@ -4,6 +4,7 @@ import { markSeen, unlockAchievements } from '../domain/achievements/evaluator.t
 import type { DifficultyLevel } from '../domain/clues/difficulty.ts';
 import { toGameResult } from '../domain/game/engine.ts';
 import type { GameMode, GameResult, GameSession } from '../domain/game/types.ts';
+import { mergeProgress } from '../domain/progression/merge.ts';
 import { recordGameEnd, setActiveSession } from '../domain/progression/record.ts';
 import type { PokemonIndexEntry } from '../domain/pokemon/types.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
@@ -32,6 +33,8 @@ export interface ProgressStore {
   setDifficulty(difficulty: DifficultyLevel): void;
   /** Records that the player has been shown these unlocked achievements. */
   markAchievementsSeen(ids: readonly string[]): void;
+  /** Folds in progress saved elsewhere (the cloud) without losing anything from this device. */
+  mergeRemote(remote: ProgressData): void;
 }
 
 export interface ProgressStoreOptions {
@@ -94,6 +97,11 @@ export function createProgressStore(
       };
     },
     markAchievementsSeen: (ids) => commit(markSeen(state, ids)),
+    mergeRemote(remote) {
+      const merged = mergeProgress(state, remote);
+      // Combining two histories can complete achievements neither one had alone; those start seen.
+      commit(unlockAchievements(merged, catalogue, now(), true).data);
+    },
     setDifficulty: (difficulty) => {
       if (state.settings.difficulty === difficulty) return;
       commit({ ...state, settings: { ...state.settings, difficulty } });

@@ -8,6 +8,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { AccountButton } from '../features/account/AccountButton.tsx';
 import { ErrorBoundary } from './ErrorBoundary.tsx';
 import { hrefFor, type RouteId } from './router.ts';
 import { useOnline } from './useOnline.ts';
@@ -57,29 +58,32 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
               </span>
             </span>
           </a>
-          <nav
-            aria-label="Main"
-            className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t-[3px] border-ink bg-panel pb-[env(safe-area-inset-bottom)] md:static md:z-auto md:gap-1.5 md:border-0 md:bg-transparent md:pb-0"
-          >
-            {NAV.map(({ route: target, label, icon: Icon }) => {
-              const active = route === target;
-              return (
-                <a
-                  key={target}
-                  href={hrefFor(target)}
-                  aria-current={active ? 'page' : undefined}
-                  className={`group flex min-h-16 flex-1 flex-col items-center justify-center gap-1 px-2 text-xs font-semibold transition md:min-h-10 md:flex-none md:flex-row md:gap-2 md:rounded-full md:border-2 md:px-4 md:text-sm ${active ? 'text-dex md:border-ink md:bg-volt md:text-ink md:shadow-[0_2px_0_var(--color-ink)]' : 'text-ink-soft hover:text-ink md:border-transparent md:text-white md:hover:bg-white/15 md:hover:text-white'}`}
-                >
-                  <span
-                    className={`grid h-7 w-12 place-items-center rounded-full transition md:h-auto md:w-auto ${active ? 'bg-dex/12 md:bg-transparent' : ''}`}
+          <div className="flex items-center gap-2">
+            <nav
+              aria-label="Main"
+              className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t-[3px] border-ink bg-panel pb-[env(safe-area-inset-bottom)] md:static md:z-auto md:gap-1.5 md:border-0 md:bg-transparent md:pb-0"
+            >
+              {NAV.map(({ route: target, label, icon: Icon }) => {
+                const active = route === target;
+                return (
+                  <a
+                    key={target}
+                    href={hrefFor(target)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`group flex min-h-16 flex-1 flex-col items-center justify-center gap-1 px-2 text-xs font-semibold transition md:min-h-10 md:flex-none md:flex-row md:gap-2 md:rounded-full md:border-2 md:px-4 md:text-sm ${active ? 'text-dex md:border-ink md:bg-volt md:text-ink md:shadow-[0_2px_0_var(--color-ink)]' : 'text-ink-soft hover:text-ink md:border-transparent md:text-white md:hover:bg-white/15 md:hover:text-white'}`}
                   >
-                    <Icon size={20} aria-hidden />
-                  </span>
-                  {label}
-                </a>
-              );
-            })}
-          </nav>
+                    <span
+                      className={`grid h-7 w-12 place-items-center rounded-full transition md:h-auto md:w-auto ${active ? 'bg-dex/12 md:bg-transparent' : ''}`}
+                    >
+                      <Icon size={20} aria-hidden />
+                    </span>
+                    {label}
+                  </a>
+                );
+              })}
+            </nav>
+            <AccountButton />
+          </div>
         </header>
       </div>
 

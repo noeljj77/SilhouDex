@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { AchievementToaster } from '../features/achievements/AchievementToaster.tsx';
 import { DailyPage } from '../pages/DailyPage.tsx';
 import { PokeBall } from '../components/PokeBall.tsx';
+import { CloudProvider } from '../cloud/CloudProvider.tsx';
 import { AppShell } from './AppShell.tsx';
 import { ProgressProvider } from './ProgressProvider.tsx';
 import { useRoute, type RouteId } from './router.ts';
@@ -60,12 +61,14 @@ export function App() {
   const route = useRoute();
   return (
     <ProgressProvider>
-      <AchievementToaster />
-      <AppShell route={route}>
-        <Suspense fallback={<PageLoading />}>
-          <Page route={route} />
-        </Suspense>
-      </AppShell>
+      <CloudProvider>
+        <AchievementToaster />
+        <AppShell route={route}>
+          <Suspense fallback={<PageLoading />}>
+            <Page route={route} />
+          </Suspense>
+        </AppShell>
+      </CloudProvider>
     </ProgressProvider>
   );
 }
