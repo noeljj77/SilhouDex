@@ -20,7 +20,10 @@ export function AccountButton() {
         className="dex-btn !min-h-10 !gap-2 !px-3 !text-sm"
       >
         <GoogleIcon />
-        <span>{state.status === 'signing-in' ? 'Signing in…' : 'Sign in'}</span>
+        {/* Icon only on the narrowest phones, where the header has no room for the word. */}
+        <span className="hidden min-[360px]:inline">
+          {state.status === 'signing-in' ? 'Signing in…' : 'Sign in'}
+        </span>
       </button>
     );
   }

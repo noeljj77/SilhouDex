@@ -62,7 +62,7 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
           <div className="flex items-center gap-2">
             <nav
               aria-label="Main"
-              className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t-[3px] border-ink bg-panel pb-[env(safe-area-inset-bottom)] md:static md:z-auto md:gap-1.5 md:border-0 md:bg-transparent md:pb-0"
+              className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t-[3px] border-ink bg-panel pb-[env(safe-area-inset-bottom)] lg:static lg:z-auto lg:gap-1.5 lg:border-0 lg:bg-transparent lg:pb-0"
             >
               {NAV.map(({ route: target, label, icon: Icon }) => {
                 const active = route === target;
@@ -71,10 +71,10 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
                     key={target}
                     href={hrefFor(target)}
                     aria-current={active ? 'page' : undefined}
-                    className={`group flex min-h-16 flex-1 flex-col items-center justify-center gap-1 px-2 text-xs font-semibold transition md:min-h-10 md:flex-none md:flex-row md:gap-2 md:rounded-full md:border-2 md:px-4 md:text-sm ${active ? 'text-dex md:border-ink md:bg-volt md:text-ink md:shadow-[0_2px_0_var(--color-ink)]' : 'text-ink-soft hover:text-ink md:border-transparent md:text-white md:hover:bg-white/15 md:hover:text-white'}`}
+                    className={`group flex min-h-16 flex-1 flex-col items-center justify-center gap-1 px-1 text-xs font-semibold transition lg:min-h-10 lg:flex-none lg:flex-row lg:gap-2 lg:rounded-full lg:border-2 lg:px-4 lg:text-sm ${active ? 'text-dex lg:border-ink lg:bg-volt lg:text-ink lg:shadow-[0_2px_0_var(--color-ink)]' : 'text-ink-soft hover:text-ink lg:border-transparent lg:text-white lg:hover:bg-white/15 lg:hover:text-white'}`}
                   >
                     <span
-                      className={`grid h-7 w-12 place-items-center rounded-full transition md:h-auto md:w-auto ${active ? 'bg-dex/12 md:bg-transparent' : ''}`}
+                      className={`grid h-7 w-12 place-items-center rounded-full transition lg:h-auto lg:w-auto ${active ? 'bg-dex/12 lg:bg-transparent' : ''}`}
                     >
                       <Icon size={20} aria-hidden />
                     </span>
@@ -105,7 +105,7 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
         <ErrorBoundary key={route}>{children}</ErrorBoundary>
       </div>
 
-      <footer className="mx-auto w-full max-w-5xl px-4 pb-28 pt-10 text-xs leading-relaxed text-ink-soft md:pb-8">
+      <footer className="mx-auto w-full max-w-5xl px-4 pb-28 pt-10 text-xs leading-relaxed text-ink-soft lg:pb-8">
         <p>
           SilhouDex is an unofficial fan project, not affiliated with Nintendo, Game Freak,
           Creatures Inc. or The Pokémon Company. Pokémon and their names and artwork belong to their
