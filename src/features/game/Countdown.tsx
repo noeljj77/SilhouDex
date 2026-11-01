@@ -10,7 +10,12 @@ export function Countdown({ className }: { className?: string }) {
     return () => clearInterval(timer);
   }, []);
   return (
-    <time className={`tabular-nums ${className ?? ''}`} aria-label="Time until the next challenge">
+    <time
+      role="timer"
+      aria-live="off"
+      className={`tabular-nums ${className ?? ''}`}
+      aria-label="Time until the next challenge"
+    >
       {formatCountdown(ms)}
     </time>
   );

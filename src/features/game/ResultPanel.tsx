@@ -42,7 +42,7 @@ export function ResultPanel({
           {result.status === 'won' ? 'It was' : 'The answer was'}
         </p>
         <p className="text-3xl font-black text-white sm:text-4xl">
-          <span className="text-white/40">#{String(entry.id).padStart(4, '0')}</span> {entry.name}
+          <span className="text-white/55">#{String(entry.id).padStart(4, '0')}</span> {entry.name}
         </p>
         <ul className="mt-2 flex flex-wrap gap-2" aria-label="Types">
           {entry.types.map((t) => (

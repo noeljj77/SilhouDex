@@ -22,7 +22,7 @@ export function StatCard({
         {label}
       </dt>
       <dd className={`text-3xl font-black tabular-nums ${tone}`}>{value}</dd>
-      {hint && <p className="text-xs text-violet-200/60">{hint}</p>}
+      {hint && <dd className="text-xs text-violet-200/60">{hint}</dd>}
     </div>
   );
 }

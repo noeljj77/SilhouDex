@@ -52,10 +52,10 @@ export function AchievementCard({ view }: { view: AchievementView }) {
             </span>
           )}
           {unlocked && !isNew && (
-            <Check size={18} className="shrink-0 text-volt" aria-label="Unlocked" />
+            <Check size={18} className="shrink-0 text-volt" role="img" aria-label="Unlocked" />
           )}
         </div>
-        <p className={`text-sm ${status === 'locked' ? 'text-white/40' : 'text-violet-200/80'}`}>
+        <p className={`text-sm ${status === 'locked' ? 'text-white/60' : 'text-violet-200/80'}`}>
           {def.description}
         </p>
 

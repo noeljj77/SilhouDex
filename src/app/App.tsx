@@ -1,17 +1,26 @@
 import { lazy, Suspense } from 'react';
 import { AchievementToaster } from '../features/achievements/AchievementToaster.tsx';
-import { AchievementsPage } from '../pages/AchievementsPage.tsx';
 import { DailyPage } from '../pages/DailyPage.tsx';
-import { PokedexPage } from '../pages/PokedexPage.tsx';
-import { PracticePage } from '../pages/PracticePage.tsx';
-import { SilhouetteLabPage } from '../pages/SilhouetteLabPage.tsx';
 import { AppShell } from './AppShell.tsx';
 import { ProgressProvider } from './ProgressProvider.tsx';
 import { useRoute, type RouteId } from './router.ts';
 
-// Loaded on demand: it carries the charting library, which the game screens do not need.
+// The Daily game is what most visitors open first, so it loads with the app. Every other page
+// loads when it is opened, which keeps the first load small (Profile also brings the charts).
+const PracticePage = lazy(() =>
+  import('../pages/PracticePage.tsx').then((m) => ({ default: m.PracticePage })),
+);
+const PokedexPage = lazy(() =>
+  import('../pages/PokedexPage.tsx').then((m) => ({ default: m.PokedexPage })),
+);
+const AchievementsPage = lazy(() =>
+  import('../pages/AchievementsPage.tsx').then((m) => ({ default: m.AchievementsPage })),
+);
 const ProfilePage = lazy(() =>
   import('../pages/ProfilePage.tsx').then((m) => ({ default: m.ProfilePage })),
+);
+const SilhouetteLabPage = lazy(() =>
+  import('../pages/SilhouetteLabPage.tsx').then((m) => ({ default: m.SilhouetteLabPage })),
 );
 
 function Page({ route }: { route: RouteId }) {
@@ -25,14 +34,18 @@ function Page({ route }: { route: RouteId }) {
     case 'achievements':
       return <AchievementsPage />;
     case 'profile':
-      return (
-        <Suspense fallback={<p className="py-16 text-center text-violet-200/70">Loading…</p>}>
-          <ProfilePage />
-        </Suspense>
-      );
+      return <ProfilePage />;
     case 'lab':
       return <SilhouetteLabPage />;
   }
+}
+
+function PageLoading() {
+  return (
+    <p role="status" className="py-16 text-center text-violet-200/80">
+      Loading…
+    </p>
+  );
 }
 
 export function App() {
@@ -41,7 +54,9 @@ export function App() {
     <ProgressProvider>
       <AchievementToaster />
       <AppShell route={route}>
-        <Page route={route} />
+        <Suspense fallback={<PageLoading />}>
+          <Page route={route} />
+        </Suspense>
       </AppShell>
     </ProgressProvider>
   );

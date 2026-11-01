@@ -124,7 +124,7 @@ export function PokedexPage() {
         </ul>
       )}
 
-      <p className="text-xs text-violet-200/50">
+      <p className="text-xs text-violet-200/70">
         Regional and alternate forms count as their base Pokémon. Names of undiscovered Pokémon stay
         hidden, so search finds only the ones you have identified, plus any Pokémon by number.
       </p>

@@ -114,7 +114,7 @@ export function GuessInput({ disabled = false, guessedIds, onGuess }: GuessInput
             onKeyDown={onKeyDown}
             onFocus={() => setOpen(true)}
             onBlur={() => setOpen(false)}
-            className="h-12 w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-3 text-base text-white placeholder:text-white/40 focus-visible:outline-2 focus-visible:outline-cyan-glow disabled:opacity-50"
+            className="h-12 w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-3 text-base text-white placeholder:text-white/55 focus-visible:outline-2 focus-visible:outline-cyan-glow disabled:opacity-50"
           />
         </div>
         <button

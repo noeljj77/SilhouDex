@@ -75,7 +75,7 @@ function OpenClue({ clue, number }: { clue: Clue; number: number }) {
 
 function LockedClue({ number }: { number: number }) {
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-dashed border-white/15 p-3.5 text-white/45">
+    <li className="flex items-center gap-3 rounded-2xl border border-dashed border-white/15 p-3.5 text-white/60">
       <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/5">
         <Lock size={18} aria-hidden />
       </span>

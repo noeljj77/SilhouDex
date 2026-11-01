@@ -59,7 +59,7 @@ export const PokemonCard = memo(
             #{String(entry.id).padStart(4, '0')}
           </span>
           <span
-            className={`w-full truncate text-sm font-bold ${discovery ? 'text-white' : 'text-white/35'}`}
+            className={`w-full truncate text-sm font-bold ${discovery ? 'text-white' : 'text-white/55'}`}
           >
             {discovery ? entry.name : '???'}
           </span>

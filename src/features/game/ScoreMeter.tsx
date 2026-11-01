@@ -14,7 +14,11 @@ export function ScoreMeter({ view }: { view: GameView }) {
         : 'from-orange-400 to-red-500';
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4" aria-label="Score">
+    <div
+      role="group"
+      aria-label="Score"
+      className="rounded-2xl border border-white/10 bg-white/5 p-4"
+    >
       <div className="flex items-end justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-violet-200/70">Score</p>

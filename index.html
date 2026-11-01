@@ -3,16 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SilhouDex · Daily Pokémon silhouette game</title>
     <meta
       name="description"
-      content="SilhouDex — a daily Pokémon silhouette guessing game. Every shadow has a story."
+      content="SilhouDex is a daily Pokémon silhouette guessing game. Study the shadow, unlock clues and name the Pokémon. Every shadow has a story."
     />
     <meta name="theme-color" content="#0b0a1f" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>SilhouDex</title>
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SilhouDex" />
+    <meta property="og:title" content="SilhouDex · Daily Pokémon silhouette game" />
+    <meta
+      property="og:description"
+      content="Study the shadow, unlock clues and name the Pokémon. A new puzzle every day."
+    />
+    <meta property="og:url" content="https://noeljj77.github.io/SilhouDex/" />
+    <meta property="og:image" content="https://noeljj77.github.io/SilhouDex/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="SilhouDex: a mystery question mark on a purple backdrop"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="root"></div>
+    <noscript>SilhouDex needs JavaScript to run. Please turn it on and reload the page.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

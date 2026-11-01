@@ -22,10 +22,10 @@ const STATUS: Record<DayStatus, { text: string; icon?: LucideIcon; style: string
     icon: Flag,
     style: 'border-orange-400/40 bg-orange-400/15 text-orange-300',
   },
-  missed: { text: 'Missed', icon: Minus, style: 'border-white/10 bg-white/5 text-white/45' },
+  missed: { text: 'Missed', icon: Minus, style: 'border-white/10 bg-white/5 text-white/60' },
   today: { text: 'Today, not played yet', style: 'border-volt bg-volt/10 text-volt' },
-  future: { text: 'Upcoming', style: 'border-transparent text-white/25' },
-  'before-start': { text: 'Before you started', style: 'border-transparent text-white/20' },
+  future: { text: 'Upcoming', style: 'border-transparent text-white/55' },
+  'before-start': { text: 'Before you started', style: 'border-transparent text-white/55' },
 };
 
 const LEGEND: DayStatus[] = ['won', 'lost', 'gave_up', 'missed', 'today'];

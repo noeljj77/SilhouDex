@@ -52,7 +52,7 @@ export function PokedexFilterBar({
             value={filters.query}
             onChange={(e) => set('query', e.target.value)}
             autoComplete="off"
-            className="h-11 w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-3 text-white placeholder:text-white/40 focus-visible:outline-2 focus-visible:outline-cyan-glow"
+            className="h-11 w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-3 text-white placeholder:text-white/55 focus-visible:outline-2 focus-visible:outline-cyan-glow"
           />
         </div>
         <div

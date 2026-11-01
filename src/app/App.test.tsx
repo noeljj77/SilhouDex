@@ -41,13 +41,27 @@ describe('App', () => {
     expect(screen.getByText('Loading silhouette…')).toBeInTheDocument();
   });
 
-  it('switches pages when the address changes', () => {
+  it('switches pages when the address changes (pages load on demand)', async () => {
     render(<App />);
     go('#/practice');
-    expect(screen.getByRole('heading', { name: 'Practice' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Practice' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Practice' })).toHaveAttribute('aria-current', 'page');
     go('#/pokedex');
-    expect(screen.getByRole('heading', { name: 'Pokédex' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Pokédex' })).toBeInTheDocument();
+  });
+
+  it('shows a loading message while a page is on its way', () => {
+    render(<App />);
+    go('#/achievements');
+    expect(screen.getByText('Loading…')).toBeInTheDocument();
+  });
+
+  it('opens the Achievements page', async () => {
+    window.location.hash = '#/achievements';
+    render(<App />);
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Achievements' }),
+    ).toBeInTheDocument();
   });
 
   it('opens the Profile page (loaded on demand)', { timeout: 20_000 }, async () => {
@@ -66,10 +80,10 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: 'Daily' })).toHaveAttribute('aria-current', 'page');
   });
 
-  it('keeps the developer lab reachable but out of the menu', () => {
+  it('keeps the developer lab reachable but out of the menu', async () => {
     window.location.hash = '#/lab';
     render(<App />);
-    expect(screen.getByText(/Silhouette Lab/)).toBeInTheDocument();
+    expect(await screen.findByText(/Silhouette Lab/)).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: 'Main' })).not.toHaveTextContent(/lab/i);
   });
 });

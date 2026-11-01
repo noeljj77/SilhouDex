@@ -131,6 +131,7 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
           />
         )}
         <pre
+          role="group"
           aria-label="Result text"
           className="min-w-0 flex-1 whitespace-pre-wrap break-words rounded-xl bg-white/5 p-3 font-sans text-sm leading-relaxed text-white"
         >

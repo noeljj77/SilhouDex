@@ -108,7 +108,9 @@ function Picture({
 function LoadingPanel() {
   return (
     <div className="absolute inset-0 flex items-center justify-center" aria-live="polite">
-      <span className="animate-pulse text-8xl font-black text-white/25">?</span>
+      <span aria-hidden className="animate-pulse text-8xl font-black text-white/25">
+        ?
+      </span>
       <span className="sr-only">Loading silhouette…</span>
     </div>
   );
@@ -116,21 +118,23 @@ function LoadingPanel() {
 
 function ErrorPanel({ onRetry }: { onRetry?: () => void }) {
   return (
-    <div
-      className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center"
-      role="alert"
-    >
-      <p className="text-lg font-semibold text-white">The silhouette could not load.</p>
-      <p className="text-sm text-white/70">Check your connection and try again.</p>
-      {onRetry && (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="rounded-full bg-white/90 px-5 py-2 text-sm font-bold text-night-900 transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-glow"
-        >
-          Try again
-        </button>
-      )}
+    <div className="absolute inset-0 flex items-center justify-center p-6">
+      <div
+        role="alert"
+        className="flex flex-col items-center gap-3 rounded-2xl bg-night-950/85 p-5 text-center"
+      >
+        <p className="text-lg font-semibold text-white">The silhouette could not load.</p>
+        <p className="text-sm text-white/80">Check your connection and try again.</p>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="rounded-full bg-white/90 px-5 py-2 text-sm font-bold text-night-900 transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-glow"
+          >
+            Try again
+          </button>
+        )}
+      </div>
     </div>
   );
 }

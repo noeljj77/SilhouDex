@@ -150,7 +150,7 @@ export function SilhouetteLabPage() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name…"
               autoComplete="off"
-              className="h-11 rounded-xl border border-white/15 bg-white/5 px-4 text-white placeholder:text-white/40 focus-visible:outline-2 focus-visible:outline-cyan-glow"
+              className="h-11 rounded-xl border border-white/15 bg-white/5 px-4 text-white placeholder:text-white/55 focus-visible:outline-2 focus-visible:outline-cyan-glow"
             />
             {results.length > 0 && (
               <ul className="flex flex-wrap gap-2">
