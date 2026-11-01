@@ -3,11 +3,11 @@ import { daysBetween, msUntilNextUtcDay, toDateKey, type DateKey } from '../../l
 import type { SpeciesId } from '../pokemon/types.ts';
 
 /**
- * Date of Daily Challenge #1.
- * TODO: set to the real launch date. Do not change it after launch: it would renumber every
+ * Date of Daily Challenge #1: the first day of November 2026, so each calendar month holds one
+ * Pokémon per day (30 in November, 31 in December, …). Do not change it: it would renumber every
  * challenge and move every player's streak calendar.
  */
-export const LAUNCH_DATE: DateKey = '2026-10-31';
+export const LAUNCH_DATE: DateKey = '2026-11-01';
 
 /**
  * Daily pool v1: species 1..1025, shuffled once with a fixed seed.
