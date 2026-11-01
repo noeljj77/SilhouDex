@@ -12,6 +12,13 @@ export const CARD_HEIGHT = 1350;
 export const CARD_FONT_FAMILY =
   "'Sora Variable', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif";
 const FONT = CARD_FONT_FAMILY;
+/** Headings use the same rounded display font as the site. */
+export const CARD_DISPLAY_FONT_FAMILY =
+  "'Fredoka Variable', 'Sora Variable', system-ui, sans-serif";
+
+const INK = '#1b2236';
+const INK_SOFT = '#4a5570';
+const DEX_RED = '#d3202b';
 
 export interface CardArtwork {
   image: CanvasImageSource;
@@ -28,7 +35,7 @@ export interface CardOptions {
   url?: string | null;
 }
 
-const STATUS_COLOUR = { won: '#facc15', lost: '#f87171', gave_up: '#fb923c' } as const;
+const STATUS_COLOUR = { won: '#1f7a3a', lost: '#d3202b', gave_up: '#c2410c' } as const;
 
 function roundRect(
   ctx: CanvasRenderingContext2D,
@@ -55,8 +62,9 @@ function text(
   font: string,
   fill: string | CanvasGradient,
   align: CanvasTextAlign = 'center',
+  family: string = FONT,
 ) {
-  ctx.font = `${font} ${FONT}`;
+  ctx.font = `${font} ${family}`;
   ctx.textAlign = align;
   ctx.fillStyle = fill;
   ctx.fillText(value, x, y);
@@ -76,47 +84,109 @@ export function drawShareCard(
   const showAnswer = options.spoilers;
   const mid = W / 2;
 
-  // Backdrop
-  const bg = ctx.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#0b0a1f');
-  bg.addColorStop(0.55, '#14123a');
-  bg.addColorStop(1, '#07061a');
-  ctx.fillStyle = bg;
+  // Shell: the red top of the Pokédex, then a paper panel for the result.
+  ctx.fillStyle = DEX_RED;
   ctx.fillRect(0, 0, W, H);
-  const glow = ctx.createRadialGradient(mid, 420, 20, mid, 420, 640);
-  glow.addColorStop(0, 'rgba(139,92,246,0.45)');
-  glow.addColorStop(1, 'rgba(139,92,246,0)');
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#9d1119';
+  ctx.fillRect(0, 226, W, 14);
+  roundRect(ctx, 0, 240, W, H - 240 + 60, 60);
+  ctx.fillStyle = '#e9eef6';
+  ctx.fill();
+
+  // Lens and status lights
+  const lens = ctx.createRadialGradient(124, 104, 6, 134, 118, 62);
+  lens.addColorStop(0, '#bfe6ff');
+  lens.addColorStop(0.45, '#2f9bff');
+  lens.addColorStop(1, '#0f4fa8');
+  ctx.beginPath();
+  ctx.arc(134, 120, 62, 0, Math.PI * 2);
+  ctx.fillStyle = lens;
+  ctx.fill();
+  ctx.lineWidth = 8;
+  ctx.strokeStyle = '#ffffff';
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(134, 120, 70, 0, Math.PI * 2);
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = INK;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(112, 96, 14, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.fill();
+  ['#ff6b6b', '#ffcb05', '#5be08a'].forEach((colour, i) => {
+    ctx.beginPath();
+    ctx.arc(240 + i * 34, 70, 11, 0, Math.PI * 2);
+    ctx.fillStyle = colour;
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = INK;
+    ctx.stroke();
+  });
 
   // Branding
-  const brand = ctx.createLinearGradient(mid - 230, 0, mid + 230, 0);
-  brand.addColorStop(0, '#8b5cf6');
-  brand.addColorStop(1, '#22d3ee');
-  text(ctx, 'SilhouDex', mid, 138, '800 86px', brand);
-  text(ctx, 'Every shadow has a story.', mid, 188, '500 30px', 'rgba(196,181,253,0.85)');
-  text(ctx, `Daily Silhouette · #${data.challengeNumber}`, mid, 256, '700 36px', '#22d3ee');
+  ctx.save();
+  ctx.shadowColor = '#9d1119';
+  ctx.shadowOffsetY = 6;
+  text(ctx, 'SilhouDex', 226, 168, '700 92px', '#ffffff', 'left', CARD_DISPLAY_FONT_FAMILY);
+  ctx.restore();
+  text(ctx, 'Every shadow has a story.', 230, 208, '500 28px', 'rgba(255,255,255,0.92)', 'left');
+  text(
+    ctx,
+    `Daily Silhouette · #${data.challengeNumber}`,
+    W - 70,
+    80,
+    '700 34px',
+    '#ffffff',
+    'right',
+  );
 
-  // Picture panel
+  // Picture panel: a dark bezel around the sunburst screen
   const size = 560;
   const px = (W - size) / 2;
-  const py = 290;
-  const panel = ctx.createRadialGradient(
+  const py = 306;
+  roundRect(ctx, px - 26, py - 26, size + 52, size + 52, 64);
+  ctx.fillStyle = '#0d1a2b';
+  ctx.fill();
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = INK;
+  ctx.stroke();
+
+  const screen = ctx.createRadialGradient(
     mid,
-    py + size * 0.38,
+    py + size * 0.45,
     10,
     mid,
     py + size * 0.5,
-    size * 0.8,
+    size * 0.75,
   );
-  panel.addColorStop(0, '#b9a4ff');
-  panel.addColorStop(0.45, '#7c4ddb');
-  panel.addColorStop(1, '#2a1b6e');
-  roundRect(ctx, px, py, size, size, 48);
-  ctx.fillStyle = panel;
-  ctx.fill();
-  ctx.lineWidth = 3;
-  ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+  screen.addColorStop(0, '#9be0ff');
+  screen.addColorStop(0.55, '#3fa9ff');
+  screen.addColorStop(1, '#1767d1');
+  ctx.save();
+  roundRect(ctx, px, py, size, size, 44);
+  ctx.clip();
+  ctx.fillStyle = screen;
+  ctx.fillRect(px, py, size, size);
+  // Sunburst rays
+  const cx = mid;
+  const cy = py + size * 0.5;
+  const rays = 20;
+  ctx.fillStyle = 'rgba(255,255,255,0.22)';
+  for (let i = 0; i < rays; i++) {
+    const a0 = (i / rays) * Math.PI * 2;
+    const a1 = a0 + (Math.PI * 2) / rays / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a0) * size, cy + Math.sin(a0) * size);
+    ctx.lineTo(cx + Math.cos(a1) * size, cy + Math.sin(a1) * size);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+  roundRect(ctx, px, py, size, size, 44);
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = '#000000';
   ctx.stroke();
 
   if (showAnswer && options.artwork) {
@@ -127,24 +197,34 @@ export function drawShareCard(
     const h = height * scale;
     ctx.drawImage(image, mid - w / 2, py + (size - h) / 2, w, h);
   } else if (!showAnswer) {
-    text(ctx, '?', mid, py + size / 2 + 130, '800 380px', 'rgba(255,255,255,0.3)');
+    text(
+      ctx,
+      '?',
+      mid,
+      py + size / 2 + 130,
+      '700 380px',
+      'rgba(255,255,255,0.7)',
+      'center',
+      CARD_DISPLAY_FONT_FAMILY,
+    );
   }
   const caption =
     showAnswer && options.answer ? `It was ${options.answer.name}` : 'Can you name it?';
-  text(ctx, caption, mid, py + size + 66, '700 44px', '#ffffff');
+  text(ctx, caption, mid, py + size + 78, '600 46px', INK, 'center', CARD_DISPLAY_FONT_FAMILY);
 
   // Score
   const scoreY = 1050;
-  text(ctx, String(data.score), mid - 52, scoreY, '800 124px', '#ffffff', 'right');
   text(
     ctx,
-    `/${SCORING.startScore}`,
-    mid - 40,
+    String(data.score),
+    mid - 52,
     scoreY,
-    '600 52px',
-    'rgba(196,181,253,0.8)',
-    'left',
+    '700 108px',
+    DEX_RED,
+    'right',
+    CARD_DISPLAY_FONT_FAMILY,
   );
+  text(ctx, `/${SCORING.startScore}`, mid - 40, scoreY, '600 52px', INK_SOFT, 'left');
   text(ctx, outcomeLabel(data.status), mid, scoreY + 56, '700 36px', STATUS_COLOUR[data.status]);
 
   // Stats
@@ -155,8 +235,8 @@ export function drawShareCard(
   ];
   stats.forEach((stat, i) => {
     const x = 270 + i * 270;
-    text(ctx, stat.value, x, 1184, '800 56px', '#ffffff');
-    text(ctx, stat.label, x, 1220, '500 26px', 'rgba(196,181,253,0.8)');
+    text(ctx, stat.value, x, 1184, '700 56px', INK, 'center', CARD_DISPLAY_FONT_FAMILY);
+    text(ctx, stat.label, x, 1220, '600 26px', INK_SOFT);
   });
 
   // Reveal progression: a pill per picture stage, lit for the stages the player saw
@@ -168,13 +248,10 @@ export function drawShareCard(
     const x = startX + i * (pillW + gap);
     roundRect(ctx, x, 1248, pillW, 50, 25);
     if (i < seen) {
-      const lit = ctx.createLinearGradient(x, 0, x + pillW, 0);
-      lit.addColorStop(0, '#8b5cf6');
-      lit.addColorStop(1, '#22d3ee');
-      ctx.fillStyle = lit;
+      ctx.fillStyle = DEX_RED;
       ctx.fill();
     } else {
-      ctx.fillStyle = 'rgba(255,255,255,0.07)';
+      ctx.fillStyle = '#c5cfe0';
       ctx.fill();
     }
     text(
@@ -183,18 +260,11 @@ export function drawShareCard(
       x + pillW / 2,
       1282,
       '700 24px',
-      i < seen ? '#07061a' : 'rgba(255,255,255,0.35)',
+      i < seen ? '#ffffff' : INK_SOFT,
     );
   });
 
   if (options.url) {
-    text(
-      ctx,
-      options.url.replace(/^https?:\/\//, ''),
-      mid,
-      1330,
-      '500 24px',
-      'rgba(196,181,253,0.7)',
-    );
+    text(ctx, options.url.replace(/^https?:\/\//, ''), mid, 1330, '600 24px', INK_SOFT);
   }
 }

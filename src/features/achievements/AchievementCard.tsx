@@ -29,10 +29,10 @@ export function AchievementCard({ view }: { view: AchievementView }) {
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 220, damping: 14 }}
       data-status={status}
-      className={`relative flex gap-3 rounded-2xl border p-4 ${unlocked ? 'border-volt/50 bg-gradient-to-br from-volt/15 to-violet-glow/10 shadow-[0_0_30px_-12px_rgba(250,204,21,0.7)]' : status === 'in-progress' ? 'border-cyan-glow/30 bg-white/5' : 'border-white/10 bg-night-900/50'}`}
+      className={`relative flex gap-3 rounded-2xl border-2 border-ink p-4 ${unlocked ? 'bg-[#fff4c2] shadow-[0_4px_0_var(--color-ink)]' : status === 'in-progress' ? 'bg-panel shadow-[0_4px_0_var(--color-ink)]' : 'border-dashed !border-line bg-panel/60'}`}
     >
       <span
-        className={`grid size-12 shrink-0 place-items-center rounded-xl ${unlocked ? 'bg-volt text-night-950' : status === 'in-progress' ? 'bg-cyan-glow/15 text-cyan-glow' : 'bg-white/5 text-white/30'}`}
+        className={`grid size-12 shrink-0 place-items-center rounded-xl border-2 ${unlocked ? 'border-ink bg-volt text-ink' : status === 'in-progress' ? 'border-ink bg-lens/20 text-lens-deep' : 'border-line bg-paper text-ink-soft'}`}
       >
         {status === 'locked' ? (
           <Lock size={20} aria-hidden />
@@ -43,24 +43,22 @@ export function AchievementCard({ view }: { view: AchievementView }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <h3 className={`font-bold ${status === 'locked' ? 'text-white/60' : 'text-white'}`}>
+          <h3
+            className={`font-display text-lg ${status === 'locked' ? 'text-ink-soft' : 'text-ink'}`}
+          >
             {def.title}
           </h3>
           {isNew && (
-            <span className="rounded-full bg-volt px-2 py-0.5 text-[0.65rem] font-black uppercase text-night-950">
-              New
-            </span>
+            <span className="dex-chip bg-dex !px-2 !py-0 !text-[0.7rem] !text-white">New</span>
           )}
           {unlocked && !isNew && (
-            <Check size={18} className="shrink-0 text-volt" role="img" aria-label="Unlocked" />
+            <Check size={18} className="shrink-0 text-leaf" role="img" aria-label="Unlocked" />
           )}
         </div>
-        <p className={`text-sm ${status === 'locked' ? 'text-white/60' : 'text-violet-200/80'}`}>
-          {def.description}
-        </p>
+        <p className="text-sm text-ink-soft">{def.description}</p>
 
         {unlocked ? (
-          <p className="mt-2 text-xs font-semibold text-volt">
+          <p className="mt-2 text-xs font-bold text-leaf">
             Unlocked{unlockedAt && formatDate(unlockedAt) ? ` ${formatDate(unlockedAt)}` : ''}
           </p>
         ) : (
@@ -71,14 +69,14 @@ export function AchievementCard({ view }: { view: AchievementView }) {
               aria-valuemin={0}
               aria-valuemax={def.target}
               aria-valuenow={progress}
-              className="h-2 overflow-hidden rounded-full bg-white/10"
+              className="h-2.5 overflow-hidden rounded-full border-2 border-ink bg-paper"
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-cyan-glow to-violet-glow transition-[width] duration-700"
+                className="h-full bg-lens transition-[width] duration-700"
                 style={{ width: `${percent}%` }}
               />
             </div>
-            <p className="mt-1 text-xs tabular-nums text-violet-200/60">
+            <p className="mt-1 text-xs font-semibold tabular-nums text-ink-soft">
               {progress} / {def.target} {def.unit}
             </p>
           </div>

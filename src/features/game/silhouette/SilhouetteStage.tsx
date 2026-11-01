@@ -12,6 +12,8 @@ export interface SilhouetteStageProps {
   stage: number;
   /** When true the black silhouette melts into the full-colour artwork. */
   solved?: boolean;
+  /** Shown on the device's number plate once the Pokémon is known; "???" until then. */
+  dexNumber?: number;
   onRetry?: () => void;
   className?: string;
 }
@@ -22,6 +24,7 @@ export function SilhouetteStage({
   order,
   stage,
   solved = false,
+  dexNumber,
   onRetry,
   className = '',
 }: SilhouetteStageProps) {
@@ -34,20 +37,46 @@ export function SilhouetteStage({
       : 'Mystery Pokémon silhouette';
 
   return (
+    // The device: a dark bezel with status lights around a bright "Who's that Pokémon?" screen.
     <div
-      role="img"
-      aria-label={label}
-      className={`relative aspect-square w-full overflow-hidden rounded-3xl border border-white/15 bg-[radial-gradient(circle_at_50%_38%,#b9a4ff_0%,#7c4ddb_42%,#2a1b6e_100%)] shadow-[0_0_60px_-10px_rgba(139,92,246,0.7)] ${className}`}
+      className={`rounded-[1.75rem] border-2 border-ink bg-screen p-3 shadow-[0_6px_0_var(--color-ink)] ${className}`}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_110%,rgba(34,211,238,0.35),transparent_55%)]" />
-      <Sparkles />
-      {ready ? (
-        <Picture artwork={artwork} order={order} fraction={fraction} solved={solved} />
-      ) : status === 'error' ? (
-        <ErrorPanel onRetry={onRetry} />
-      ) : (
-        <LoadingPanel />
-      )}
+      <div aria-hidden className="mb-2.5 flex items-center justify-between px-1">
+        <span className="font-display text-lg leading-none tracking-wider text-lcd">
+          No. {solved && dexNumber ? String(dexNumber).padStart(4, '0') : '???'}
+        </span>
+        <span className="flex gap-1.5 [&>i]:size-2.5 [&>i]:rounded-full [&>i]:border [&>i]:border-black/60">
+          <i className="led-blink bg-[#ff6b6b]" />
+          <i className="bg-volt" />
+          <i className="bg-lcd" />
+        </span>
+      </div>
+
+      <div
+        role="img"
+        aria-label={label}
+        className="relative aspect-square w-full overflow-hidden rounded-2xl border-2 border-black bg-[radial-gradient(circle_at_50%_45%,#9be0ff_0%,#3fa9ff_55%,#1767d1_100%)]"
+      >
+        <div className="sunburst pointer-events-none absolute -inset-[40%]" />
+        <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_50px_rgb(5_30_90/0.55)]" />
+        <Sparkles />
+        {ready ? (
+          <Picture artwork={artwork} order={order} fraction={fraction} solved={solved} />
+        ) : status === 'error' ? (
+          <ErrorPanel onRetry={onRetry} />
+        ) : (
+          <LoadingPanel />
+        )}
+      </div>
+
+      <div aria-hidden className="mt-2.5 flex items-center justify-between px-1">
+        <span className="flex gap-1.5">
+          {[0, 1, 2, 3].map((i) => (
+            <span key={i} className="h-1.5 w-7 rounded-full bg-white/15" />
+          ))}
+        </span>
+        <span className="size-3 rounded-full border-2 border-black/60 bg-dex" />
+      </div>
     </div>
   );
 }
@@ -92,7 +121,7 @@ function Picture({
             {!reduceMotion && (
               <motion.div
                 aria-hidden
-                className="pointer-events-none absolute -inset-x-1/4 inset-y-0 bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.7)_50%,transparent_60%)]"
+                className="pointer-events-none absolute -inset-x-1/4 inset-y-0 bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.8)_50%,transparent_60%)]"
                 initial={{ x: '-100%' }}
                 animate={{ x: '100%' }}
                 transition={{ duration: 1.1, ease: 'easeInOut' }}
@@ -108,7 +137,7 @@ function Picture({
 function LoadingPanel() {
   return (
     <div className="absolute inset-0 flex items-center justify-center" aria-live="polite">
-      <span aria-hidden className="animate-pulse text-8xl font-black text-white/25">
+      <span aria-hidden className="animate-pulse font-display text-8xl text-white/60">
         ?
       </span>
       <span className="sr-only">Loading silhouette…</span>
@@ -119,18 +148,11 @@ function LoadingPanel() {
 function ErrorPanel({ onRetry }: { onRetry?: () => void }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center p-6">
-      <div
-        role="alert"
-        className="flex flex-col items-center gap-3 rounded-2xl bg-night-950/85 p-5 text-center"
-      >
-        <p className="text-lg font-semibold text-white">The silhouette could not load.</p>
-        <p className="text-sm text-white/80">Check your connection and try again.</p>
+      <div role="alert" className="flex flex-col items-center gap-3 dex-card p-5 text-center">
+        <p className="font-display text-lg text-ink">The silhouette could not load.</p>
+        <p className="text-sm text-ink-soft">Check your connection and try again.</p>
         {onRetry && (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="rounded-full bg-white/90 px-5 py-2 text-sm font-bold text-night-900 transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-glow"
-          >
+          <button type="button" onClick={onRetry} className="dex-btn dex-btn-yellow">
             Try again
           </button>
         )}

@@ -16,8 +16,7 @@ const STATUS: { value: StatusFilter; label: string }[] = [
 const GENERATIONS: Generation[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 
-const selectClass =
-  'h-11 w-full rounded-xl border border-white/15 bg-night-800 px-3 text-sm font-normal normal-case tracking-normal text-white focus-visible:outline-2 focus-visible:outline-cyan-glow';
+const selectClass = 'dex-field h-11 !min-h-0 text-sm font-medium';
 
 export function PokedexFilterBar({
   filters,
@@ -43,7 +42,7 @@ export function PokedexFilterBar({
           <Search
             aria-hidden
             size={18}
-            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40"
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-soft"
           />
           <input
             type="search"
@@ -52,13 +51,13 @@ export function PokedexFilterBar({
             value={filters.query}
             onChange={(e) => set('query', e.target.value)}
             autoComplete="off"
-            className="h-11 w-full rounded-xl border border-white/15 bg-white/5 pl-10 pr-3 text-white placeholder:text-white/55 focus-visible:outline-2 focus-visible:outline-cyan-glow"
+            className="dex-field h-11 !min-h-0 !pl-10"
           />
         </div>
         <div
           role="radiogroup"
           aria-label="Show"
-          className="inline-flex w-fit rounded-xl border border-white/15 bg-white/5 p-1"
+          className="inline-flex w-fit gap-1 rounded-xl border-2 border-ink bg-panel p-1"
         >
           {STATUS.map(({ value, label }) => (
             <button
@@ -67,7 +66,7 @@ export function PokedexFilterBar({
               role="radio"
               aria-checked={filters.status === value}
               onClick={() => set('status', value)}
-              className={`min-h-9 rounded-lg px-3 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-cyan-glow ${filters.status === value ? 'bg-cyan-glow/20 text-cyan-glow' : 'text-white/70 hover:bg-white/10'}`}
+              className={`min-h-9 rounded-lg px-3 font-display text-sm transition ${filters.status === value ? 'bg-dex text-white' : 'text-ink-soft hover:bg-paper'}`}
             >
               {label}
             </button>
@@ -76,7 +75,7 @@ export function PokedexFilterBar({
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:flex md:flex-wrap md:items-end">
-        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wider text-violet-200/70">
+        <label className="flex flex-col gap-1 text-sm font-semibold text-ink-soft">
           Generation
           <select
             className={selectClass}
@@ -96,7 +95,7 @@ export function PokedexFilterBar({
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wider text-violet-200/70">
+        <label className="flex flex-col gap-1 text-sm font-semibold text-ink-soft">
           Type
           <select
             className={`${selectClass} capitalize`}
@@ -111,7 +110,7 @@ export function PokedexFilterBar({
             ))}
           </select>
         </label>
-        <label className="col-span-2 flex flex-col gap-1 sm:col-span-1 text-xs font-semibold uppercase tracking-wider text-violet-200/70">
+        <label className="col-span-2 flex flex-col gap-1 sm:col-span-1 text-sm font-semibold text-ink-soft">
           Sort
           <select
             className={selectClass}
@@ -129,7 +128,7 @@ export function PokedexFilterBar({
           <button
             type="button"
             onClick={() => onChange(DEFAULT_FILTERS)}
-            className="inline-flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-cyan-glow hover:bg-cyan-glow/10 focus-visible:outline-2 focus-visible:outline-cyan-glow"
+            className="inline-flex h-11 items-center gap-2 rounded-xl px-3 text-sm font-bold text-lens-deep hover:bg-lens/15"
           >
             <RotateCcw size={16} aria-hidden /> Reset filters
           </button>
@@ -137,7 +136,7 @@ export function PokedexFilterBar({
         <p
           role="status"
           aria-live="polite"
-          className="col-span-2 text-sm text-violet-200/70 sm:col-span-3 md:ml-auto md:self-center"
+          className="col-span-2 text-sm font-semibold text-ink-soft sm:col-span-3 md:ml-auto md:self-center"
         >
           Showing {shown} of {total}
         </p>

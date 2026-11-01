@@ -88,17 +88,18 @@ export function GameScreen({
     // box is never far below the picture. On large screens it becomes two columns.
     <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,28rem)_1fr] lg:gap-6">
       <div className="contents lg:flex lg:flex-col lg:gap-4">
-        <div className="order-1 lg:order-none">
+        <div className="order-1 mx-auto w-full max-w-lg lg:order-none lg:max-w-none">
           <SilhouetteStage
             status={status}
             artwork={artwork}
             order={order}
             stage={view.revealStage}
             solved={view.isOver}
+            dexNumber={pokemonId}
             onRetry={retry}
           />
         </div>
-        <div className="order-3 lg:order-none">
+        <div className="order-3 mx-auto w-full max-w-lg lg:order-none lg:max-w-none">
           <ScoreMeter view={view} />
         </div>
       </div>
@@ -124,7 +125,7 @@ export function GameScreen({
         <div className="order-4 flex flex-col gap-3 lg:order-none">
           <ClueList clues={clues} unlocked={view.isOver ? CLUES_PER_GAME : view.cluesUnlocked} />
           {details.status === 'ready' && clues.length === 0 && (
-            <p className="text-sm text-violet-200/70">Clues are not available for this Pokémon.</p>
+            <p className="text-sm text-ink-soft">Clues are not available for this Pokémon.</p>
           )}
         </div>
       </div>
@@ -140,7 +141,7 @@ function GiveUp({ disabled, onConfirm }: { disabled: boolean; onConfirm(): void 
         type="button"
         disabled={disabled}
         onClick={() => setConfirming(true)}
-        className="w-fit text-sm text-white/50 underline-offset-4 hover:text-white hover:underline disabled:opacity-40"
+        className="w-fit text-sm font-semibold text-ink-soft underline-offset-4 hover:text-ink hover:underline disabled:opacity-40"
       >
         Give up
       </button>
@@ -150,21 +151,21 @@ function GiveUp({ disabled, onConfirm }: { disabled: boolean; onConfirm(): void 
     <div
       role="alertdialog"
       aria-label="Confirm giving up"
-      className="flex flex-wrap items-center gap-3 rounded-xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-100"
+      className="dex-card flex flex-wrap items-center gap-3 !border-dex bg-[#fff1f1] p-3 text-sm text-ink !shadow-[0_4px_0_var(--color-dex)]"
     >
       <span>Give up? You score 0 and the answer is revealed.</span>
       <span className="flex gap-2">
         <button
           type="button"
           onClick={onConfirm}
-          className="rounded-lg bg-red-500 px-3 py-1.5 font-bold text-white hover:bg-red-400"
+          className="dex-btn dex-btn-red !min-h-9 !px-3 !text-sm"
         >
           Yes, reveal it
         </button>
         <button
           type="button"
           onClick={() => setConfirming(false)}
-          className="rounded-lg border border-white/20 px-3 py-1.5 text-white hover:bg-white/10"
+          className="dex-btn !min-h-9 !px-3 !text-sm"
         >
           Keep playing
         </button>

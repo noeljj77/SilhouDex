@@ -22,43 +22,71 @@ const NAV: { route: RouteId; label: string; icon: LucideIcon }[] = [
 
 const REPO_URL = 'https://github.com/noeljj77/SilhouDex';
 
-/** Page frame: brand and navigation (a tab bar on phones, a top bar on larger screens). */
+/** The Pokédex lens: a blue glass dome with a highlight. Decorative. */
+function Lens() {
+  return (
+    <span
+      aria-hidden
+      className="relative grid size-11 shrink-0 place-items-center rounded-full border-[3px] border-white bg-[radial-gradient(circle_at_35%_30%,#bfe6ff,#2f9bff_45%,#0f4fa8)] shadow-[0_0_0_3px_var(--color-ink),inset_0_-4px_8px_rgb(0_0_0/0.25)]"
+    >
+      <span className="absolute left-2 top-1.5 size-3 rounded-full bg-white/80 blur-[1px]" />
+    </span>
+  );
+}
+
+/** Page frame: the Pokédex's red top shell with the brand, and the navigation (a tab bar on phones). */
 export function AppShell({ route, children }: { route: RouteId; children: ReactNode }) {
   const online = useOnline();
   return (
-    <div className="flex min-h-dvh flex-col bg-[radial-gradient(ellipse_at_top,var(--color-night-800),var(--color-night-950)_70%)]">
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 pt-4 md:py-4">
-        <a
-          href={hrefFor('daily')}
-          className="bg-linear-to-r from-violet-glow to-cyan-glow bg-clip-text text-2xl font-black tracking-tight text-transparent"
-        >
-          SilhouDex
-        </a>
-        <nav
-          aria-label="Main"
-          className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t border-white/10 bg-night-900/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:static md:z-auto md:gap-1 md:border-0 md:bg-transparent md:pb-0 md:backdrop-blur-none"
-        >
-          {NAV.map(({ route: target, label, icon: Icon }) => {
-            const active = route === target;
-            return (
-              <a
-                key={target}
-                href={hrefFor(target)}
-                aria-current={active ? 'page' : undefined}
-                className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 px-2 text-xs font-semibold transition md:min-h-10 md:flex-none md:flex-row md:gap-2 md:rounded-full md:px-4 md:text-sm ${active ? 'text-cyan-glow md:bg-cyan-glow/15' : 'text-white/60 hover:text-white md:hover:bg-white/10'}`}
+    <div className="dex-backdrop flex min-h-dvh flex-col">
+      <div className="border-b-[3px] border-ink bg-dex shadow-[inset_0_-5px_0_var(--color-dex-dark)]">
+        <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3">
+          <a href={hrefFor('daily')} className="flex items-center gap-3 rounded-full">
+            <Lens />
+            <span className="flex flex-col gap-1">
+              <span
+                aria-hidden
+                className="flex gap-1.5 [&>i]:size-2 [&>i]:rounded-full [&>i]:border [&>i]:border-ink"
               >
-                <Icon size={20} aria-hidden />
-                {label}
-              </a>
-            );
-          })}
-        </nav>
-      </header>
+                <i className="led-blink bg-[#ff6b6b]" />
+                <i className="bg-volt" />
+                <i className="bg-[#5be08a]" />
+              </span>
+              <span className="font-display text-2xl leading-none text-white [text-shadow:0_2px_0_var(--color-dex-dark)]">
+                SilhouDex
+              </span>
+            </span>
+          </a>
+          <nav
+            aria-label="Main"
+            className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t-[3px] border-ink bg-panel pb-[env(safe-area-inset-bottom)] md:static md:z-auto md:gap-1.5 md:border-0 md:bg-transparent md:pb-0"
+          >
+            {NAV.map(({ route: target, label, icon: Icon }) => {
+              const active = route === target;
+              return (
+                <a
+                  key={target}
+                  href={hrefFor(target)}
+                  aria-current={active ? 'page' : undefined}
+                  className={`group flex min-h-16 flex-1 flex-col items-center justify-center gap-1 px-2 text-xs font-semibold transition md:min-h-10 md:flex-none md:flex-row md:gap-2 md:rounded-full md:border-2 md:px-4 md:text-sm ${active ? 'text-dex md:border-ink md:bg-volt md:text-ink md:shadow-[0_2px_0_var(--color-ink)]' : 'text-ink-soft hover:text-ink md:border-transparent md:text-white md:hover:bg-white/15 md:hover:text-white'}`}
+                >
+                  <span
+                    className={`grid h-7 w-12 place-items-center rounded-full transition md:h-auto md:w-auto ${active ? 'bg-dex/12 md:bg-transparent' : ''}`}
+                  >
+                    <Icon size={20} aria-hidden />
+                  </span>
+                  {label}
+                </a>
+              );
+            })}
+          </nav>
+        </header>
+      </div>
 
       {!online && (
         <p
           role="status"
-          className="mx-auto mt-2 flex w-full max-w-5xl items-center gap-2 px-4 text-sm text-volt"
+          className="mx-auto mt-3 flex w-full max-w-5xl items-center gap-2 px-4 text-sm font-semibold text-dex-dark"
         >
           <WifiOff size={16} aria-hidden className="shrink-0" />
           You&rsquo;re offline. Pokémon you&rsquo;ve already seen still work, but new ones may not
@@ -71,7 +99,7 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
         <ErrorBoundary key={route}>{children}</ErrorBoundary>
       </div>
 
-      <footer className="mx-auto w-full max-w-5xl px-4 pb-24 pt-10 text-xs leading-relaxed text-white/55 md:pb-8">
+      <footer className="mx-auto w-full max-w-5xl px-4 pb-28 pt-10 text-xs leading-relaxed text-ink-soft md:pb-8">
         <p>
           SilhouDex is an unofficial fan project, not affiliated with Nintendo, Game Freak,
           Creatures Inc. or The Pokémon Company. Pokémon and their names and artwork belong to their
@@ -80,7 +108,7 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
             href="https://pokeapi.co/"
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-white"
+            className="underline underline-offset-2 hover:text-ink"
           >
             PokéAPI
           </a>
@@ -89,7 +117,7 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
             href={REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-white"
+            className="underline underline-offset-2 hover:text-ink"
           >
             Source on GitHub
           </a>

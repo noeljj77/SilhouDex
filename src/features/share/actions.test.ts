@@ -121,6 +121,8 @@ describe('ensureCardFonts', () => {
       '600 24px "Sora Variable"',
       '700 24px "Sora Variable"',
       '800 24px "Sora Variable"',
+      '600 24px "Fredoka Variable"',
+      '700 24px "Fredoka Variable"',
     ]);
   });
 

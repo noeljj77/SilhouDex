@@ -28,22 +28,19 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
         role="alert"
         className="mx-auto flex max-w-md flex-col items-center gap-4 py-16 text-center"
       >
-        <h1 className="text-3xl font-black text-white">Something went wrong</h1>
-        <p className="text-violet-200/80">
+        <h1 className="font-display text-3xl text-ink">Something went wrong</h1>
+        <p className="text-ink-soft">
           Your progress is saved on this device. Reloading the page usually fixes this.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="rounded-xl bg-gradient-to-r from-violet-glow to-cyan-glow px-5 py-2.5 font-bold text-night-950 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="dex-btn dex-btn-yellow"
           >
             Reload the page
           </button>
-          <a
-            href={hrefFor('daily')}
-            className="rounded-xl bg-white/10 px-5 py-2.5 font-semibold text-white hover:bg-white/20"
-          >
+          <a href={hrefFor('daily')} className="dex-btn">
             Back to the Daily game
           </a>
         </div>

@@ -15,17 +15,17 @@ import type { DateKey } from '../../lib/utcDate.ts';
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const STATUS: Record<DayStatus, { text: string; icon?: LucideIcon; style: string }> = {
-  won: { text: 'Won', icon: Check, style: 'border-cyan-glow/50 bg-cyan-glow/20 text-cyan-glow' },
-  lost: { text: 'Lost', icon: X, style: 'border-red-400/40 bg-red-400/15 text-red-300' },
+  won: { text: 'Won', icon: Check, style: 'border-ink bg-leaf text-white' },
+  lost: { text: 'Lost', icon: X, style: 'border-ink bg-dex text-white' },
   gave_up: {
     text: 'Gave up',
     icon: Flag,
-    style: 'border-orange-400/40 bg-orange-400/15 text-orange-300',
+    style: 'border-ink bg-[#ff9a3c] text-ink',
   },
-  missed: { text: 'Missed', icon: Minus, style: 'border-white/10 bg-white/5 text-white/60' },
-  today: { text: 'Today, not played yet', style: 'border-volt bg-volt/10 text-volt' },
-  future: { text: 'Upcoming', style: 'border-transparent text-white/55' },
-  'before-start': { text: 'Before you started', style: 'border-transparent text-white/55' },
+  missed: { text: 'Missed', icon: Minus, style: 'border-line bg-paper text-ink-soft' },
+  today: { text: 'Today, not played yet', style: 'border-ink bg-volt text-ink' },
+  future: { text: 'Upcoming', style: 'border-transparent text-ink-soft' },
+  'before-start': { text: 'Before you started', style: 'border-transparent text-ink-soft' },
 };
 
 const LEGEND: DayStatus[] = ['won', 'lost', 'gave_up', 'missed', 'today'];
@@ -62,21 +62,18 @@ export function MonthCalendarView({
   const canGoForward = compareMonths(shown, latest) < 0;
 
   return (
-    <section
-      aria-label="Calendar"
-      className="rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-5"
-    >
+    <section aria-label="Calendar" className="dex-card !rounded-3xl p-4 sm:p-5">
       <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
           aria-label="Previous month"
           disabled={!canGoBack}
           onClick={() => setShown((m) => shiftMonth(m, -1))}
-          className="grid size-10 place-items-center rounded-xl text-white enabled:hover:bg-white/10 disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-cyan-glow"
+          className="grid size-10 place-items-center rounded-xl text-ink enabled:hover:bg-paper disabled:opacity-30"
         >
           <ChevronLeft size={20} aria-hidden />
         </button>
-        <h3 className="text-lg font-bold text-white" aria-live="polite">
+        <h3 className="font-display text-2xl text-ink" aria-live="polite">
           {monthName(shown)}
         </h3>
         <button
@@ -84,7 +81,7 @@ export function MonthCalendarView({
           aria-label="Next month"
           disabled={!canGoForward}
           onClick={() => setShown((m) => shiftMonth(m, 1))}
-          className="grid size-10 place-items-center rounded-xl text-white enabled:hover:bg-white/10 disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-cyan-glow"
+          className="grid size-10 place-items-center rounded-xl text-ink enabled:hover:bg-paper disabled:opacity-30"
         >
           <ChevronRight size={20} aria-hidden />
         </button>
@@ -98,7 +95,7 @@ export function MonthCalendarView({
               <th
                 key={d}
                 scope="col"
-                className="pb-1 text-center text-xs font-semibold text-violet-200/60"
+                className="pb-1 text-center text-xs font-semibold text-ink-soft"
               >
                 {d}
               </th>
@@ -119,12 +116,12 @@ export function MonthCalendarView({
       </table>
 
       <ul
-        className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-violet-200/70"
+        className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs font-semibold text-ink-soft"
         aria-label="Legend"
       >
         {LEGEND.map((s) => (
           <li key={s} className="flex items-center gap-1.5">
-            <span className={`size-3.5 rounded border ${STATUS[s].style}`} />
+            <span className={`size-4 rounded border-2 ${STATUS[s].style}`} />
             {STATUS[s].text.replace(', not played yet', '')}
           </li>
         ))}
@@ -140,7 +137,7 @@ function DayCell({ day, month }: { day: CalendarDay; month: MonthRef }) {
       role="img"
       aria-label={describe(day, month)}
       title={describe(day, month)}
-      className={`relative mx-auto flex aspect-square w-full max-w-12 items-center justify-center rounded-lg border text-sm font-semibold ${style}`}
+      className={`relative mx-auto flex aspect-square w-full max-w-12 items-center justify-center rounded-lg border-2 text-sm font-semibold ${style}`}
     >
       {Icon ? <Icon size={18} aria-hidden /> : <span aria-hidden>{day.day}</span>}
       {Icon && (

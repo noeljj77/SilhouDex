@@ -6,23 +6,15 @@ import { AnimatedNumber } from './AnimatedNumber.tsx';
 /** Score, a bar that drains with each miss, and a pip for each guess used. */
 export function ScoreMeter({ view }: { view: GameView }) {
   const percent = Math.max(0, Math.min(100, (view.score / SCORING.startScore) * 100));
-  const tone =
-    percent > 60
-      ? 'from-cyan-glow to-violet-glow'
-      : percent > 30
-        ? 'from-volt to-orange-400'
-        : 'from-orange-400 to-red-500';
+  // Like a battle HP bar: green, then yellow, then red as points run out.
+  const tone = percent > 50 ? 'bg-[#3dc26b]' : percent > 25 ? 'bg-volt' : 'bg-dex';
 
   return (
-    <div
-      role="group"
-      aria-label="Score"
-      className="rounded-2xl border border-white/10 bg-white/5 p-4"
-    >
+    <div role="group" aria-label="Score" className="dex-card p-4">
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-violet-200/70">Score</p>
-          <p className="text-4xl font-black leading-none text-white tabular-nums">
+          <p className="text-sm font-semibold text-ink-soft">Score</p>
+          <p className="font-display text-5xl leading-none text-ink tabular-nums">
             <AnimatedNumber value={view.score} />
           </p>
         </div>
@@ -33,29 +25,34 @@ export function ScoreMeter({ view }: { view: GameView }) {
           {Array.from({ length: SCORING.maxWrongGuesses }, (_, i) => (
             <li
               key={i}
-              className={`size-3 rounded-full ${i < view.wrongGuesses ? 'bg-red-400' : i === SCORING.maxWrongGuesses - 1 ? 'bg-volt/50' : 'bg-white/20'}`}
+              className={`size-3.5 rounded-full border-2 border-ink ${i < view.wrongGuesses ? 'bg-dex' : i === SCORING.maxWrongGuesses - 1 ? 'bg-volt' : 'bg-panel'}`}
             />
           ))}
         </ul>
       </div>
-      <div
-        className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/10"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={SCORING.startScore}
-        aria-valuenow={view.score}
-        aria-label="Points left"
-      >
-        <motion.div
-          className={`h-full rounded-full bg-gradient-to-r ${tone}`}
-          initial={false}
-          animate={{ width: `${percent}%` }}
-          transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-        />
+      <div className="mt-3 flex items-center gap-2 rounded-full border-2 border-ink bg-ink px-2.5 py-1">
+        <span aria-hidden className="font-display text-xs leading-none text-volt">
+          HP
+        </span>
+        <div
+          className="h-3 flex-1 overflow-hidden rounded-full bg-white/20"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={SCORING.startScore}
+          aria-valuenow={view.score}
+          aria-label="Points left"
+        >
+          <motion.div
+            className={`h-full rounded-full ${tone}`}
+            initial={false}
+            animate={{ width: `${percent}%` }}
+            transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+          />
+        </div>
       </div>
       {!view.isOver && (
         <p
-          className={`mt-2 text-sm ${view.isFinalGuess ? 'font-bold text-volt' : 'text-violet-200/70'}`}
+          className={`mt-2 text-sm ${view.isFinalGuess ? 'font-bold text-dex-dark' : 'text-ink-soft'}`}
           aria-live="polite"
         >
           {view.isFinalGuess

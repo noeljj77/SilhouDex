@@ -36,7 +36,7 @@ const ICONS: Record<ClueCategory, LucideIcon> = {
 export function ClueList({ clues, unlocked }: { clues: readonly Clue[]; unlocked: number }) {
   return (
     <section aria-label="Clues" className="flex flex-col gap-2.5">
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-violet-200/70">Clues</h2>
+      <h2 className="font-display text-xl text-ink">Clues</h2>
       <ol className="flex flex-col gap-2.5">
         {Array.from({ length: CLUES_PER_GAME }, (_, i) => {
           const clue = clues[i];
@@ -58,16 +58,16 @@ function OpenClue({ clue, number }: { clue: Clue; number: number }) {
       initial={{ opacity: 0, y: 12, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-      className="flex gap-3 rounded-2xl border border-cyan-glow/30 bg-gradient-to-br from-night-700/80 to-night-800/80 p-3.5 shadow-[0_0_24px_-12px_rgba(34,211,238,0.6)]"
+      className="dex-lcd flex gap-3 p-3.5 shadow-[0_4px_0_var(--color-ink)]"
     >
-      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-cyan-glow/15 text-cyan-glow">
+      <span className="grid size-10 shrink-0 place-items-center rounded-xl border-2 border-lcd/60 bg-lcd/10 text-lcd">
         <Icon size={20} aria-hidden />
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-wider text-cyan-glow/80">
+        <p className="text-xs font-semibold text-lcd">
           Clue {number} · {clue.title}
         </p>
-        <p className="mt-0.5 text-[0.95rem] leading-snug text-white">{clue.body}</p>
+        <p className="mt-0.5 text-[0.95rem] leading-snug text-screen-ink">{clue.body}</p>
       </div>
     </motion.li>
   );
@@ -75,8 +75,8 @@ function OpenClue({ clue, number }: { clue: Clue; number: number }) {
 
 function LockedClue({ number }: { number: number }) {
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-dashed border-white/15 p-3.5 text-white/60">
-      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/5">
+    <li className="flex items-center gap-3 rounded-2xl border-2 border-dashed border-line bg-panel/60 p-3.5 text-ink-soft">
+      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-paper">
         <Lock size={18} aria-hidden />
       </span>
       <p className="text-sm">

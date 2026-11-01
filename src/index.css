@@ -1,35 +1,176 @@
 @import 'tailwindcss';
 
 /*
- * SilhouDex design tokens. Placeholder values for M0 — the full visual
- * direction (typography, motion, surfaces) is settled in the design pass.
+ * SilhouDex design tokens: a Pokédex handheld.
+ * Red shell, blue lens, yellow buttons, light paper panels, and dark screens for the game.
  */
 @theme {
-  --color-night-950: #07061a;
-  --color-night-900: #0b0a1f;
-  --color-night-800: #14123a;
-  --color-night-700: #1f1b52;
+  --color-dex: #d3202b;
+  --color-dex-dark: #9d1119;
+  --color-dex-light: #f25b62;
+  --color-lens: #2f9bff;
+  --color-lens-deep: #1260c4;
+  --color-volt: #ffcb05;
+  --color-volt-deep: #d9a400;
+  --color-leaf: #1f7a3a;
 
-  --color-violet-glow: #8b5cf6;
-  --color-cyan-glow: #22d3ee;
-  --color-volt: #facc15;
+  --color-ink: #1b2236;
+  --color-ink-soft: #4a5570;
+  --color-paper: #e9eef6;
+  --color-panel: #ffffff;
+  --color-line: #c5cfe0;
+
+  --color-screen: #0d1a2b;
+  --color-screen-2: #16283f;
+  --color-screen-ink: #d9f2ff;
+  --color-lcd: #7cf7b0;
 
   --font-sans: 'Sora Variable', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fredoka Variable', 'Sora Variable', ui-rounded, system-ui, sans-serif;
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Page backdrop: a faint grid, like the paper inside a Pokédex manual. */
+.dex-backdrop {
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(to right, rgb(27 34 54 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(27 34 54 / 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.005em;
+  }
+
+  /* White panel with a game-UI outline and a hard bottom edge. */
+  .dex-card {
+    background: var(--color-panel);
+    border: 2px solid var(--color-ink);
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 0 var(--color-ink);
+  }
+
+  /* A dark LCD panel for clues and read-outs. */
+  .dex-lcd {
+    background:
+      repeating-linear-gradient(to bottom, transparent 0 3px, rgb(0 0 0 / 0.14) 3px 4px),
+      linear-gradient(160deg, var(--color-screen-2), var(--color-screen));
+    color: var(--color-screen-ink);
+    border: 2px solid var(--color-ink);
+    border-radius: 1rem;
+    box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.06);
+  }
+
+  /* Chunky pressable buttons. */
+  .dex-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.1rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 0.9rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--color-ink);
+    background: var(--color-panel);
+    box-shadow: 0 3px 0 var(--color-ink);
+    cursor: pointer;
+    transition:
+      transform 90ms ease,
+      box-shadow 90ms ease,
+      filter 120ms ease;
+  }
+  .dex-btn:hover:not(:disabled) {
+    filter: brightness(1.05);
+  }
+  .dex-btn:active:not(:disabled) {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 var(--color-ink);
+  }
+  .dex-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+  .dex-btn-yellow {
+    background: var(--color-volt);
+  }
+  .dex-btn-red {
+    background: var(--color-dex);
+    color: #fff;
+  }
+  .dex-btn-blue {
+    background: var(--color-lens-deep);
+    color: #fff;
+  }
+
+  /* Small label tag. */
+  .dex-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 999px;
+    background: var(--color-panel);
+    padding: 0.2rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  /* Text field. */
+  .dex-field {
+    width: 100%;
+    min-height: 3rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 0.9rem;
+    background: var(--color-panel);
+    color: var(--color-ink);
+    padding: 0 0.9rem;
+    font-size: 1rem;
+    box-shadow: inset 0 2px 0 rgb(27 34 54 / 0.08);
+  }
+  .dex-field::placeholder {
+    color: var(--color-ink-soft);
+  }
+  .dex-field:disabled {
+    opacity: 0.5;
+  }
+}
+
+:where(a, button, input, select, [role='radio'], [tabindex]):focus-visible {
+  outline: 3px solid var(--color-lens);
+  outline-offset: 2px;
 }
 
 /* Faint sparkles drifting in the stage backdrop. */
 @keyframes twinkle {
   0%,
   100% {
-    opacity: 0.08;
+    opacity: 0.1;
     transform: translateY(0) scale(0.7);
   }
   50% {
-    opacity: 0.85;
+    opacity: 0.95;
     transform: translateY(-14px) scale(1.15);
   }
 }
@@ -38,18 +179,47 @@ html {
   animation: twinkle var(--dur, 6s) ease-in-out var(--delay, 0s) infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sparkle {
-    animation: none;
-    opacity: 0.3;
+/* Slow turning rays behind the silhouette: the "Who's that Pokémon?" sunburst. */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-body {
-  margin: 0;
-  min-height: 100dvh;
-  background: var(--color-night-900);
-  color: #ece9ff;
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
+.sunburst {
+  background: repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    rgb(255 255 255 / 0.22) 0deg 9deg,
+    rgb(255 255 255 / 0) 9deg 18deg
+  );
+  animation: spin-slow 90s linear infinite;
+}
+
+@keyframes blink {
+  0%,
+  86%,
+  100% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.35;
+  }
+}
+
+.led-blink {
+  animation: blink 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparkle {
+    animation: none;
+    opacity: 0.35;
+  }
+  .sunburst,
+  .led-blink {
+    animation: none;
+  }
+  .dex-btn {
+    transition: none;
+  }
 }

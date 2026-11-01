@@ -53,23 +53,23 @@ export function AchievementToaster() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-              className="pointer-events-auto flex w-full max-w-sm items-center gap-3 rounded-2xl border border-volt/60 bg-night-800 p-3 shadow-[0_0_40px_-8px_rgba(250,204,21,0.6)]"
+              className="pointer-events-auto flex w-full max-w-sm items-center gap-3 dex-card !border-ink bg-panel p-3"
             >
-              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-volt text-night-950">
+              <span className="grid size-11 shrink-0 place-items-center rounded-xl border-2 border-ink bg-volt text-ink">
                 <AchievementIcon name={def.icon} size={22} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-volt">
+                <p className="flex items-center gap-1 text-xs font-bold text-dex">
                   <Trophy size={12} aria-hidden /> Achievement unlocked
                 </p>
-                <p className="truncate font-bold text-white">{def.title}</p>
-                <p className="truncate text-xs text-violet-200/80">{def.description}</p>
+                <p className="truncate font-display text-lg text-ink">{def.title}</p>
+                <p className="truncate text-xs text-ink-soft">{def.description}</p>
               </div>
               <button
                 type="button"
                 aria-label={`Dismiss ${def.title}`}
                 onClick={() => store.markAchievementsSeen([id])}
-                className="grid size-9 shrink-0 place-items-center rounded-lg text-white/60 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-cyan-glow"
+                className="grid size-9 shrink-0 place-items-center rounded-lg text-ink-soft hover:bg-paper hover:text-ink"
               >
                 <X size={16} aria-hidden />
               </button>

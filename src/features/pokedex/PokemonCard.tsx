@@ -27,10 +27,10 @@ export const PokemonCard = memo(
           type="button"
           aria-label={label}
           onClick={(e) => onOpen(entry.id, e.currentTarget)}
-          className={`group relative flex w-full flex-col items-center gap-1 rounded-2xl border p-2 text-center transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-glow ${discovery ? 'border-cyan-glow/30 bg-white/5 hover:border-cyan-glow/70 hover:bg-white/10' : 'border-white/10 bg-night-900/60 hover:border-white/25'}`}
+          className={`group relative flex w-full flex-col items-center gap-1 rounded-2xl border-2 border-ink p-2 text-center shadow-[0_3px_0_var(--color-ink)] transition hover:-translate-y-0.5 ${discovery ? 'bg-panel' : 'bg-line/60'}`}
         >
           <span
-            className={`relative grid aspect-square w-full place-items-center overflow-hidden rounded-xl ${discovery ? 'bg-[radial-gradient(circle_at_50%_40%,#a78bfa,#5b34b8)]' : 'bg-[radial-gradient(circle_at_50%_40%,#4c3a8a,#1e1650)]'}`}
+            className={`relative grid aspect-square w-full place-items-center overflow-hidden rounded-xl border-2 border-ink ${discovery ? 'bg-[radial-gradient(circle_at_50%_45%,#b4e6ff,#3fa9ff)]' : 'bg-[radial-gradient(circle_at_50%_45%,#c9d5e8,#8ea3c2)]'}`}
           >
             {discovery ? (
               <img
@@ -46,20 +46,20 @@ export const PokemonCard = memo(
                 alt=""
                 loading="lazy"
                 decoding="async"
-                className="size-[78%] object-contain opacity-80 brightness-0 [image-rendering:pixelated]"
+                className="size-[78%] object-contain opacity-90 brightness-0 [image-rendering:pixelated]"
               />
             )}
             {discovery && (
-              <span className="absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-cyan-glow text-night-950">
+              <span className="absolute right-1 top-1 grid size-5 place-items-center rounded-full border-2 border-ink bg-volt text-ink">
                 <Check size={12} strokeWidth={3} aria-hidden />
               </span>
             )}
           </span>
-          <span className="text-xs tabular-nums text-white/50">
+          <span className="text-xs font-semibold tabular-nums text-ink-soft">
             #{String(entry.id).padStart(4, '0')}
           </span>
           <span
-            className={`w-full truncate text-sm font-bold ${discovery ? 'text-white' : 'text-white/55'}`}
+            className={`w-full truncate text-sm font-bold ${discovery ? 'text-ink' : 'text-ink-soft'}`}
           >
             {discovery ? entry.name : '???'}
           </span>

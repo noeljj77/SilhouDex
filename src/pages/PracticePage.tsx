@@ -66,11 +66,9 @@ function PracticeRound({ onNext }: { onNext(): void }) {
     <main className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-cyan-glow">
-            Unlimited play
-          </p>
-          <h1 className="text-3xl font-black text-white">Practice</h1>
-          <p className="text-sm text-violet-200/70">
+          <p className="text-sm font-bold text-dex">Unlimited play</p>
+          <h1 className="font-display text-4xl text-ink">Practice</h1>
+          <p className="text-sm text-ink-soft">
             Never affects your daily streak or daily stats.
             {played > 0 && ` Games played: ${played}.`}
           </p>
@@ -92,24 +90,14 @@ function PracticeRound({ onNext }: { onNext(): void }) {
         onGuess={game.guess}
         onGiveUp={game.giveUp}
         resultFooter={
-          <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
-            <button
-              type="button"
-              onClick={onNext}
-              className="rounded-xl bg-gradient-to-r from-violet-glow to-cyan-glow px-5 py-2.5 font-bold text-night-950 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
+          <div className="flex flex-wrap gap-2 border-t-2 border-line pt-4">
+            <button type="button" onClick={onNext} className="dex-btn dex-btn-yellow">
               Next Pokémon
             </button>
-            <a
-              href={hrefFor('daily')}
-              className="rounded-xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/20"
-            >
+            <a href={hrefFor('daily')} className="dex-btn">
               Daily challenge
             </a>
-            <a
-              href={hrefFor('pokedex')}
-              className="rounded-xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/20"
-            >
+            <a href={hrefFor('pokedex')} className="dex-btn">
               View Pokédex
             </a>
           </div>

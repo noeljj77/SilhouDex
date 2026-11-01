@@ -15,11 +15,12 @@ import {
 export async function ensureCardFonts(): Promise<void> {
   if (typeof document === 'undefined' || !document.fonts) return;
   try {
-    await Promise.all(
-      ['500', '600', '700', '800'].map((weight) =>
+    await Promise.all([
+      ...['500', '600', '700', '800'].map((weight) =>
         document.fonts.load(`${weight} 24px "Sora Variable"`),
       ),
-    );
+      ...['600', '700'].map((weight) => document.fonts.load(`${weight} 24px "Fredoka Variable"`)),
+    ]);
   } catch {
     // The card still draws with the fallback font.
   }

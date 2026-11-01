@@ -30,18 +30,16 @@ export function AchievementsPage() {
     <main className="flex flex-col gap-6">
       <header className="flex flex-col gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-cyan-glow">
-            Goals to chase
-          </p>
-          <h1 className="text-3xl font-black text-white">Achievements</h1>
+          <p className="text-sm font-bold text-dex">Goals to chase</p>
+          <h1 className="font-display text-4xl text-ink">Achievements</h1>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-white">
-            <span className="text-3xl font-black tabular-nums text-volt">{unlockedCount}</span>
-            <span className="text-violet-200/80"> of {views.length} unlocked</span>
+        <div className="dex-card p-4">
+          <p className="text-ink">
+            <span className="font-display text-4xl tabular-nums text-dex">{unlockedCount}</span>
+            <span className="font-semibold text-ink-soft"> of {views.length} unlocked</span>
           </p>
           <div
-            className="mt-2 h-2.5 overflow-hidden rounded-full bg-white/10"
+            className="mt-2 h-3.5 overflow-hidden rounded-full border-2 border-ink bg-paper"
             role="progressbar"
             aria-label="Achievements unlocked"
             aria-valuemin={0}
@@ -49,7 +47,7 @@ export function AchievementsPage() {
             aria-valuenow={unlockedCount}
           >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-volt to-orange-400 transition-[width] duration-700"
+              className="h-full bg-volt transition-[width] duration-700"
               style={{ width: `${percent}%` }}
             />
           </div>
@@ -64,7 +62,7 @@ export function AchievementsPage() {
                 type="button"
                 aria-pressed={category === c}
                 onClick={() => setCategory(c)}
-                className={`min-h-9 rounded-full border px-4 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-cyan-glow ${category === c ? 'border-cyan-glow bg-cyan-glow/20 text-cyan-glow' : 'border-white/15 text-white/70 hover:bg-white/10'}`}
+                className={`dex-chip min-h-9 cursor-pointer !px-4 !text-sm transition ${category === c ? '!bg-dex !text-white' : 'hover:bg-paper'}`}
               >
                 {c === 'all' ? 'All' : CATEGORY_LABELS[c]}
               </button>
@@ -75,9 +73,9 @@ export function AchievementsPage() {
 
       {groups.map(({ category: c, items }) => (
         <section key={c} aria-labelledby={`cat-${c}`} className="flex flex-col gap-3">
-          <h2 id={`cat-${c}`} className="text-lg font-bold text-white">
+          <h2 id={`cat-${c}`} className="font-display text-2xl text-ink">
             {CATEGORY_LABELS[c]}
-            <span className="ml-2 text-sm font-medium text-violet-200/60">
+            <span className="ml-2 font-sans text-sm font-semibold text-ink-soft">
               {items.filter((i) => i.status === 'unlocked').length}/{items.length}
             </span>
           </h2>

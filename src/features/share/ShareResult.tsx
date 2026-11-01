@@ -125,11 +125,9 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
   return (
     <section
       aria-label="Share your result"
-      className="flex flex-col gap-3 border-t border-white/10 pt-4"
+      className="flex flex-col gap-3 border-t-2 border-line pt-4"
     >
-      <h3 className="text-sm font-semibold uppercase tracking-wider text-violet-200/70">
-        Share your result
-      </h3>
+      <h3 className="font-display text-lg text-ink">Share your result</h3>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         {preview && (
@@ -140,13 +138,13 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
                 ? `Preview of your result card, showing ${entry.name}`
                 : 'Preview of your result card'
             }
-            className="w-36 shrink-0 self-start rounded-xl border border-white/15"
+            className="w-36 shrink-0 self-start rounded-xl border-2 border-ink"
           />
         )}
         <pre
           role="group"
           aria-label="Result text"
-          className="min-w-0 flex-1 whitespace-pre-wrap break-words rounded-xl bg-white/5 p-3 font-sans text-sm leading-relaxed text-white"
+          className="min-w-0 flex-1 whitespace-pre-wrap break-words rounded-xl border-2 border-line bg-paper p-3 font-sans text-sm leading-relaxed text-ink"
         >
           {text}
         </pre>
@@ -154,20 +152,20 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
 
       <label
         htmlFor={switchId}
-        className="flex w-fit cursor-pointer items-center gap-3 text-sm text-white"
+        className="flex w-fit cursor-pointer items-center gap-3 text-sm font-semibold text-ink"
       >
         <input
           id={switchId}
           type="checkbox"
           checked={spoilers}
           onChange={(e) => setSpoilers(e.target.checked)}
-          className="size-5 accent-cyan-300"
+          className="size-5 accent-dex"
         />
         <span>
-          Include the Pokémon <span className="text-violet-200/70">(spoilers)</span>
+          Include the Pokémon <span className="font-normal text-ink-soft">(spoilers)</span>
         </span>
       </label>
-      <p className="-mt-1 text-xs text-violet-200/60">
+      <p className="-mt-1 text-xs text-ink-soft">
         {spoilers
           ? 'The text and card will name the Pokémon.'
           : 'The text and card never mention the Pokémon.'}
@@ -190,7 +188,7 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
       <p
         role="status"
         aria-live="polite"
-        className="flex min-h-5 items-center gap-1.5 text-sm font-semibold text-cyan-glow"
+        className="flex min-h-5 items-center gap-1.5 text-sm font-semibold text-leaf"
       >
         {message && <Check size={14} aria-hidden />}
         {message}
@@ -209,11 +207,7 @@ function ActionButton({
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-glow"
-    >
+    <button type="button" onClick={onClick} className="dex-btn !text-sm">
       {icon}
       {children}
     </button>

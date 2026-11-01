@@ -12,12 +12,12 @@ export function ComingSoonPage({
 }) {
   return (
     <main className="mx-auto flex max-w-md flex-col items-center gap-4 py-16 text-center">
-      <span className="grid size-20 place-items-center rounded-3xl border border-white/15 bg-white/5 text-violet-glow">
+      <span className="grid size-20 place-items-center dex-card text-dex">
         <Icon size={36} aria-hidden />
       </span>
-      <h1 className="text-3xl font-black text-white">{title}</h1>
-      <p className="text-violet-200/80">{blurb}</p>
-      <p className="rounded-full border border-volt/40 px-4 py-1 text-sm text-volt">Coming soon</p>
+      <h1 className="font-display text-3xl text-ink">{title}</h1>
+      <p className="text-ink-soft">{blurb}</p>
+      <p className="dex-chip bg-volt">Coming soon</p>
     </main>
   );
 }

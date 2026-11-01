@@ -56,9 +56,9 @@ export function SilhouetteLabPage() {
   const results = query.trim() ? pokedexIndex.search(query, 6) : [];
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:py-10">
+    <main className="dex-lcd mx-auto my-4 flex w-full max-w-5xl flex-col gap-6 !rounded-3xl px-4 py-6 sm:py-10">
       <header className="flex flex-col gap-1">
-        <h1 className="bg-linear-to-r from-violet-glow to-cyan-glow bg-clip-text text-4xl font-black tracking-tight text-transparent sm:text-5xl">
+        <h1 className="bg-linear-to-r from-lens to-lcd bg-clip-text text-4xl font-black tracking-tight text-transparent sm:text-5xl">
           SilhouDex
         </h1>
         <p className="text-violet-200/80">Every shadow has a story.</p>
@@ -97,7 +97,7 @@ export function SilhouetteLabPage() {
                     setStage(s);
                     setSolved(false);
                   }}
-                  className={`h-11 min-w-11 rounded-xl border px-3 font-bold transition ${stage === s ? 'border-cyan-glow bg-cyan-glow/20 text-cyan-glow' : 'border-white/15 bg-white/5 text-white hover:bg-white/10'}`}
+                  className={`h-11 min-w-11 rounded-xl border px-3 font-bold transition ${stage === s ? 'border-lcd bg-lcd/20 text-lcd' : 'border-white/15 bg-white/5 text-white hover:bg-white/10'}`}
                 >
                   {s}
                 </button>
@@ -150,7 +150,7 @@ export function SilhouetteLabPage() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name…"
               autoComplete="off"
-              className="h-11 rounded-xl border border-white/15 bg-white/5 px-4 text-white placeholder:text-white/55 focus-visible:outline-2 focus-visible:outline-cyan-glow"
+              className="h-11 rounded-xl border border-white/15 bg-white/5 px-4 text-white placeholder:text-white/55 focus-visible:outline-2 focus-visible:outline-lcd"
             />
             {results.length > 0 && (
               <ul className="flex flex-wrap gap-2">
@@ -196,7 +196,7 @@ export function SilhouetteLabPage() {
               </thead>
               <tbody>
                 {REVEAL_FRACTIONS.map((fraction, s) => (
-                  <tr key={s} className={s === stage ? 'text-cyan-glow' : 'text-white/80'}>
+                  <tr key={s} className={s === stage ? 'text-lcd' : 'text-white/80'}>
                     <td className="py-0.5">{s}</td>
                     <td className="py-0.5">{Math.round(fraction * 100)}%</td>
                   </tr>
@@ -223,7 +223,7 @@ function LabButton({
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex h-11 items-center gap-2 rounded-xl border border-violet-glow/50 bg-violet-glow/15 px-4 text-sm font-semibold text-white transition hover:bg-violet-glow/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-glow"
+      className="inline-flex h-11 items-center gap-2 rounded-xl border border-lens/50 bg-lens/15 px-4 text-sm font-semibold text-white transition hover:bg-lens/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lcd"
     >
       {icon}
       {children}

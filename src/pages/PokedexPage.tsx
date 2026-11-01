@@ -49,23 +49,19 @@ export function PokedexPage() {
     <main className="flex flex-col gap-6">
       <header className="flex flex-col gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-cyan-glow">
-            Your collection
-          </p>
-          <h1 className="text-3xl font-black text-white">Pokédex</h1>
+          <p className="text-sm font-bold text-dex">Your collection</p>
+          <h1 className="font-display text-4xl text-ink">Pokédex</h1>
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-white">
-            <span className="text-3xl font-black tabular-nums text-cyan-glow">
-              {stats.discovered}
-            </span>
-            <span className="text-violet-200/80">
+        <div className="dex-card p-4">
+          <p className="text-ink">
+            <span className="font-display text-4xl tabular-nums text-dex">{stats.discovered}</span>
+            <span className="font-semibold text-ink-soft">
               {' '}
               of {stats.total} discovered ({stats.percent}%)
             </span>
           </p>
           <div
-            className="mt-2 h-2.5 overflow-hidden rounded-full bg-white/10"
+            className="mt-2 h-3.5 overflow-hidden rounded-full border-2 border-ink bg-paper"
             role="progressbar"
             aria-label="Collection completion"
             aria-valuemin={0}
@@ -73,7 +69,7 @@ export function PokedexPage() {
             aria-valuenow={stats.percent}
           >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-cyan-glow to-violet-glow transition-[width] duration-700"
+              className="h-full bg-dex transition-[width] duration-700"
               style={{ width: `${stats.percent}%` }}
             />
           </div>
@@ -92,7 +88,7 @@ export function PokedexPage() {
                       generation: f.generation === g.generation ? 'all' : g.generation,
                     }))
                   }
-                  className={`rounded-full border px-3 py-1 text-xs font-semibold tabular-nums transition focus-visible:outline-2 focus-visible:outline-cyan-glow ${filters.generation === g.generation ? 'border-cyan-glow bg-cyan-glow/20 text-cyan-glow' : g.discovered === g.total ? 'border-volt/60 bg-volt/10 text-volt' : 'border-white/15 text-white/70 hover:bg-white/10'}`}
+                  className={`dex-chip cursor-pointer tabular-nums transition ${filters.generation === g.generation ? '!bg-dex !text-white' : g.discovered === g.total ? '!bg-volt' : 'hover:bg-paper'}`}
                 >
                   Gen {ROMAN[g.generation - 1]} · {g.discovered}/{g.total}
                 </button>
@@ -110,7 +106,7 @@ export function PokedexPage() {
       />
 
       {rows.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-violet-200/70">
+        <p className="rounded-2xl border-2 border-dashed border-line bg-panel/60 p-8 text-center text-ink-soft">
           No Pokémon match these filters.
         </p>
       ) : (
@@ -124,7 +120,7 @@ export function PokedexPage() {
         </ul>
       )}
 
-      <p className="text-xs text-violet-200/70">
+      <p className="text-xs text-ink-soft">
         Regional and alternate forms count as their base Pokémon. Names of undiscovered Pokémon stay
         hidden, so search finds only the ones you have identified, plus any Pokémon by number.
       </p>

@@ -22,9 +22,9 @@ export function DailyPage() {
   if (state.kind === 'before-launch') {
     return (
       <main className="mx-auto flex max-w-md flex-col items-center gap-3 py-16 text-center">
-        <CalendarClock size={40} className="text-violet-glow" aria-hidden />
-        <h1 className="text-3xl font-black text-white">The first challenge is coming</h1>
-        <p className="text-violet-200/80">
+        <CalendarClock size={40} className="text-dex" aria-hidden />
+        <h1 className="font-display text-4xl text-ink">The first challenge is coming</h1>
+        <p className="text-ink-soft">
           Daily Silhouette starts on {state.launchDate}. Try Practice in the meantime.
         </p>
       </main>
@@ -56,17 +56,15 @@ function DailyChallengeView({ challenge }: { challenge: DailyChallenge }) {
     <main className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-cyan-glow">
-            Daily Silhouette
-          </p>
-          <h1 className="text-3xl font-black text-white">
+          <p className="text-sm font-bold text-dex">Daily Silhouette</p>
+          <h1 className="font-display text-4xl text-ink">
             Challenge #{challenge.challengeNumber}
-            <span className="block text-base font-medium text-violet-200/70 sm:ml-3 sm:inline">
+            <span className="block font-sans text-base font-medium text-ink-soft sm:ml-3 sm:inline">
               {formatDate(challenge.dateKey)}
             </span>
           </h1>
         </div>
-        <div className="flex flex-col items-start gap-2 sm:items-end">
+        <div className="flex flex-wrap items-start gap-2 sm:flex-col sm:items-end">
           <StreakBadge streak={streak} />
           <NextDayCountdown />
         </div>
@@ -86,17 +84,11 @@ function DailyFooter({ result }: { result: GameResult }) {
   return (
     <div className="flex flex-col gap-4">
       {entry && <ShareResult result={result} entry={entry} />}
-      <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
-        <a
-          href={hrefFor('practice')}
-          className="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
-        >
+      <div className="flex flex-wrap gap-2 border-t-2 border-line pt-4">
+        <a href={hrefFor('practice')} className="dex-btn !min-h-10 !text-sm">
           Play Practice
         </a>
-        <a
-          href={hrefFor('pokedex')}
-          className="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
-        >
+        <a href={hrefFor('pokedex')} className="dex-btn !min-h-10 !text-sm">
           View Pokédex
         </a>
       </div>

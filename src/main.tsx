@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 // Sora, served from this site (no outside font requests).
 import '@fontsource-variable/sora/wght.css';
+// Fredoka for headings, also served from this site.
+import '@fontsource-variable/fredoka/wght.css';
 import './index.css';
 import { App } from './app/App.tsx';
 

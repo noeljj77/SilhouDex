@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { AchievementToaster } from '../features/achievements/AchievementToaster.tsx';
 import { DailyPage } from '../pages/DailyPage.tsx';
+import { PokeBall } from '../components/PokeBall.tsx';
 import { AppShell } from './AppShell.tsx';
 import { ProgressProvider } from './ProgressProvider.tsx';
 import { useRoute, type RouteId } from './router.ts';
@@ -42,7 +43,14 @@ function Page({ route }: { route: RouteId }) {
 
 function PageLoading() {
   return (
-    <p role="status" className="py-16 text-center text-violet-200/80">
+    <p
+      role="status"
+      className="flex flex-col items-center gap-3 py-16 text-center font-display text-ink-soft"
+    >
+      <PokeBall
+        size={44}
+        className="animate-spin [animation-duration:1.4s] motion-reduce:animate-none"
+      />
       Loading…
     </p>
   );

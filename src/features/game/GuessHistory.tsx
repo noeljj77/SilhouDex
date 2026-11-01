@@ -9,10 +9,7 @@ export function GuessHistory({ guesses }: { guesses: readonly Guess[] }) {
   return (
     <ul aria-label="Wrong guesses" className="flex flex-wrap gap-2">
       {wrong.map((g) => (
-        <li
-          key={g.pokemonId}
-          className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-400/10 px-3 py-1 text-sm text-red-200"
-        >
+        <li key={g.pokemonId} className="dex-chip !border-dex bg-[#fff1f1] !text-dex-dark">
           <X size={14} aria-hidden />
           {pokedexIndex.getById(g.pokemonId)?.name ?? `#${g.pokemonId}`}
         </li>

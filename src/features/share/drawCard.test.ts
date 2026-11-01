@@ -85,8 +85,8 @@ describe('drawShareCard: spoiler-free', () => {
   ])('lights %i reveals as %i stages', (revealsUsed, lit) => {
     const { ctx, fills } = recorder();
     drawShareCard(ctx, data({ revealsUsed }), { spoilers: false });
-    // Stage pills are filled with a gradient when lit, and a faint colour when not.
-    const faint = fills.filter((f) => f === 'rgba(255,255,255,0.07)').length;
+    // Stage pills are filled red when lit, and a faint colour when not.
+    const faint = fills.filter((f) => f === '#c5cfe0').length;
     expect(faint).toBe(6 - lit);
   });
 

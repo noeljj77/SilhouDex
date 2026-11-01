@@ -50,17 +50,15 @@ export function ProfilePage() {
   return (
     <main className="flex flex-col gap-8">
       <header>
-        <p className="text-sm font-semibold uppercase tracking-wider text-cyan-glow">
-          Trainer profile
-        </p>
-        <h1 className="text-3xl font-black text-white">Profile</h1>
-        {sinceText && <p className="text-sm text-violet-200/70">Playing since {sinceText}</p>}
+        <p className="text-sm font-bold text-dex">Trainer profile</p>
+        <h1 className="font-display text-4xl text-ink">Profile</h1>
+        {sinceText && <p className="text-sm text-ink-soft">Playing since {sinceText}</p>}
       </header>
 
       {store.storageMode !== 'persistent' && (
         <p
           role="status"
-          className="rounded-xl border border-volt/40 bg-volt/10 p-3 text-sm text-volt"
+          className="dex-card !border-ink bg-[#fff4c2] p-3 text-sm font-semibold text-ink"
         >
           {store.storageMode === 'read-only'
             ? 'This browser holds progress from a newer version of SilhouDex, so nothing new is being saved.'
@@ -69,7 +67,7 @@ export function ProfilePage() {
       )}
 
       <section aria-labelledby="streaks" className="flex flex-col gap-3">
-        <h2 id="streaks" className="text-xl font-bold text-white">
+        <h2 id="streaks" className="font-display text-2xl text-ink">
           Daily streak
         </h2>
         <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -77,7 +75,7 @@ export function ProfilePage() {
             label="Current streak"
             icon={Flame}
             value={streaks.current}
-            tone={streaks.current > 0 ? 'text-orange-300' : 'text-white'}
+            tone={streaks.current > 0 ? 'text-[#d9480f]' : 'text-ink'}
             hint={
               streaks.atRisk
                 ? 'Play today to keep it going'
@@ -86,7 +84,12 @@ export function ProfilePage() {
                   : 'Play today to start one'
             }
           />
-          <StatCard label="Longest streak" icon={Trophy} value={streaks.longest} tone="text-volt" />
+          <StatCard
+            label="Longest streak"
+            icon={Trophy}
+            value={streaks.longest}
+            tone="text-lens-deep"
+          />
           <StatCard
             label="Completed"
             icon={CalendarCheck}
@@ -97,14 +100,14 @@ export function ProfilePage() {
             label="Today"
             icon={Target}
             value={todayResult ? todayResult.score : '—'}
-            tone={todayResult ? 'text-cyan-glow' : 'text-white/60'}
+            tone={todayResult ? 'text-lens-deep' : 'text-ink-soft'}
             hint={
               todayResult ? (
                 'Finished. Come back tomorrow.'
               ) : (
                 <a
                   href={hrefFor('daily')}
-                  className="font-semibold text-cyan-glow underline-offset-2 hover:underline"
+                  className="font-bold text-lens-deep underline underline-offset-2"
                 >
                   Not played yet. Play now
                 </a>
@@ -116,11 +119,11 @@ export function ProfilePage() {
       </section>
 
       <section aria-labelledby="daily-stats" className="flex flex-col gap-3">
-        <h2 id="daily-stats" className="text-xl font-bold text-white">
+        <h2 id="daily-stats" className="font-display text-2xl text-ink">
           Daily statistics
         </h2>
         {daily.played === 0 ? (
-          <p className="rounded-2xl border border-dashed border-white/15 p-6 text-center text-violet-200/70">
+          <p className="rounded-2xl border-2 border-dashed border-line bg-panel/60 p-6 text-center text-ink-soft">
             Finish your first daily challenge to see your statistics here.
           </p>
         ) : (
@@ -137,7 +140,7 @@ export function ProfilePage() {
                 label="Average score"
                 value={daily.averageScore}
                 hint={`Best ${daily.bestScore}`}
-                tone="text-volt"
+                tone="text-lens-deep"
               />
               <StatCard
                 label="Perfect games"
@@ -146,7 +149,7 @@ export function ProfilePage() {
                 hint="Solved with no wrong guess"
               />
             </dl>
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-5">
+            <div className="dex-card !rounded-3xl p-4 sm:p-5">
               <GuessDistributionChart stats={daily} />
             </div>
           </>
@@ -154,10 +157,10 @@ export function ProfilePage() {
       </section>
 
       <section aria-labelledby="practice-stats" className="flex flex-col gap-3">
-        <h2 id="practice-stats" className="text-xl font-bold text-white">
+        <h2 id="practice-stats" className="font-display text-2xl text-ink">
           Practice
         </h2>
-        <p className="text-sm text-violet-200/70">
+        <p className="text-sm text-ink-soft">
           Practice games are counted separately and never affect your daily statistics or streak.
         </p>
         <dl className="grid grid-cols-3 gap-3">
@@ -169,29 +172,26 @@ export function ProfilePage() {
           <StatCard
             label="Average score"
             value={practice.played === 0 ? '—' : practice.averageScore}
-            tone="text-volt"
+            tone="text-lens-deep"
           />
         </dl>
       </section>
 
       <section aria-labelledby="collection" className="flex flex-col gap-3">
-        <h2 id="collection" className="text-xl font-bold text-white">
+        <h2 id="collection" className="font-display text-2xl text-ink">
           Collection
         </h2>
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-          <p className="text-white">
-            <span className="text-3xl font-black tabular-nums text-cyan-glow">
+        <div className="dex-card flex flex-wrap items-center justify-between gap-3 p-4">
+          <p className="text-ink">
+            <span className="font-display text-4xl tabular-nums text-dex">
               {collection.discovered}
             </span>
-            <span className="text-violet-200/80">
+            <span className="font-semibold text-ink-soft">
               {' '}
               of {collection.total} Pokémon discovered ({collection.percent}%)
             </span>
           </p>
-          <a
-            href={hrefFor('pokedex')}
-            className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
-          >
+          <a href={hrefFor('pokedex')} className="dex-btn dex-btn-yellow !min-h-10 !text-sm">
             <BookOpen size={16} aria-hidden /> Open Pokédex
           </a>
         </div>

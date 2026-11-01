@@ -21,6 +21,7 @@
     "build:index": "tsx scripts/build-pokedex-index.ts"
   },
   "dependencies": {
+    "@fontsource-variable/fredoka": "^5.3.0",
     "@fontsource-variable/sora": "^5.3.0",
     "lucide-react": "^1.66.0",
     "motion": "^14.9.0",

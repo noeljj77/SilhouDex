@@ -25,7 +25,7 @@ export function DifficultyPicker({
       <div
         role="radiogroup"
         aria-label="Clue difficulty"
-        className="inline-flex w-fit rounded-xl border border-white/15 bg-white/5 p-1"
+        className="inline-flex w-fit gap-1 rounded-xl border-2 border-ink bg-panel p-1"
       >
         {OPTIONS.map(({ level, label, hint }) => {
           const selected = value === level;
@@ -38,14 +38,14 @@ export function DifficultyPicker({
               title={hint}
               disabled={disabled}
               onClick={() => onChange(level)}
-              className={`min-h-9 rounded-lg px-4 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-cyan-glow disabled:cursor-not-allowed ${selected ? 'bg-cyan-glow/20 text-cyan-glow' : 'text-white/70 enabled:hover:bg-white/10'} ${disabled && !selected ? 'opacity-40' : ''}`}
+              className={`min-h-9 rounded-lg px-4 font-display text-sm transition disabled:cursor-not-allowed ${selected ? 'bg-dex text-white' : 'text-ink-soft enabled:hover:bg-paper'} ${disabled && !selected ? 'opacity-40' : ''}`}
             >
               {label}
             </button>
           );
         })}
       </div>
-      <p className="text-xs text-violet-200/60">
+      <p className="text-xs text-ink-soft">
         {disabled
           ? 'Difficulty can be changed between games.'
           : OPTIONS.find((o) => o.level === value)?.hint}
