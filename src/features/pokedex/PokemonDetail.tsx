@@ -4,6 +4,7 @@ import { typeStyle } from '../../components/typeColors.ts';
 import { useDialogKeys } from '../../components/useDialogKeys.ts';
 import { hrefFor } from '../../app/router.ts';
 import { spriteUrl } from '../../data/sprites.ts';
+import { pokedexLabel } from './pokedexLabel.ts';
 import type { PokedexRow } from '../../domain/pokedex/browse.ts';
 
 const formatDate = (iso: string) => {
@@ -39,9 +40,7 @@ export function PokemonDetail({ row, onClose }: { row: PokedexRow; onClose(): vo
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label={
-          discovery ? `${entry.name}, number ${entry.id}` : `Number ${entry.id}, undiscovered`
-        }
+        aria-label={pokedexLabel(entry.id, discovery ? entry.name : undefined)}
         onKeyDown={onKeyDown}
         className="relative flex max-h-full w-full max-w-md flex-col gap-4 dex-card overflow-y-auto !rounded-3xl p-5"
       >

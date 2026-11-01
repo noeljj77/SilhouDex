@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react';
 import { memo } from 'react';
 import { spriteUrl } from '../../data/sprites.ts';
+import { pokedexLabel } from './pokedexLabel.ts';
 import type { PokedexRow } from '../../domain/pokedex/browse.ts';
 import type { SpeciesId } from '../../domain/pokemon/types.ts';
 
@@ -17,9 +18,7 @@ export const PokemonCard = memo(
     onOpen(id: SpeciesId, trigger: HTMLElement): void;
   }) {
     const { entry, discovery } = row;
-    const label = discovery
-      ? `${entry.name}, number ${entry.id}`
-      : `Number ${entry.id}, undiscovered`;
+    const label = pokedexLabel(entry.id, discovery ? entry.name : undefined);
     return (
       // Off-screen tiles are skipped by the browser's layout, which keeps 1,025 tiles cheap.
       <li className="[contain-intrinsic-size:auto_11rem] [content-visibility:auto]">
@@ -58,6 +57,8 @@ export const PokemonCard = memo(
           <span className="text-xs font-semibold tabular-nums text-ink-soft">
             #{String(entry.id).padStart(4, '0')}
           </span>
+          {/* A space between the two (they are flex items, so it is not drawn) keeps the visible text
+              "#0004 Charmander", which is what the accessible name has to contain. */}{' '}
           <span
             className={`w-full truncate text-sm font-bold ${discovery ? 'text-ink' : 'text-ink-soft'}`}
           >

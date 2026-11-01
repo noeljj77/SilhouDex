@@ -141,7 +141,7 @@ function DayCell({ day, month }: { day: CalendarDay; month: MonthRef }) {
     >
       {Icon ? <Icon size={18} aria-hidden /> : <span aria-hidden>{day.day}</span>}
       {Icon && (
-        <span aria-hidden className="absolute left-1 top-0.5 text-[0.6rem] font-medium opacity-70">
+        <span aria-hidden className="absolute left-1 top-0.5 text-[0.6rem] font-semibold">
           {day.day}
         </span>
       )}

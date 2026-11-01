@@ -61,7 +61,7 @@ describe('PokedexPage: an empty collection', () => {
 
   it('labels undiscovered tiles by number only', () => {
     renderPokedex();
-    expect(screen.getByRole('button', { name: 'Number 25, undiscovered' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '#0025 undiscovered' })).toBeInTheDocument();
   });
 });
 
@@ -70,7 +70,7 @@ describe('PokedexPage: discoveries', () => {
     const { container } = renderPokedex(seeded());
     for (const name of ['Bulbasaur', 'Charmander', 'Pikachu', 'Mewtwo']) {
       expect(
-        screen.getByRole('button', { name: new RegExp(`^${name}, number`) }),
+        screen.getByRole('button', { name: new RegExp(`^#\\d{4} ${name}$`) }),
       ).toBeInTheDocument();
     }
     expect(screen.getAllByText('???')).toHaveLength(1021);
@@ -123,9 +123,9 @@ describe('PokedexPage: filters', () => {
     renderPokedex(seeded());
     await user.click(screen.getByRole('radio', { name: 'Discovered' }));
     await user.selectOptions(screen.getByLabelText('Type'), 'Fire');
-    expect(tileNames()).toEqual(['Charmander, number 4']);
+    expect(tileNames()).toEqual(['#0004 Charmander']);
     await user.selectOptions(screen.getByLabelText('Type'), 'Poison');
-    expect(tileNames()).toEqual(['Bulbasaur, number 1']);
+    expect(tileNames()).toEqual(['#0001 Bulbasaur']);
   });
 
   it('combines filters and can reset them all', async () => {
@@ -158,7 +158,7 @@ describe('PokedexPage: search', () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
     await user.type(screen.getByRole('searchbox', { name: 'Search' }), 'pika');
-    expect(tileNames()).toEqual(['Pikachu, number 25']);
+    expect(tileNames()).toEqual(['#0025 Pikachu']);
   });
 
   it('does not find undiscovered Pokémon by name', async () => {
@@ -172,7 +172,7 @@ describe('PokedexPage: search', () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
     await user.type(screen.getByRole('searchbox', { name: 'Search' }), '#133');
-    expect(tileNames()).toEqual(['Number 133, undiscovered']);
+    expect(tileNames()).toEqual(['#0133 undiscovered']);
   });
 });
 
@@ -182,12 +182,12 @@ describe('PokedexPage: sorting', () => {
     renderPokedex(seeded());
     await user.selectOptions(screen.getByLabelText('Sort'), 'Name, Z to A');
     expect(tileNames().slice(0, 6)).toEqual([
-      'Pikachu, number 25',
-      'Mewtwo, number 150',
-      'Charmander, number 4',
-      'Bulbasaur, number 1',
-      'Number 2, undiscovered',
-      'Number 3, undiscovered',
+      '#0025 Pikachu',
+      '#0150 Mewtwo',
+      '#0004 Charmander',
+      '#0001 Bulbasaur',
+      '#0002 undiscovered',
+      '#0003 undiscovered',
     ]);
   });
 
@@ -195,14 +195,14 @@ describe('PokedexPage: sorting', () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
     await user.selectOptions(screen.getByLabelText('Sort'), 'Recently discovered');
-    expect(tileNames()[0]).toBe('Charmander, number 4');
+    expect(tileNames()[0]).toBe('#0004 Charmander');
   });
 
   it('can list from the highest number', async () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
     await user.selectOptions(screen.getByLabelText('Sort'), 'Number, high to low');
-    expect(tileNames()[0]).toBe('Number 1025, undiscovered');
+    expect(tileNames()[0]).toBe('#1025 undiscovered');
   });
 });
 
@@ -210,8 +210,8 @@ describe('PokedexPage: details', () => {
   it('shows when and how a discovered Pokémon was identified', async () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
-    await user.click(screen.getByRole('button', { name: 'Pikachu, number 25' }));
-    const dialog = screen.getByRole('dialog', { name: 'Pikachu, number 25' });
+    await user.click(screen.getByRole('button', { name: '#0025 Pikachu' }));
+    const dialog = screen.getByRole('dialog', { name: '#0025 Pikachu' });
     expect(within(dialog).getByRole('heading', { name: 'Pikachu' })).toBeInTheDocument();
     expect(dialog).toHaveTextContent('electric');
     expect(dialog).toHaveTextContent('Generation 1');
@@ -224,15 +224,15 @@ describe('PokedexPage: details', () => {
   it('shows legendary and mythical badges', async () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
-    await user.click(screen.getByRole('button', { name: 'Mewtwo, number 150' }));
+    await user.click(screen.getByRole('button', { name: '#0150 Mewtwo' }));
     expect(within(screen.getByRole('dialog')).getByText('Legendary')).toBeInTheDocument();
   });
 
   it('keeps an undiscovered Pokémon a mystery, without its name or types', async () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
-    await user.click(screen.getByRole('button', { name: 'Number 133, undiscovered' }));
-    const dialog = screen.getByRole('dialog', { name: 'Number 133, undiscovered' });
+    await user.click(screen.getByRole('button', { name: '#0133 undiscovered' }));
+    const dialog = screen.getByRole('dialog', { name: '#0133 undiscovered' });
     expect(within(dialog).getByRole('heading', { name: 'Undiscovered' })).toBeInTheDocument();
     expect(dialog.textContent).not.toMatch(/Eevee|normal|Generation/i);
     expect(within(dialog).getByRole('link', { name: /Daily challenge/ })).toHaveAttribute(
@@ -248,7 +248,7 @@ describe('PokedexPage: details', () => {
   it('closes with Escape and returns focus to the tile', async () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
-    const tile = screen.getByRole('button', { name: 'Pikachu, number 25' });
+    const tile = screen.getByRole('button', { name: '#0025 Pikachu' });
     await user.click(tile);
     expect(screen.getByRole('button', { name: 'Close' })).toHaveFocus();
     await user.keyboard('{Escape}');
@@ -259,11 +259,11 @@ describe('PokedexPage: details', () => {
   it('closes with the close button and by clicking outside', async () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
-    await user.click(screen.getByRole('button', { name: 'Pikachu, number 25' }));
+    await user.click(screen.getByRole('button', { name: '#0025 Pikachu' }));
     await user.click(screen.getByRole('button', { name: 'Close' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Pikachu, number 25' }));
+    await user.click(screen.getByRole('button', { name: '#0025 Pikachu' }));
     const backdrop = screen.getByRole('dialog').parentElement!;
     await user.pointer({ target: backdrop, keys: '[MouseLeft]' });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -272,7 +272,7 @@ describe('PokedexPage: details', () => {
   it('keeps Tab inside the open panel', async () => {
     const user = userEvent.setup();
     renderPokedex(seeded());
-    await user.click(screen.getByRole('button', { name: 'Number 133, undiscovered' }));
+    await user.click(screen.getByRole('button', { name: '#0133 undiscovered' }));
     const dialog = screen.getByRole('dialog');
     for (let i = 0; i < 6; i++) {
       await user.tab();
