@@ -76,5 +76,7 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
     restoreMocks: true,
+    // The Pokédex tests render 1,025 tiles in a simulated browser, which is slow on a CI machine.
+    testTimeout: 20_000,
   },
 });
