@@ -12,9 +12,10 @@ on:
 permissions:
   contents: read
 
-# One deployment at a time; a newer push waits for the running one instead of cancelling it.
+# One run at a time per branch, so a pull request's checks are never cancelled by another branch's
+# run, and a newer push to main waits for the running deployment instead of cancelling it.
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
