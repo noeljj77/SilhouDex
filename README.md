@@ -1,6 +1,6 @@
 # SilhouDex
 
-> _Every shadow has a story._
+> _Who's that Pokémon._
 
 [![Check and deploy](https://github.com/noeljj77/SilhouDex/actions/workflows/deploy.yml/badge.svg)](https://github.com/noeljj77/SilhouDex/actions/workflows/deploy.yml)
 [![Live demo](https://img.shields.io/badge/live%20demo-noeljj77.github.io%2FSilhouDex-d3202b)](https://noeljj77.github.io/SilhouDex/)
