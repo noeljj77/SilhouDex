@@ -20,12 +20,23 @@ async function getAuthModules() {
   return authReady;
 }
 
-async function getStoreModules() {
-  if (storeReady) return storeReady;
-  const [app, api] = await loadStore();
-  const instance = app.getApps()[0] ?? app.initializeApp(firebaseConfig);
-  storeReady = { db: api.getFirestore(instance), api };
-  return storeReady;
+let storePromise: Promise<NonNullable<typeof storeReady>> | undefined;
+
+/**
+ * Loads and sets up Firestore once. It is started early (while the player is still signing in),
+ * so the database is ready by the time progress needs to be loaded.
+ */
+function getStoreModules() {
+  storePromise ??= loadStore().then(([app, api]) => {
+    const instance = app.getApps()[0] ?? app.initializeApp(firebaseConfig);
+    // Firestore's usual streaming connection can stall behind some networks and browsers before
+    // it gives up. Letting it spot that and switch to plain requests keeps the first save fast.
+    const db = api.initializeFirestore(instance, { experimentalAutoDetectLongPolling: true });
+    storeReady = { db, api };
+    return storeReady;
+  });
+  storePromise.catch(() => (storePromise = undefined));
+  return storePromise;
 }
 
 const toUser = (u: {
@@ -47,7 +58,11 @@ export function createFirebaseBackend(): CloudBackend {
       getAuthModules()
         .then(({ auth, api }) => {
           if (stopped) return;
-          unsubscribe = api.onAuthStateChanged(auth, (u) => callback(u ? toUser(u) : null));
+          unsubscribe = api.onAuthStateChanged(auth, (u) => {
+            // Signed-in players need the database next, so start loading it now.
+            if (u) void getStoreModules().catch(() => {});
+            callback(u ? toUser(u) : null);
+          });
         })
         .catch(() => callback(null));
       return () => {
@@ -59,6 +74,7 @@ export function createFirebaseBackend(): CloudBackend {
     async signIn() {
       // The sign-in code is normally ready by the time the player taps the button. Opening the
       // window straight from the tap keeps phone browsers from blocking it as an unwanted pop-up.
+      void getStoreModules().catch(() => {});
       const { auth, api } = authReady ?? (await getAuthModules());
       try {
         await api.signInWithPopup(auth, new api.GoogleAuthProvider());
