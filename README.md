@@ -63,6 +63,7 @@ npm run dev
 | `npm run preview`     | Preview the production build                                                              |
 | `npm test`            | Run the test suite once                                                                   |
 | `npm run test:watch`  | Run tests in watch mode                                                                   |
+| `npm run test:e2e`    | Build the site and run the browser tests (first run `npx playwright install chromium`)    |
 | `npm run lint`        | Lint the codebase                                                                         |
 | `npm run format`      | Format files with Prettier                                                                |
 | `npm run build:index` | Rebuild the bundled Pokédex index from PokéAPI (`-- --verify-artwork` checks every image) |
@@ -73,6 +74,7 @@ The developer-only Silhouette Lab (`#/lab`) is available in `npm run dev` and is
 
 ```
 scripts/          build-time tools (Pokédex index generation)
+e2e/              browser tests (Playwright) run against the production build
 src/
   app/            app shell, routing, progress store, error and offline handling
   pages/          Daily, Practice, Pokédex, Achievements, Profile
@@ -89,9 +91,10 @@ docs/             setup guide for Google sign-in, README images and the demo GIF
 
 ## Quality
 
-- **660+ automated tests** cover the game rules, scoring, clue generation, daily schedule, streak edge cases, persistence and migrations, every achievement, the share output, cloud merging and syncing (including failure cases), and full Daily and Practice games.
-- **Accessibility:** axe finds no violations on any screen (desktop and phone, including the guess list, result and dialogs), text contrast is checked against the real colours behind it, and the guess box and dialogs work by keyboard with screen-reader labels and reduced-motion support.
-- **Continuous integration:** every push and pull request runs the formatting check, lint, tests and build. Only a green run on `main` is published, and Dependabot keeps dependencies current.
+- **660+ unit and component tests** cover the game rules, scoring, clue generation, daily schedule, streak edge cases, persistence and migrations, every achievement, the share output, cloud merging and syncing (including failure cases), and full Daily and Practice games.
+- **Browser tests** (`e2e/`, Playwright) drive the production build in a real browser: a whole Daily game with a refresh in the middle, the locked day, sharing, Practice staying separate, the UTC-midnight rollover, a corrupt save and going offline. They also check that nothing scrolls sideways at ten widths from 320 to 1920 pixels, that the console is clean and the Content-Security-Policy is strict, and that axe finds no violations (WCAG 2.2 AA) on every screen, dialog and game state, on a phone and a desktop.
+- **Accessibility:** beyond the automated scan, the guess box and dialogs work by keyboard with screen-reader labels, tiles are named by what they show, and reduced motion stops the decorative animation.
+- **Continuous integration:** every push and pull request runs the formatting check, lint, unit tests, build and the browser tests. Only a green run on `main` is published, and Dependabot keeps dependencies current.
 - **Performance:** each page loads on demand, and React, Motion, icons and the Pokémon list are separate cached files. The Firebase code is a separate file, kept out of the game's own bundle.
 
 ## Deploying
@@ -115,7 +118,7 @@ Sign-in is optional and switches on only when the Firebase settings in `src/clou
 ## Roadmap
 
 - Global leaderboard and extra game modes, which need a small backend.
-- End-to-end browser tests in CI (the current tests are unit, component and integration).
+- Browser tests for Google sign-in against a Firebase emulator (today the sign-in window itself is checked by hand, because it needs a real Google account).
 
 ## Licence
 

@@ -77,23 +77,26 @@ export function GuessDistributionChart({ stats }: { stats: DailyStats }) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <table className="sr-only">
-        <caption>Wrong guesses before solving</caption>
-        <thead>
-          <tr>
-            <th scope="col">Result</th>
-            <th scope="col">Games</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((b) => (
-            <tr key={b.label}>
-              <th scope="row">{b.detail}</th>
-              <td>{b.count}</td>
+      {/* The hidden class goes on a wrapper: a table ignores the 1px size and would stretch the page. */}
+      <div className="sr-only">
+        <table>
+          <caption>Wrong guesses before solving</caption>
+          <thead>
+            <tr>
+              <th scope="col">Result</th>
+              <th scope="col">Games</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((b) => (
+              <tr key={b.label}>
+                <th scope="row">{b.detail}</th>
+                <td>{b.count}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   );
 }
