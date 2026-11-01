@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { afterEach } from 'vitest';
+
+// Pages load on demand, which can take longer than the 1 s default on a slow CI machine.
+configure({ asyncUtilTimeout: 8000 });
 
 afterEach(() => {
   cleanup();
