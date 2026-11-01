@@ -1,10 +1,10 @@
 # SilhouDex progress
 
-_Last updated: 1 November 2026._ Daily Pokémon silhouette guessing game. Tagline: "Every shadow has a story."
+_Last updated: 1 November 2026 (site is live)._ Daily Pokémon silhouette guessing game. Tagline: "Every shadow has a story."
 
 ## Where we are in one line
 
-All ten milestones are built and the game is feature-complete. The Sora font, MIT licence and layout check are done and committed. What remains is switching on GitHub Pages (a setting only the repository owner can change). The launch date is set: 1 November 2026 is challenge #1.
+All ten milestones are built and the game is feature-complete. The Sora font, MIT licence and layout check are done and committed. **The site is live at https://noeljj77.github.io/SilhouDex/** and Challenge #1 (1 November 2026) is running. What remains is a real-phone test and the optional final review pass.
 
 ## What we have accomplished
 
@@ -40,14 +40,11 @@ Decisions you made along the way: any finished daily (win, loss or give-up) keep
 
 **For you (I can't do these):**
 
-1. **Switch on GitHub Pages:** repository **Settings → Pages → Source: GitHub Actions**. Then re-run the failed workflow from the Actions tab (or push anything). The site then appears at https://noeljj77.github.io/SilhouDex/.
-2. **Try it on a real phone** once it is live: the share sheet and card download can only be fully tested on a device.
+1. **Try it on a real phone**: the share sheet and card download can only be fully tested on a device.
 
 **For me:**
 
-1. Once the site is live, check the real address: loading, a full game, sharing, and the social preview.
-2. Confirm `SHARE_URL` and the social-preview address match the live site.
-3. Optional before launch: a final code-review, simplify and security-review pass.
+1. Optional: a final code-review, simplify and security-review pass.
 
 ## After launch (V2, not started)
 
