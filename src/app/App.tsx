@@ -21,9 +21,12 @@ const AchievementsPage = lazy(() =>
 const ProfilePage = lazy(() =>
   import('../pages/ProfilePage.tsx').then((m) => ({ default: m.ProfilePage })),
 );
-const SilhouetteLabPage = lazy(() =>
-  import('../pages/SilhouetteLabPage.tsx').then((m) => ({ default: m.SilhouetteLabPage })),
-);
+// The developer-only Silhouette Lab shows answers, so it is left out of the published site entirely.
+const SilhouetteLabPage = import.meta.env.DEV
+  ? lazy(() =>
+      import('../pages/SilhouetteLabPage.tsx').then((m) => ({ default: m.SilhouetteLabPage })),
+    )
+  : null;
 
 function Page({ route }: { route: RouteId }) {
   switch (route) {
@@ -38,7 +41,7 @@ function Page({ route }: { route: RouteId }) {
     case 'profile':
       return <ProfilePage />;
     case 'lab':
-      return <SilhouetteLabPage />;
+      return SilhouetteLabPage ? <SilhouetteLabPage /> : <DailyPage />;
   }
 }
 

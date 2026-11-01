@@ -4,6 +4,25 @@
   "version": "0.1.0",
   "description": "SilhouDex — a daily Pokémon silhouette guessing game. Every shadow has a story.",
   "license": "MIT",
+  "author": "Noel John Jacob",
+  "homepage": "https://noeljj77.github.io/SilhouDex/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noeljj77/SilhouDex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/noeljj77/SilhouDex/issues"
+  },
+  "keywords": [
+    "pokemon",
+    "game",
+    "react",
+    "typescript",
+    "vite",
+    "tailwindcss",
+    "firebase",
+    "pwa"
+  ],
   "type": "module",
   "engines": {
     "node": ">=22.13.0"

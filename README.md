@@ -62,7 +62,7 @@ npm run dev
 | `npm run format`      | Format files with Prettier                                                                |
 | `npm run build:index` | Rebuild the bundled Pokédex index from PokéAPI (`-- --verify-artwork` checks every image) |
 
-The developer-only Silhouette Lab is at `#/lab`.
+The developer-only Silhouette Lab (`#/lab`) is available in `npm run dev` and is left out of the published site, because it shows answers.
 
 ## Project structure
 
