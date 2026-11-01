@@ -361,6 +361,92 @@ describe('DailyPage: streak badge', () => {
   });
 });
 
+describe('DailyPage: countdown to the next challenge', () => {
+  it('is always visible while playing', async () => {
+    renderDaily();
+    await ready();
+    expect(screen.getByText(/New challenge in/)).toBeInTheDocument();
+    expect(screen.getByLabelText('Time until the next challenge').textContent).toMatch(
+      /^\d{2}:\d{2}:\d{2}$/,
+    );
+  });
+
+  it('stays visible on the result screen, and is not shown twice', async () => {
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    await guess(user, 'Bulbasaur');
+    await screen.findByRole('region', { name: 'Result' });
+    expect(screen.getAllByLabelText('Time until the next challenge')).toHaveLength(1);
+  });
+
+  it('counts down to UTC midnight', async () => {
+    vi.setSystemTime(new Date(`${BULBASAUR_DAY}T22:30:00Z`));
+    renderDaily();
+    await ready();
+    expect(screen.getByLabelText('Time until the next challenge')).toHaveTextContent('01:30:00');
+  });
+});
+
+describe('DailyPage: sharing', () => {
+  const text = () => screen.getByLabelText('Result text').textContent ?? '';
+
+  it('offers sharing after finishing, with a spoiler-free result by default', async () => {
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    await guess(user, 'Charmander');
+    await guess(user, 'Bulbasaur');
+    const share = await screen.findByRole('region', { name: 'Share your result' });
+    expect(share).toBeInTheDocument();
+    expect(text()).toContain('Score 85/100 · 1 wrong guess');
+    expect(text()).toMatch(/SilhouDex #\d+ ✅/);
+    expect(text()).toContain('🔥 1-day streak');
+    expect(text()).not.toMatch(/bulbasaur/i);
+  });
+
+  it('does not offer sharing while the game is still on', async () => {
+    renderDaily();
+    await ready();
+    expect(screen.queryByRole('region', { name: 'Share your result' })).not.toBeInTheDocument();
+  });
+
+  it('keeps the answer out of the shared text even though the page now shows it', async () => {
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    await guess(user, 'Bulbasaur');
+    await screen.findByRole('region', { name: 'Share your result' });
+    expect(screen.getByRole('region', { name: 'Result' })).toHaveTextContent('Bulbasaur'); // the panel above
+    expect(text()).not.toMatch(/bulbasaur/i); // the share text
+    await user.click(screen.getByRole('checkbox', { name: /Include the Pokémon/ }));
+    expect(text()).toMatch(/Spoiler: it was Bulbasaur/);
+  });
+
+  it('can share a result after the page is refreshed (the day is locked)', async () => {
+    const user = userEvent.setup();
+    const first = renderDaily();
+    await ready();
+    await guess(user, 'Bulbasaur');
+    await screen.findByRole('region', { name: 'Share your result' });
+    first.unmount();
+
+    renderDaily();
+    expect(await screen.findByRole('region', { name: 'Share your result' })).toBeInTheDocument();
+    expect(text()).toContain('Score 100/100');
+  });
+
+  it('can share a give-up too', async () => {
+    const user = userEvent.setup();
+    renderDaily();
+    await ready();
+    await user.click(screen.getByRole('button', { name: 'Give up' }));
+    await user.click(screen.getByRole('button', { name: 'Yes, reveal it' }));
+    await screen.findByRole('region', { name: 'Share your result' });
+    expect(text()).toMatch(/SilhouDex #\d+ 🏳️/);
+  });
+});
+
 describe('DailyPage: fairness', () => {
   it('uses the same clues for everyone, whatever difficulty the player picked in Practice', async () => {
     const { species, pokemon, chain } = fixtures.bulbasaur;

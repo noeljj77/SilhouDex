@@ -3,13 +3,15 @@ import { useCallback, useState } from 'react';
 import { hrefFor } from '../app/router.ts';
 import { useProgress, useProgressStore } from '../app/progressStore.ts';
 import { computeStreaks } from '../domain/progression/streaks.ts';
+import { NextDayCountdown } from '../features/daily/NextDayCountdown.tsx';
 import { StreakBadge } from '../features/daily/StreakBadge.tsx';
+import { ShareResult } from '../features/share/ShareResult.tsx';
+import { pokedexIndex } from '../data/pokedexIndex.ts';
 import { DEFAULT_DIFFICULTY } from '../domain/clues/difficulty.ts';
 import type { DailyChallenge } from '../domain/daily/schedule.ts';
 import { createSession, viewFromResult } from '../domain/game/engine.ts';
 import type { GameResult, GameSession } from '../domain/game/types.ts';
 import { useDailyChallenge } from '../features/daily/useDailyChallenge.ts';
-import { Countdown } from '../features/game/Countdown.tsx';
 import { GameScreen } from '../features/game/GameScreen.tsx';
 import { useGameController } from '../features/game/useGameController.ts';
 import { parseDateKey } from '../lib/utcDate.ts';
@@ -64,7 +66,10 @@ function DailyChallengeView({ challenge }: { challenge: DailyChallenge }) {
             </span>
           </h1>
         </div>
-        <StreakBadge streak={streak} />
+        <div className="flex flex-col items-start gap-2 sm:items-end">
+          <StreakBadge streak={streak} />
+          <NextDayCountdown />
+        </div>
       </header>
       {saved ? (
         <LockedDaily challenge={challenge} result={saved} />
@@ -75,13 +80,13 @@ function DailyChallengeView({ challenge }: { challenge: DailyChallenge }) {
   );
 }
 
-function NextChallenge() {
+/** Under a finished daily: share it, or play on elsewhere. */
+function DailyFooter({ result }: { result: GameResult }) {
+  const entry = pokedexIndex.getById(result.pokemonId);
   return (
-    <div className="flex flex-col gap-3 border-t border-white/10 pt-4">
-      <p className="text-sm text-violet-200/80">
-        Next challenge in <Countdown className="font-bold text-white" />
-      </p>
-      <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-4">
+      {entry && <ShareResult result={result} entry={entry} />}
+      <div className="flex flex-wrap gap-2 border-t border-white/10 pt-4">
         <a
           href={hrefFor('practice')}
           className="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20"
@@ -110,7 +115,7 @@ function LockedDaily({ challenge, result }: { challenge: DailyChallenge; result:
       finished={{ result, isNewDiscovery: false }}
       onGuess={() => 'ignored'}
       onGiveUp={() => {}}
-      resultFooter={<NextChallenge />}
+      resultFooter={<DailyFooter result={result} />}
     />
   );
 }
@@ -153,7 +158,7 @@ function PlayableDaily({ challenge }: { challenge: DailyChallenge }) {
       finished={game.finish}
       onGuess={game.guess}
       onGiveUp={game.giveUp}
-      resultFooter={<NextChallenge />}
+      resultFooter={game.finish ? <DailyFooter result={game.finish.result} /> : null}
     />
   );
 }

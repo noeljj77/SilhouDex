@@ -110,6 +110,15 @@ describe('PracticePage', () => {
     expect(saved.practice.active).toBeUndefined();
   });
 
+  it('has no share option (practice games are not part of the daily challenge)', async () => {
+    const user = userEvent.setup();
+    renderPractice();
+    await ready();
+    await guess(user, 'Bulbasaur');
+    await screen.findByRole('region', { name: 'Result' });
+    expect(screen.queryByRole('region', { name: 'Share your result' })).not.toBeInTheDocument();
+  });
+
   it('never touches daily results, daily progress or the streak data', async () => {
     const user = userEvent.setup();
     renderPractice();
