@@ -1,9 +1,15 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup, configure } from '@testing-library/react';
-import { afterEach } from 'vitest';
+import { afterEach, beforeEach } from 'vitest';
+import { HOW_TO_PLAY_KEY } from '../features/help/howToPlayMemory.ts';
 
 // Pages load on demand, which can take longer than the 1 s default on a slow CI machine.
 configure({ asyncUtilTimeout: 8000 });
+
+// The first-visit help card would sit over every screen under test, so it starts out dismissed.
+beforeEach(() => {
+  localStorage.setItem(HOW_TO_PLAY_KEY, '1');
+});
 
 afterEach(() => {
   cleanup();

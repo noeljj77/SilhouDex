@@ -1,6 +1,7 @@
 import { Sparkles, X } from 'lucide-react';
-import { useEffect, useRef, type KeyboardEvent } from 'react';
+import { useEffect, useRef } from 'react';
 import { typeStyle } from '../../components/typeColors.ts';
+import { useDialogKeys } from '../../components/useDialogKeys.ts';
 import { hrefFor } from '../../app/router.ts';
 import { spriteUrl } from '../../data/sprites.ts';
 import type { PokedexRow } from '../../domain/pokedex/browse.ts';
@@ -27,28 +28,7 @@ export function PokemonDetail({ row, onClose }: { row: PokedexRow; onClose(): vo
 
   useEffect(() => closeRef.current?.focus(), []);
 
-  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Escape') {
-      event.stopPropagation();
-      onClose();
-      return;
-    }
-    if (event.key !== 'Tab') return;
-    // Keep Tab inside the panel.
-    const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled])',
-    );
-    if (!focusable || focusable.length === 0) return;
-    const first = focusable[0]!;
-    const last = focusable[focusable.length - 1]!;
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  };
+  const onKeyDown = useDialogKeys(panelRef, onClose);
 
   return (
     <div

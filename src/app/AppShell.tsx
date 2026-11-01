@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { AccountButton } from '../features/account/AccountButton.tsx';
+import { HowToPlay } from '../features/help/HowToPlay.tsx';
 import { ErrorBoundary } from './ErrorBoundary.tsx';
 import { hrefFor, type RouteId } from './router.ts';
 import { useOnline } from './useOnline.ts';
@@ -82,6 +83,7 @@ export function AppShell({ route, children }: { route: RouteId; children: ReactN
                 );
               })}
             </nav>
+            <HowToPlay />
             <AccountButton />
           </div>
         </header>
