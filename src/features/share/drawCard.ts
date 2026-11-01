@@ -9,7 +9,9 @@ import {
 export const CARD_WIDTH = 1080;
 export const CARD_HEIGHT = 1350;
 
-const FONT = "'Segoe UI', system-ui, -apple-system, Roboto, sans-serif";
+export const CARD_FONT_FAMILY =
+  "'Sora Variable', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif";
+const FONT = CARD_FONT_FAMILY;
 
 export interface CardArtwork {
   image: CanvasImageSource;

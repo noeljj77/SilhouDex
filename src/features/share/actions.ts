@@ -8,6 +8,23 @@ import {
   type CardOptions,
 } from './drawCard.ts';
 
+/**
+ * Makes sure the card font is ready before the card is drawn. A canvas silently uses a fallback
+ * font if the real one has not loaded yet, which would make the card look different each time.
+ */
+export async function ensureCardFonts(): Promise<void> {
+  if (typeof document === 'undefined' || !document.fonts) return;
+  try {
+    await Promise.all(
+      ['500', '600', '700', '800'].map((weight) =>
+        document.fonts.load(`${weight} 24px "Sora Variable"`),
+      ),
+    );
+  } catch {
+    // The card still draws with the fallback font.
+  }
+}
+
 /** Draws the result card on a new canvas, or returns null if this browser cannot draw. */
 export function renderCard(data: ShareData, options: CardOptions): HTMLCanvasElement | null {
   const canvas = document.createElement('canvas');

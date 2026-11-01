@@ -10,6 +10,7 @@ import {
   canvasToBlob,
   copyText,
   downloadBlob,
+  ensureCardFonts,
   loadCardArtwork,
   renderCard,
   shareNatively,
@@ -27,6 +28,7 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
   const [artwork, setArtwork] = useState<CardArtwork | null>(null);
   const [message, setMessage] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
+  const [fontsReady, setFontsReady] = useState(false);
   const messageTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const streak = result.dateKey ? computeStreaks(daily.results, result.dateKey).current : 0;
@@ -54,9 +56,19 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
     [spoilers, answer, artwork],
   );
 
+  // The card is drawn with the site font, so wait until it has loaded (a canvas would otherwise
+  // quietly use a different font).
+  useEffect(() => {
+    let cancelled = false;
+    ensureCardFonts().then(() => !cancelled && setFontsReady(true));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // A small picture of the card, so the player sees what they are about to share.
   useEffect(() => {
-    if (!data) return;
+    if (!data || !fontsReady) return;
     let cancelled = false;
     Promise.resolve().then(() => {
       const canvas = renderCard(data, cardOptions);
@@ -65,7 +77,7 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
     return () => {
       cancelled = true;
     };
-  }, [data, cardOptions]);
+  }, [data, cardOptions, fontsReady]);
 
   useEffect(() => () => clearTimeout(messageTimer.current), []);
 
@@ -78,6 +90,7 @@ export function ShareResult({ result, entry }: { result: GameResult; entry: Poke
   };
 
   const cardBlob = async () => {
+    await ensureCardFonts();
     const canvas = renderCard(data, cardOptions);
     return canvas ? canvasToBlob(canvas) : null;
   };

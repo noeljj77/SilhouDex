@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { canShareNatively, copyText, downloadBlob, shareNatively } from './actions.ts';
+import {
+  canShareNatively,
+  copyText,
+  downloadBlob,
+  ensureCardFonts,
+  shareNatively,
+} from './actions.ts';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -99,5 +105,32 @@ describe('native sharing', () => {
   it('reports a real failure', async () => {
     setNavigator({ share: vi.fn().mockRejectedValue(new Error('boom')) });
     expect(await shareNatively({ title: 't', text: 'x' })).toBe('failed');
+  });
+});
+
+describe('ensureCardFonts', () => {
+  const setFonts = (fonts: unknown) =>
+    Object.defineProperty(document, 'fonts', { value: fonts, configurable: true });
+
+  it('waits for every weight the card uses before drawing', async () => {
+    const load = vi.fn().mockResolvedValue([]);
+    setFonts({ load });
+    await ensureCardFonts();
+    expect(load.mock.calls.map((call) => call[0])).toEqual([
+      '500 24px "Sora Variable"',
+      '600 24px "Sora Variable"',
+      '700 24px "Sora Variable"',
+      '800 24px "Sora Variable"',
+    ]);
+  });
+
+  it('does nothing in a browser without the font loading API', async () => {
+    setFonts(undefined);
+    await expect(ensureCardFonts()).resolves.toBeUndefined();
+  });
+
+  it('still lets the card draw (with a fallback font) if the font fails to load', async () => {
+    setFonts({ load: vi.fn().mockRejectedValue(new Error('network')) });
+    await expect(ensureCardFonts()).resolves.toBeUndefined();
   });
 });

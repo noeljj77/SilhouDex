@@ -101,6 +101,10 @@ One-time setup: in the repository, go to **Settings → Pages** and set **Source
 - **Progress is per browser.** It lives in that browser's storage, so it doesn't follow you between devices.
 - **Forms.** Regional and alternate forms count as their base Pokémon.
 
+## Licence
+
+The code is released under the [MIT licence](LICENSE). The licence covers the source code only, not Pokémon names or artwork (see the disclaimer below). The Sora font is bundled under the SIL Open Font License.
+
 ## Disclaimer
 
 SilhouDex is an unofficial, non-commercial fan project. It is not affiliated with, endorsed by, or sponsored by Nintendo, Game Freak, Creatures Inc. or The Pokémon Company. Pokémon and Pokémon character names are trademarks of their respective owners. Pokémon data and artwork come from [PokéAPI](https://pokeapi.co/).

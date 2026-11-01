@@ -14,7 +14,7 @@
   --color-cyan-glow: #22d3ee;
   --color-volt: #facc15;
 
-  --font-sans: ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Sora Variable', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
 }
 
 html {

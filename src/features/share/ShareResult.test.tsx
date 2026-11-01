@@ -17,6 +17,7 @@ vi.mock('./actions.ts', () => ({
   loadCardArtwork: vi.fn(),
   copyText: vi.fn(),
   downloadBlob: vi.fn(),
+  ensureCardFonts: vi.fn(),
   canShareNatively: vi.fn(),
   shareNatively: vi.fn(),
 }));
@@ -36,6 +37,7 @@ beforeEach(() => {
     width: 10,
     height: 10,
   });
+  mocked.ensureCardFonts.mockResolvedValue(undefined);
   mocked.copyText.mockResolvedValue(true);
   mocked.canShareNatively.mockReturnValue(false);
   mocked.shareNatively.mockResolvedValue('shared');

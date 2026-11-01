@@ -1,5 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+// Sora, served from this site (no outside font requests).
+import '@fontsource-variable/sora/wght.css';
 import './index.css';
 import { App } from './app/App.tsx';
 
