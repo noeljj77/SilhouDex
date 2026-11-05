@@ -51,7 +51,7 @@ describe('createEmptyProgress', () => {
     expect(empty()).toMatchObject({
       schemaVersion: 1,
       player: { id: 'player-1', createdAt: T1 },
-      settings: { difficulty: 'normal' },
+      settings: { difficulty: 'normal', generations: [1, 2, 3, 4, 5, 6, 7, 8, 9] },
       daily: { results: {} },
       practice: { results: [] },
       discoveries: {},

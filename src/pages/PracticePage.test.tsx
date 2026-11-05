@@ -5,6 +5,7 @@ import { ProgressProvider } from '../app/ProgressProvider.tsx';
 import { createProgressStore } from '../app/progressStore.ts';
 import { getDailyPool, LAUNCH_DATE } from '../domain/daily/schedule.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
+import { pokedexIndex } from '../data/pokedexIndex.ts';
 import { pickPracticePokemonId } from '../domain/practice/select.ts';
 import { createLocalRepository, STORAGE_KEY } from '../persistence/localRepository.ts';
 import { PracticePage } from './PracticePage.tsx';
@@ -207,7 +208,7 @@ describe('PracticePage: difficulty', () => {
     await ready();
     await guess(user, 'Charmander');
     expect(screen.getByRole('radio', { name: 'Easy' })).toBeDisabled();
-    expect(screen.getByText(/can be changed between games/)).toBeInTheDocument();
+    expect(screen.getByText(/Difficulty can be changed between games/)).toBeInTheDocument();
 
     await guess(user, 'Bulbasaur');
     await screen.findByRole('region', { name: 'Result' });
@@ -227,5 +228,101 @@ describe('PracticePage: difficulty', () => {
     renderPractice();
     await ready();
     expect(screen.getByRole('radio', { name: 'Easy' })).toBeChecked();
+  });
+});
+
+describe('PracticePage: generations', () => {
+  const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+  const gen = (n: number) => `Gen ${ROMAN[n - 1]}`;
+  const chip = (name: string) => screen.getByRole('button', { name });
+  /** The Pokémon the page most recently chose from. */
+  const lastPool = () => (picker.mock.calls.at(-1)?.[1] ?? []) as number[];
+  const generationOf = (id: number) => pokedexIndex.getById(id)!.generation;
+
+  /** Leaves only Gen I on. */
+  const onlyGenerationOne = async (user: ReturnType<typeof userEvent.setup>) => {
+    for (let g = 2; g <= 9; g++) await user.click(chip(gen(g)));
+  };
+
+  it('starts with every generation, and says how many Pokémon are in play', async () => {
+    renderPractice();
+    await ready();
+    for (let g = 1; g <= 9; g++) expect(chip(gen(g))).toHaveAttribute('aria-pressed', 'true');
+    expect(lastPool()).toHaveLength(pokedexIndex.entries.length);
+    expect(
+      screen.getByText(new RegExp(`${pokedexIndex.entries.length} Pokémon in play`)),
+    ).toBeInTheDocument();
+  });
+
+  it('only picks Pokémon from the chosen generations', async () => {
+    const user = userEvent.setup();
+    renderPractice();
+    await ready();
+    await onlyGenerationOne(user);
+    const pool = lastPool();
+    expect(pool.length).toBeGreaterThan(0);
+    expect(new Set(pool.map(generationOf))).toEqual(new Set([1]));
+    expect(screen.getByText(/151 Pokémon in play/)).toBeInTheDocument();
+    expect(stored().settings.generations).toEqual([1]);
+  });
+
+  it('always keeps at least one generation on', async () => {
+    const user = userEvent.setup();
+    renderPractice();
+    await ready();
+    await onlyGenerationOne(user);
+    await user.click(chip('Gen I'));
+    expect(chip('Gen I')).toHaveAttribute('aria-pressed', 'true');
+    expect(stored().settings.generations).toEqual([1]);
+  });
+
+  it('turns every generation back on with All', async () => {
+    const user = userEvent.setup();
+    renderPractice();
+    await ready();
+    await user.click(chip('Gen IV'));
+    expect(chip('All')).toBeEnabled();
+    await user.click(chip('All'));
+    expect(stored().settings.generations).toHaveLength(9);
+    expect(chip('All')).toBeDisabled();
+  });
+
+  it('picks a new Pokémon when the choice changes before the first guess', async () => {
+    const user = userEvent.setup();
+    renderPractice();
+    await ready();
+    const before = picker.mock.calls.length;
+    await user.click(chip('Gen IX'));
+    expect(picker.mock.calls.length).toBe(before + 1);
+  });
+
+  it('locks once the game has started, and unlocks for the next game', async () => {
+    const user = userEvent.setup();
+    renderPractice();
+    await ready();
+    await guess(user, 'Charmander');
+    expect(chip('Gen I')).toBeDisabled();
+    expect(chip('All')).toBeDisabled();
+    expect(screen.getByText(/Generations can be changed between games/)).toBeInTheDocument();
+
+    await guess(user, 'Bulbasaur');
+    await screen.findByRole('region', { name: 'Result' });
+    expect(chip('Gen I')).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: 'Next Pokémon' }));
+    await ready();
+    expect(chip('Gen I')).toBeEnabled();
+  });
+
+  it('remembers the choice after a refresh', async () => {
+    const user = userEvent.setup();
+    const first = renderPractice();
+    await ready();
+    await user.click(chip('Gen V'));
+    first.unmount();
+    renderPractice();
+    await ready();
+    expect(chip('Gen V')).toHaveAttribute('aria-pressed', 'false');
+    expect(chip('Gen IV')).toHaveAttribute('aria-pressed', 'true');
   });
 });

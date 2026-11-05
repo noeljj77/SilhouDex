@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import {
   PROGRESS_KEY,
   answerFor,
+  generationOf,
   dismissToasts,
   gameReady,
   guess,
@@ -128,6 +129,61 @@ test.describe('Practice', () => {
 
     await page.getByRole('button', { name: 'Next Pokémon' }).click();
     await expect(guessBox(page)).toBeVisible();
+  });
+});
+
+test.describe('Practice generations', () => {
+  const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+
+  test('only picks Pokémon from the chosen generations, and remembers the choice', async ({
+    page,
+  }) => {
+    await openApp(page, 'practice');
+    await gameReady(page);
+
+    // Leave only Generation I switched on.
+    for (let g = 2; g <= 9; g++) {
+      await page.getByRole('button', { name: `Gen ${ROMAN[g - 1]}`, exact: true }).click();
+    }
+    await expect(page.getByRole('button', { name: 'Gen I', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    await expect(page.getByText(/151 Pokémon in play/)).toBeVisible();
+
+    // The last one cannot be switched off.
+    await page.getByRole('button', { name: 'Gen I', exact: true }).click({ force: true });
+    await expect(page.getByRole('button', { name: 'Gen I', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+
+    // Pichu is from Generation II, so it can never be the answer here. The guess saves the game.
+    await gameReady(page);
+    await guess(page, 'Pichu');
+    await expect(page.getByText('Not Pichu. −15 points.')).toBeVisible();
+
+    const mystery = await page.evaluate(
+      (key) => JSON.parse(localStorage.getItem(key) ?? '{}').practice?.active?.pokemonId as number,
+      PROGRESS_KEY,
+    );
+    expect(generationOf(mystery)).toBe(1);
+
+    // The choice is locked during a game.
+    await expect(page.getByRole('button', { name: 'Gen II', exact: true })).toBeDisabled();
+    await expect(page.getByText(/Generations can be changed between games/)).toBeVisible();
+
+    // It survives a refresh.
+    await page.reload();
+    await gameReady(page);
+    await expect(page.getByRole('button', { name: 'Gen II', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    await expect(page.getByRole('button', { name: 'Gen I', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 });
 

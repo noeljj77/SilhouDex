@@ -1,4 +1,5 @@
 import type { GameMode, GameResult, GameSession } from '../game/types.ts';
+import { ALL_GENERATIONS } from '../pokemon/generations.ts';
 import type { Discovery, ProgressData } from './types.ts';
 
 export const SCHEMA_VERSION = 1;
@@ -9,7 +10,7 @@ export function createEmptyProgress(now: string, playerId: string): ProgressData
   return {
     schemaVersion: SCHEMA_VERSION,
     player: { id: playerId, createdAt: now },
-    settings: { difficulty: 'normal' },
+    settings: { difficulty: 'normal', generations: [...ALL_GENERATIONS] },
     daily: { results: {} },
     practice: { results: [] },
     discoveries: {},

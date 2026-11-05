@@ -5,8 +5,14 @@ import { pokedexIndex } from '../data/pokedexIndex.ts';
 import { getDailyChallenge } from '../domain/daily/schedule.ts';
 import { createSession } from '../domain/game/engine.ts';
 import type { GameSession } from '../domain/game/types.ts';
-import { pickPracticePokemonId, recentPracticeIds } from '../domain/practice/select.ts';
+import type { Generation } from '../domain/pokemon/types.ts';
+import {
+  pickPracticePokemonId,
+  practicePool,
+  recentPracticeIds,
+} from '../domain/practice/select.ts';
 import { DifficultyPicker } from '../features/game/DifficultyPicker.tsx';
+import { GenerationPicker } from '../features/game/GenerationPicker.tsx';
 import { GameScreen } from '../features/game/GameScreen.tsx';
 import { useGameController } from '../features/game/useGameController.ts';
 import { newId } from '../lib/id.ts';
@@ -40,7 +46,7 @@ function PracticeRound({ onNext }: { onNext(): void }) {
     }
     const pokemonId = pickPracticePokemonId(
       createRng(newId()),
-      pokedexIndex.entries.map((e) => e.id),
+      practicePool(pokedexIndex.entries, snapshot.settings.generations),
       recentPracticeIds(snapshot.practice.results),
       todaysDailyAnswer(new Date()),
     );
@@ -62,6 +68,14 @@ function PracticeRound({ onNext }: { onNext(): void }) {
   const game = useGameController({ start, resume: round.resume, onProgress, onFinish });
 
   const played = progress.practice.results.length;
+  // Choosing generations is allowed until the first guess, and again from the next Pokémon.
+  const started = game.session.guesses.length > 0 || game.view.isOver;
+  const poolSize = practicePool(pokedexIndex.entries, progress.settings.generations).length;
+  const changeGenerations = (next: Generation[]) => {
+    store.setGenerations(next);
+    // The mystery Pokémon was picked under the old choice, so an unstarted game picks again.
+    if (!started) onNext();
+  };
   return (
     <main className="flex flex-col gap-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -76,9 +90,16 @@ function PracticeRound({ onNext }: { onNext(): void }) {
         <DifficultyPicker
           value={progress.settings.difficulty}
           onChange={store.setDifficulty}
-          disabled={game.session.guesses.length > 0 || game.view.isOver}
+          disabled={started}
         />
       </header>
+
+      <GenerationPicker
+        value={progress.settings.generations}
+        onChange={changeGenerations}
+        poolSize={poolSize}
+        disabled={started}
+      />
 
       <GameScreen
         pokemonId={round.pokemonId}

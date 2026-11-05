@@ -3,6 +3,7 @@ import type { AchievementState, Discovery, ProgressData } from '../domain/progre
 import type { GameResult, GameSession } from '../domain/game/types.ts';
 import { isDateKey, type DateKey } from '../lib/utcDate.ts';
 import { DIFFICULTY_PROFILES, type DifficultyLevel } from '../domain/clues/difficulty.ts';
+import { normalizeGenerations } from '../domain/pokemon/generations.ts';
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -75,6 +76,11 @@ export function normalizeProgress(
       ? (raw.settings.difficulty as DifficultyLevel)
       : base.settings.difficulty;
 
+  // Saves from before this setting existed have none, which means every generation.
+  const generations = normalizeGenerations(
+    isRecord(raw.settings) ? raw.settings.generations : undefined,
+  );
+
   const dailyRaw = isRecord(raw.daily) ? raw.daily : {};
   const dailyResults: Record<DateKey, GameResult> = {};
   if (isRecord(dailyRaw.results)) {
@@ -116,7 +122,7 @@ export function normalizeProgress(
   const data: ProgressData = {
     schemaVersion,
     player,
-    settings: { difficulty },
+    settings: { difficulty, generations },
     daily: { results: dailyResults },
     practice: { results: practiceResults },
     discoveries,

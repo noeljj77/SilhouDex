@@ -1,3 +1,4 @@
+import { romanGeneration } from '../domain/pokemon/generations.ts';
 import { useCallback, useDeferredValue, useMemo, useRef, useState } from 'react';
 import { useProgress } from '../app/progressStore.ts';
 import { pokedexIndex } from '../data/pokedexIndex.ts';
@@ -12,8 +13,6 @@ import { computeCollectionStats } from '../domain/progression/stats.ts';
 import { PokedexFilterBar } from '../features/pokedex/PokedexFilterBar.tsx';
 import { PokemonCard } from '../features/pokedex/PokemonCard.tsx';
 import { PokemonDetail } from '../features/pokedex/PokemonDetail.tsx';
-
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 
 export function PokedexPage() {
   const { discoveries } = useProgress();
@@ -90,7 +89,7 @@ export function PokedexPage() {
                   }
                   className={`dex-chip cursor-pointer tabular-nums transition ${filters.generation === g.generation ? '!bg-dex !text-white' : g.discovered === g.total ? '!bg-volt' : 'hover:bg-paper'}`}
                 >
-                  Gen {ROMAN[g.generation - 1]} · {g.discovered}/{g.total}
+                  Gen {romanGeneration(g.generation)} · {g.discovered}/{g.total}
                 </button>
               </li>
             ))}

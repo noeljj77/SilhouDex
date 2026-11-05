@@ -135,7 +135,22 @@ describe('createLocalRepository', () => {
     const loaded = make().load();
     expect(loaded.practice).toEqual({ results: [] });
     expect(loaded.settings.difficulty).toBe('normal');
+    expect(loaded.settings.generations).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     expect(loaded.player.id).toBe('player-1');
+  });
+
+  it('reads a saved generation choice, tidying it up, and falls back to every generation', () => {
+    const save = (generations: unknown) =>
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ schemaVersion: 1, settings: { difficulty: 'hard', generations } }),
+      );
+    save([3, 1, 3, 99]);
+    expect(make().load().settings).toEqual({ difficulty: 'hard', generations: [1, 3] });
+    save([]);
+    expect(make().load().settings.generations).toHaveLength(9);
+    save('nonsense');
+    expect(make().load().settings.generations).toHaveLength(9);
   });
 });
 

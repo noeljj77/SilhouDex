@@ -1,6 +1,6 @@
 import type { Rng } from '../../lib/prng.ts';
 import type { GameResult } from '../game/types.ts';
-import type { SpeciesId } from '../pokemon/types.ts';
+import type { Generation, PokemonIndexEntry, SpeciesId } from '../pokemon/types.ts';
 
 /** How many of the most recent practice Pokémon are skipped, so rounds do not repeat quickly. */
 export const RECENT_PRACTICE_MEMORY = 20;
@@ -8,6 +8,15 @@ export const RECENT_PRACTICE_MEMORY = 20;
 /** Pokémon from the last few practice rounds, newest last. */
 export function recentPracticeIds(results: readonly GameResult[]): SpeciesId[] {
   return results.slice(-RECENT_PRACTICE_MEMORY).map((r) => r.pokemonId);
+}
+
+/** The ids Practice may pick from: Pokémon of the chosen generations only. */
+export function practicePool(
+  entries: readonly PokemonIndexEntry[],
+  generations: readonly Generation[],
+): SpeciesId[] {
+  const wanted = new Set<Generation>(generations);
+  return entries.filter((e) => wanted.has(e.generation)).map((e) => e.id);
 }
 
 /**

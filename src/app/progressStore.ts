@@ -2,6 +2,7 @@ import { createContext, useContext, useSyncExternalStore } from 'react';
 import { pokedexIndex } from '../data/pokedexIndex.ts';
 import { markSeen, unlockAchievements } from '../domain/achievements/evaluator.ts';
 import type { DifficultyLevel } from '../domain/clues/difficulty.ts';
+import { normalizeGenerations, sameGenerations } from '../domain/pokemon/generations.ts';
 import { toGameResult } from '../domain/game/engine.ts';
 import type { GameMode, GameResult, GameSession } from '../domain/game/types.ts';
 import { mergeProgress } from '../domain/progression/merge.ts';
@@ -10,7 +11,7 @@ import {
   recordGameEnd,
   setActiveSession,
 } from '../domain/progression/record.ts';
-import type { PokemonIndexEntry } from '../domain/pokemon/types.ts';
+import type { Generation, PokemonIndexEntry } from '../domain/pokemon/types.ts';
 import type { ProgressData } from '../domain/progression/types.ts';
 import { newId } from '../lib/id.ts';
 import type { ProgressRepository, StorageMode } from '../persistence/localRepository.ts';
@@ -36,6 +37,8 @@ export interface ProgressStore {
   finishGame(session: GameSession): FinishOutcome;
   /** Clue difficulty for Practice. (Daily always uses the same difficulty for everyone.) */
   setDifficulty(difficulty: DifficultyLevel): void;
+  /** The generations Practice picks from. An empty or invalid choice means every generation. */
+  setGenerations(generations: readonly Generation[]): void;
   /** Records that the player has been shown these unlocked achievements. */
   markAchievementsSeen(ids: readonly string[]): void;
   /** Folds in progress saved elsewhere (the cloud) without losing anything from this device. */
@@ -109,6 +112,11 @@ export function createProgressStore(
       const merged = mergeProgress(state, remote);
       // Combining two histories can complete achievements neither one had alone; those start seen.
       commit(unlockAchievements(merged, catalogue, now(), true).data);
+    },
+    setGenerations: (generations) => {
+      const next = normalizeGenerations(generations);
+      if (sameGenerations(state.settings.generations, next)) return;
+      commit({ ...state, settings: { ...state.settings, generations: next } });
     },
     setDifficulty: (difficulty) => {
       if (state.settings.difficulty === difficulty) return;

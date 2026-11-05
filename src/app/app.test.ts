@@ -89,6 +89,20 @@ describe('createProgressStore', () => {
     expect(store.getSnapshot().discoveries[25]?.timesDiscovered).toBe(1);
   });
 
+  it('saves the practice generations, tidied up, and skips saving an unchanged choice', () => {
+    const repo = makeRepo();
+    const store = createProgressStore(repo);
+    expect(store.getSnapshot().settings.generations).toHaveLength(9);
+    store.setGenerations([3, 1, 3]);
+    expect(store.getSnapshot().settings.generations).toEqual([1, 3]);
+    expect(repo.saves).toBe(1);
+    store.setGenerations([1, 3]);
+    expect(repo.saves).toBe(1);
+    store.setGenerations([]); // nothing chosen means every generation
+    expect(store.getSnapshot().settings.generations).toHaveLength(9);
+    expect(repo.saves).toBe(2);
+  });
+
   it('saves the practice difficulty, and skips saving an unchanged one', () => {
     const repo = makeRepo();
     const store = createProgressStore(repo);

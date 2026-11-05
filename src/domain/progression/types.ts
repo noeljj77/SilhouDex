@@ -1,7 +1,7 @@
 import type { DateKey } from '../../lib/utcDate.ts';
 import type { DifficultyLevel } from '../clues/difficulty.ts';
 import type { GameMode, GameResult, GameSession } from '../game/types.ts';
-import type { SpeciesId } from '../pokemon/types.ts';
+import type { Generation, SpeciesId } from '../pokemon/types.ts';
 
 /** One collected Pokémon. Only correct guesses create or update these. */
 export interface Discovery {
@@ -23,6 +23,8 @@ export interface AchievementState {
 
 export interface PlayerSettings {
   difficulty: DifficultyLevel;
+  /** Which generations Practice picks its Pokémon from. Never empty. Daily ignores it. */
+  generations: Generation[];
 }
 
 /** Everything stored for one player. Statistics and streaks are derived from this, never stored. */

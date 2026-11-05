@@ -17,7 +17,7 @@ SilhouDex is a daily Pokémon mystery guessing game. A partly hidden silhouette 
 - **Daily Silhouette.** One shared Pokémon per UTC day, five reveal stages, five clues and a score that drops 15 points per miss. One final guess after the last reveal. Your result is locked once you finish, so refreshing can't replay it.
 - **A reveal that melts in.** A clockwise sweep with fog-soft edges, drawn on a canvas and animated smoothly between stages. No grid, no tiles, no blur: the real artwork is turned into a black silhouette that keeps its transparency.
 - **Clues from real data.** 22 kinds of clue (typing, generation, abilities, evolution, size, stats, Pokédex entries and more), chosen per challenge, never repeating, never containing the Pokémon's name. Easy, Normal and Hard clue strengths.
-- **Practice.** Unlimited random Pokémon on the same engine. It never touches your daily streak or statistics, and never picks today's daily answer.
+- **Practice.** Unlimited random Pokémon on the same engine, optionally limited to the generations you choose (for example only Gen I to III). It never touches your daily streak or statistics, and never picks today's daily answer.
 - **Daily streaks.** Current and longest streak, a monthly calendar of won, lost, gave-up and missed days, and win-rate and guess-distribution statistics.
 - **Discovery Pokédex.** All 1,025 Pokémon. The ones you identify appear in full colour with their discovery dates; the rest stay as silhouettes. Filter by generation, type or status, search and sort.
 - **15 achievements.** Locked, in-progress and unlocked states with progress bars, unlock dates and a pop-up when you earn one.

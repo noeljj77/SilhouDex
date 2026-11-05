@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { createRng } from '../../lib/prng.ts';
 import type { GameResult } from '../game/types.ts';
-import { pickPracticePokemonId, RECENT_PRACTICE_MEMORY, recentPracticeIds } from './select.ts';
+import type { Generation, PokemonIndexEntry } from '../pokemon/types.ts';
+import {
+  pickPracticePokemonId,
+  practicePool,
+  RECENT_PRACTICE_MEMORY,
+  recentPracticeIds,
+} from './select.ts';
 
 const ids = Array.from({ length: 50 }, (_, i) => i + 1);
 const result = (pokemonId: number): GameResult => ({
@@ -13,6 +19,30 @@ const result = (pokemonId: number): GameResult => ({
   wrongGuesses: 0,
   revealsUsed: 0,
   completedAt: 't',
+});
+
+const entry = (id: number, generation: Generation) => ({ id, generation }) as PokemonIndexEntry;
+const entries = [entry(1, 1), entry(152, 2), entry(153, 2), entry(252, 3), entry(906, 9)];
+
+describe('practicePool', () => {
+  it('keeps only the Pokémon of the chosen generations, in order', () => {
+    expect(practicePool(entries, [2])).toEqual([152, 153]);
+    expect(practicePool(entries, [1, 3, 9])).toEqual([1, 252, 906]);
+  });
+
+  it('is every Pokémon when every generation is chosen', () => {
+    expect(practicePool(entries, [1, 2, 3, 4, 5, 6, 7, 8, 9])).toEqual([1, 152, 153, 252, 906]);
+  });
+
+  it('is empty for a generation with no Pokémon', () => {
+    expect(practicePool(entries, [5])).toEqual([]);
+  });
+
+  it('keeps a capped pick inside the chosen generations, and away from the excluded one', () => {
+    const rng = createRng('capped');
+    const pool = practicePool(entries, [2]);
+    for (let i = 0; i < 200; i++) expect(pickPracticePokemonId(rng, pool, [], [152])).toBe(153);
+  });
 });
 
 describe('pickPracticePokemonId', () => {

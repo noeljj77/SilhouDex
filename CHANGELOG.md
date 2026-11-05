@@ -4,6 +4,7 @@
 
 ### Added
 
+- Practice can be limited to chosen generations. Switch generations on or off (at least one stays on); the choice is saved with your settings, follows you between devices when you are signed in, and locks during a game.
 - Browser tests (Playwright) run in CI against the production build: a full Daily game, layouts from 320 to 1920 pixels wide, and an accessibility scan of every screen and dialog.
 - A security policy (`SECURITY.md`).
 

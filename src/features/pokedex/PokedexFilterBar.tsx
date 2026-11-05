@@ -6,6 +6,7 @@ import {
   type SortKey,
   type StatusFilter,
 } from '../../domain/pokedex/browse.ts';
+import { ALL_GENERATIONS, romanGeneration } from '../../domain/pokemon/generations.ts';
 import { POKEMON_TYPES, type Generation } from '../../domain/pokemon/types.ts';
 
 const STATUS: { value: StatusFilter; label: string }[] = [
@@ -13,8 +14,6 @@ const STATUS: { value: StatusFilter; label: string }[] = [
   { value: 'discovered', label: 'Discovered' },
   { value: 'undiscovered', label: 'Undiscovered' },
 ];
-const GENERATIONS: Generation[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 
 const selectClass = 'dex-field h-11 !min-h-0 text-sm font-medium';
 
@@ -88,9 +87,9 @@ export function PokedexFilterBar({
             }
           >
             <option value="all">All</option>
-            {GENERATIONS.map((g) => (
+            {ALL_GENERATIONS.map((g) => (
               <option key={g} value={g}>
-                Generation {ROMAN[g - 1]}
+                Generation {romanGeneration(g)}
               </option>
             ))}
           </select>

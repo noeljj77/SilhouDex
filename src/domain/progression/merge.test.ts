@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { GameResult, GameSession } from '../game/types.ts';
 import type { DateKey } from '../../lib/utcDate.ts';
+import type { Generation } from '../pokemon/types.ts';
 import { mergeProgress } from './merge.ts';
 import { PRACTICE_RESULTS_CAP, createEmptyProgress } from './record.ts';
 import type { ProgressData } from './types.ts';
@@ -144,11 +145,21 @@ describe('mergeProgress', () => {
   });
 
   it('keeps the earliest player, and takes settings from the cloud copy', () => {
-    const local = { ...empty(T2, 'new'), settings: { difficulty: 'normal' as const } };
-    const remote = { ...empty(T1, 'old'), settings: { difficulty: 'hard' as const } };
+    const local = {
+      ...empty(T2, 'new'),
+      settings: {
+        difficulty: 'normal' as const,
+        generations: [1, 2, 3, 4, 5, 6, 7, 8, 9] as Generation[],
+      },
+    };
+    const remote = {
+      ...empty(T1, 'old'),
+      settings: { difficulty: 'hard' as const, generations: [1, 2, 3] as Generation[] },
+    };
     const merged = mergeProgress(local, remote);
     expect(merged.player).toEqual({ id: 'old', createdAt: T1 });
     expect(merged.settings.difficulty).toBe('hard');
+    expect(merged.settings.generations).toEqual([1, 2, 3]);
   });
 
   it('drops an unfinished daily game once that day has a result', () => {

@@ -12,7 +12,9 @@ export const DAY_ONE = '2026-11-01T10:00:00Z';
 
 const index = JSON.parse(
   readFileSync(new URL('../src/data/pokedex-index.json', import.meta.url), 'utf-8'),
-) as { entries: { id: number; name: string }[] };
+) as { entries: { id: number; name: string; generation: number }[] };
+
+export const generationOf = (id: number) => index.entries.find((e) => e.id === id)?.generation;
 
 export const nameOf = (id: number) => index.entries.find((e) => e.id === id)?.name ?? `#${id}`;
 
