@@ -58,7 +58,7 @@ jobs:
       # 1920 pixels wide, and an accessibility scan of every screen.
       - run: npm run test:e2e
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
